@@ -1,0 +1,2755 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบบริหารจัดการและสรุปข้อมูลโครงการ Field Trip & Photo 2 | ม.อ.ปัตตานี</title>
+
+  <!-- Google Fonts: Prompt (Headings) & Sarabun (Body & Tables) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Sarabun"', 'sans-serif'],
+            heading: ['"Prompt"', 'sans-serif'],
+          },
+          colors: {
+            cream: '#FAF9F6',
+            sand: '#F3F1EC',
+            warmborder: '#E2DFD7',
+            sage: {
+              50: '#F1F6F4',
+              100: '#DFECE7',
+              200: '#BFD9CF',
+              500: '#3D7A68',
+              600: '#2F5D50',
+              700: '#24493E',
+            },
+            terracotta: {
+              50: '#FCF5F2',
+              100: '#F8E6DE',
+              500: '#C87D55',
+              600: '#B0653E',
+            },
+            ambersoft: {
+              50: '#FEF9EC',
+              100: '#FDEFC8',
+              600: '#A66F15',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet.js CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    body {
+      background-color: #FAF9F6;
+      color: #1E293B;
+      font-family: 'Sarabun', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Prompt', sans-serif;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F3F1EC;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #BFD9CF;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3D7A68;
+    }
+    .leaflet-container {
+      font-family: 'Sarabun', sans-serif;
+      border-radius: 1rem;
+      z-index: 10;
+    }
+    .tab-active {
+      background-color: #2F5D50;
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(47, 93, 80, 0.22);
+    }
+    .card-soft {
+      background-color: #FFFFFF;
+      border: 1px solid #E2DFD7;
+      box-shadow: 0 2px 10px rgba(30, 41, 59, 0.035);
+    }
+    @keyframes highlightPulse {
+      0% { box-shadow: 0 0 0 0 rgba(200, 125, 85, 0.65); border-color: #C87D55; }
+      50% { box-shadow: 0 0 0 10px rgba(200, 125, 85, 0.15); border-color: #2F5D50; }
+      100% { box-shadow: 0 2px 10px rgba(30, 41, 59, 0.035); border-color: #E2DFD7; }
+    }
+    .venue-highlight {
+      animation: highlightPulse 2.4s ease-out;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Top Header & Navigation -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-warmborder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap items-center justify-between py-3 gap-3">
+        <!-- Project Title -->
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-sage-600 text-white flex items-center justify-center shadow-sm shrink-0">
+            <i class="fa-solid fa-compass text-xl"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-sage-100 text-sage-700">ม.อ.ปัตตานี</span>
+              <span class="text-xs font-medium text-slate-500">16–23 มกราคม 2570 (8 วัน 7 คืน)</span>
+            </div>
+            <h1 class="font-heading font-bold text-base sm:text-lg text-slate-800 leading-tight">
+              ระบบวางแผนและบริหารโครงการ Field Trip &amp; Photo 2
+            </h1>
+          </div>
+        </div>
+
+        <!-- User Account, Download index.html & Reset Controls -->
+        <div class="flex items-center gap-2 ml-auto flex-wrap">
+          <div class="flex items-center gap-2 bg-sand px-3 py-1.5 rounded-2xl border border-warmborder">
+            <div id="user-avatar" class="w-8 h-8 rounded-xl bg-sage-600 text-white font-heading font-bold text-sm flex items-center justify-center shrink-0">
+              A
+            </div>
+            <div class="hidden md:block text-left">
+              <div id="user-name-display" class="text-xs font-bold text-slate-800 leading-tight">น.ส.ซอลีฮะห์</div>
+              <div id="user-roles-display" class="text-[11px] text-sage-700 font-semibold leading-tight">หัวหน้าฝ่ายประสานงาน • สมาชิกฝ่ายวิชาการ</div>
+            </div>
+          </div>
+
+          <button onclick="openLoginModal()" class="px-3.5 py-2 rounded-xl bg-sage-600 hover:bg-sage-700 text-white text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-user-lock"></i>
+            <span>ล็อกอิน / สลับสิทธิ์</span>
+          </button>
+
+          <button onclick="downloadStandaloneHtml()" title="บันทึกหน้าเว็บนี้เป็นไฟล์ index.html" class="px-3 py-2 rounded-xl bg-terracotta-50 hover:bg-terracotta-100 text-terracotta-600 border border-terracotta-100 text-xs sm:text-sm font-semibold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-download"></i>
+            <span class="hidden sm:inline">บันทึก index.html</span>
+          </button>
+
+          <button onclick="openResetModal()" title="รีเซ็ตข้อมูลเริ่มต้น" class="p-2.5 rounded-xl bg-sand hover:bg-terracotta-100 text-slate-600 hover:text-terracotta-600 border border-warmborder transition">
+            <i class="fa-solid fa-rotate-left"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="flex items-center gap-1.5 overflow-x-auto pb-3 pt-1 no-scrollbar">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn tab-active px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie"></i> ภาพรวม &amp; โครงสร้าง 8 ฝ่าย
+        </button>
+        <button onclick="switchTab('venues')" id="nav-venues" class="nav-btn text-slate-600 hover:bg-sand px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
+          <i class="fa-solid fa-map-location-dot"></i> สถานที่ดูงาน &amp; แผนที่พิกัดจริง
+        </button>
+        <button onclick="switchTab('coordination')" id="nav-coordination" class="nav-btn text-slate-600 hover:bg-sand px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
+          <i class="fa-solid fa-list-check"></i> เช็คลิสต์ประสานงาน &amp; งาน 8 ฝ่าย
+        </button>
+        <button onclick="switchTab('schedule')" id="nav-schedule" class="nav-btn text-slate-600 hover:bg-sand px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
+          <i class="fa-solid fa-calendar-days"></i> กำหนดการ 8 วัน 7 คืน
+        </button>
+        <button onclick="switchTab('budget')" id="nav-budget" class="nav-btn text-slate-600 hover:bg-sand px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
+          <i class="fa-solid fa-wallet"></i> งบประมาณโครงการ (คลิกดูรายหมวด)
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- Active Role Permission Strip -->
+    <div class="mb-6 rounded-2xl bg-sage-50 border border-sage-200 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 text-xs sm:text-sm">
+        <span class="w-7 h-7 rounded-lg bg-sage-600 text-white flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-shield-halved text-xs"></i>
+        </span>
+        <span id="permission-summary-text" class="text-slate-700">
+          สิทธิ์การใช้งานปัจจุบัน: <strong>หัวหน้าฝ่ายประสานงาน (เพิ่ม/แก้ไข/ลบได้)</strong> • <strong>สมาชิกฝ่ายวิชาการ (เพิ่ม/แก้ไขได้)</strong>
+        </span>
+      </div>
+      <div class="flex flex-wrap items-center gap-1.5" id="quick-switch-pills">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 1: DASHBOARD & ORGANIZATIONAL STRUCTURE (8 DEPTS + EXEC TEAM)     -->
+    <!-- ===================================================================== -->
+    <section id="view-dashboard" class="space-y-6">
+      <!-- Top KPIs -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="card-soft rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">ระยะเวลาเดินทาง</span>
+            <div class="w-9 h-9 rounded-xl bg-sage-100 text-sage-700 flex items-center justify-center">
+              <i class="fa-solid fa-calendar-check"></i>
+            </div>
+          </div>
+          <div class="font-heading text-2xl font-bold text-slate-800">8 วัน 7 คืน</div>
+          <p class="text-xs text-slate-500 mt-1">16–23 ม.ค. 2570 • พักโรงแรม 6 คืน + รถบัส 1 คืน</p>
+        </div>
+
+        <div class="card-soft rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">คณะผู้เดินทางรวม</span>
+            <div class="w-9 h-9 rounded-xl bg-ambersoft-100 text-ambersoft-600 flex items-center justify-center">
+              <i class="fa-solid fa-users"></i>
+            </div>
+          </div>
+          <div class="font-heading text-2xl font-bold text-slate-800">27 ท่าน</div>
+          <p class="text-xs text-slate-500 mt-1">นักศึกษา 23 คน • อาจารย์ 2 ท่าน • พขร. 2 ท่าน</p>
+        </div>
+
+        <div class="card-soft rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">งบประมาณทั้งโครงการ</span>
+            <div class="w-9 h-9 rounded-xl bg-terracotta-100 text-terracotta-600 flex items-center justify-center">
+              <i class="fa-solid fa-coins"></i>
+            </div>
+          </div>
+          <div id="kpi-budget-total" class="font-heading text-2xl font-bold text-slate-800">183,335 ฿</div>
+          <p class="text-xs text-slate-500 mt-1">รวมที่พัก 6 คืน อาหาร 20 มื้อ และน้ำมัน ม.ค. 70</p>
+        </div>
+
+        <div class="card-soft rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">ความคืบหน้าสถานที่</span>
+            <div class="w-9 h-9 rounded-xl bg-sage-100 text-sage-700 flex items-center justify-center">
+              <i class="fa-solid fa-building-circle-check"></i>
+            </div>
+          </div>
+          <div id="kpi-venue-summary" class="font-heading text-2xl font-bold text-slate-800">9 แห่ง + 3 จุดภาพ</div>
+          <p id="kpi-venue-confirmed" class="text-xs text-sage-700 font-semibold mt-1">ยืนยันคิวแล้ว 2 แห่ง • กำลังประสานงาน 7 แห่ง</p>
+        </div>
+      </div>
+
+      <!-- Progress of 8 Departments & Real-Time Venue Contact Status -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 card-soft rounded-2xl p-5 sm:p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="font-heading text-lg font-bold text-slate-800">ความคืบหน้าการดำเนินงานแยกตาม 8 ฝ่าย</h2>
+              <p class="text-xs text-slate-500">ตามโครงสร้างแบ่งหน้าที่โครงการทัศนศึกษา (อัปเดตอัตโนมัติจากรายการงาน)</p>
+            </div>
+            <button onclick="switchTab('coordination')" class="text-xs font-bold text-sage-700 hover:underline">
+              จัดการงาน 8 ฝ่าย <i class="fa-solid fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+          <div id="dashboard-8dept-progress" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 card-soft rounded-2xl p-5 sm:p-6 flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="font-heading text-lg font-bold text-slate-800">สถานะติดต่อสถานที่ดูงาน</h2>
+              <p class="text-xs text-slate-500">เชื่อมโยงข้อมูลระหว่างฝ่ายสถานที่ฯ และฝ่ายประสานงาน</p>
+            </div>
+            <button onclick="switchTab('coordination')" class="text-xs font-bold text-terracotta-600 hover:underline">
+              ไปที่เช็คลิสต์ <i class="fa-solid fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+          <div id="dashboard-contact-summary" class="space-y-2.5 overflow-y-auto max-h-[370px] pr-1">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Organizational Structure from Attached PDF -->
+      <div class="card-soft rounded-2xl p-5 sm:p-6 space-y-6">
+        <div class="border-b border-warmborder pb-3">
+          <span class="text-xs font-bold text-sage-700 uppercase tracking-wider">โครงสร้างการบริหารโครงการ (อ้างอิงเอกสารสรุปหน้าที่ฯ)</span>
+          <h2 class="font-heading text-lg font-bold text-slate-800 mt-0.5">ทีมบริหารโครงการ (5 ตำแหน่ง) และสายบังคับบัญชา 8 ฝ่ายงาน</h2>
+        </div>
+
+        <!-- Executive Hierarchy Visual -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- President + Secretary + Treasurer -->
+          <div class="p-4 rounded-2xl bg-sage-50 border border-sage-200 space-y-2.5">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-sage-600 text-white flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-crown"></i>
+              </div>
+              <div>
+                <div class="font-heading font-bold text-sm text-slate-800">ประธานโครงการ</div>
+                <div class="text-xs text-slate-600">กำกับดูแลภาพรวม ตัดสินใจ และประสานงานกับอาจารย์</div>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-sage-200/80 space-y-1.5 text-xs">
+              <div><strong class="text-sage-700">• เลขานุการ:</strong> บันทึกการประชุม จัดทำหนังสือ และตรวจสอบรายชื่อสมาชิก</div>
+              <div><strong class="text-sage-700">• เหรัญญิก:</strong> จัดทำงบประมาณ ควบคุมรายรับ-รายจ่าย และสรุปบัญชี</div>
+            </div>
+          </div>
+
+          <!-- Vice President 1 -->
+          <div class="p-4 rounded-2xl bg-ambersoft-50 border border-ambersoft-100 space-y-2.5">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-ambersoft-600 text-white flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-file-signature"></i>
+              </div>
+              <div>
+                <div class="font-heading font-bold text-sm text-slate-800">รองประธานคนที่ 1</div>
+                <div class="text-xs text-slate-600">ดูแลงานเอกสาร วิชาการ และการสื่อสาร</div>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-ambersoft-100 grid grid-cols-2 gap-1.5 text-xs font-semibold text-slate-700">
+              <span class="px-2 py-1 rounded-lg bg-white border border-ambersoft-100">1. ฝ่ายประสานงาน (6)</span>
+              <span class="px-2 py-1 rounded-lg bg-white border border-ambersoft-100">3. ฝ่ายวิชาการ (6)</span>
+              <span class="px-2 py-1 rounded-lg bg-white border border-ambersoft-100">4. ฝ่ายประชาสัมพันธ์ (4)</span>
+              <span class="px-2 py-1 rounded-lg bg-white border border-ambersoft-100">5. ฝ่ายประเมินผล (5)</span>
+            </div>
+          </div>
+
+          <!-- Vice President 2 -->
+          <div class="p-4 rounded-2xl bg-terracotta-50 border border-terracotta-100 space-y-2.5">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-terracotta-500 text-white flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-route"></i>
+              </div>
+              <div>
+                <div class="font-heading font-bold text-sm text-slate-800">รองประธานคนที่ 2</div>
+                <div class="text-xs text-slate-600">ดูแลงานภาคสนาม การเดินทาง และพลาธิการ</div>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-terracotta-100 grid grid-cols-2 gap-1.5 text-xs font-semibold text-slate-700">
+              <span class="px-2 py-1 rounded-lg bg-white border border-terracotta-100">2. ฝ่ายโสตฯ (5)</span>
+              <span class="px-2 py-1 rounded-lg bg-white border border-terracotta-100">6. ฝ่ายสวัสดิการ (6)</span>
+              <span class="px-2 py-1 rounded-lg bg-white border border-terracotta-100">7. ฝ่ายพยาบาล (2)</span>
+              <span class="px-2 py-1 rounded-lg bg-white border border-terracotta-100">8. ฝ่ายสถานที่ฯ (6)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed 8 Departments Responsibility Table (Before / During / After Trip) -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-sand text-slate-700 border-y border-warmborder">
+                <th class="py-3 px-3 font-heading font-semibold">ฝ่ายงาน (โควตา)</th>
+                <th class="py-3 px-3 font-heading font-semibold">หน้าที่หลัก &amp; ขอบเขตงาน</th>
+                <th class="py-3 px-3 font-heading font-semibold">ก่อนเดินทาง</th>
+                <th class="py-3 px-3 font-heading font-semibold">ระหว่างเดินทาง</th>
+                <th class="py-3 px-3 font-heading font-semibold">หลังเดินทาง</th>
+              </tr>
+            </thead>
+            <tbody id="pdf-dept-matrix-body" class="divide-y divide-warmborder/70">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 2: VENUES & INTERACTIVE REAL-COORDINATE MAP                       -->
+    <!-- ===================================================================== -->
+    <section id="view-venues" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="font-heading text-xl font-bold text-slate-800">แผนที่พิกัดจริง &amp; ข้อมูลสถานที่ดูงาน ที่พัก จุดแวะพัก</h2>
+          <p class="text-sm text-slate-500">กดที่หมุดบนแผนที่เพื่อดูข้อมูลสรุป แล้วกดปุ่ม/ข้อความในป๊อปอัปเพื่อเลื่อนลงไปยังการ์ดรายละเอียดของสถานที่นั้นทันที</p>
+        </div>
+        <button onclick="openVenueModal()" class="px-4 py-2.5 rounded-xl bg-sage-600 hover:bg-sage-700 text-white text-sm font-semibold transition flex items-center gap-2 self-start shadow-sm">
+          <i class="fa-solid fa-plus"></i> เพิ่มสถานที่ใหม่ (ฝ่ายสถานที่ฯ)
+        </button>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="filterVenues('all')" class="venue-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-white transition" data-cat="all">
+          ทั้งหมด (17 พิกัด)
+        </button>
+        <button onclick="filterVenues('study')" class="venue-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-warmborder text-slate-700 hover:bg-sage-50 transition" data-cat="study">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-sage-600 mr-1.5"></span>สถานที่ดูงาน (8 แห่ง + ตัวเลือก)
+        </button>
+        <button onclick="filterVenues('hotel')" class="venue-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-warmborder text-slate-700 hover:bg-sage-50 transition" data-cat="hotel">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-terracotta-500 mr-1.5"></span>ที่พักหลัก
+        </button>
+        <button onclick="filterVenues('photo')" class="venue-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-warmborder text-slate-700 hover:bg-sage-50 transition" data-cat="photo">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-ambersoft-600 mr-1.5"></span>จุดถ่ายภาพ Photo 2
+        </button>
+        <button onclick="filterVenues('rest')" class="venue-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-warmborder text-slate-700 hover:bg-sage-50 transition" data-cat="rest">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-sky-600 mr-1.5"></span>จุดพักรถ &amp; อาหารฮาลาล
+        </button>
+      </div>
+
+      <!-- Leaflet Map Box -->
+      <div class="card-soft rounded-2xl p-3 sm:p-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3 px-1">
+          <div class="flex flex-wrap items-center gap-3 text-xs text-slate-600">
+            <span class="font-bold text-slate-800">คำอธิบายหมุด:</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-[#2F5D50] inline-block"></span> ดูงาน</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-[#C87D55] inline-block"></span> ที่พัก</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-[#D97706] inline-block"></span> ถ่ายภาพ Photo 2</span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-[#0284C7] inline-block"></span> จุดแวะพัก/ฮาลาล</span>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="focusMapBangkok()" class="text-xs px-3 py-1 rounded-lg bg-sand hover:bg-sage-100 text-slate-700 font-semibold transition">
+              <i class="fa-solid fa-crosshairs mr-1"></i> โซนกรุงเทพฯ
+            </button>
+            <button onclick="focusMapAll()" class="text-xs px-3 py-1 rounded-lg bg-sand hover:bg-sage-100 text-slate-700 font-semibold transition">
+              <i class="fa-solid fa-expand mr-1"></i> เส้นทางปัตตานี–อยุธยา
+            </button>
+          </div>
+        </div>
+        <div id="map" class="w-full h-[380px] sm:h-[440px] border border-warmborder"></div>
+      </div>
+
+      <!-- Venue Cards Grid -->
+      <div id="venues-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 3: COORDINATION WORKFLOW & 8 DEPARTMENTS TASK BOARD               -->
+    <!-- ===================================================================== -->
+    <section id="view-coordination" class="hidden space-y-6">
+      <!-- Cross-Department Sync Info Banner -->
+      <div class="card-soft rounded-2xl p-5 border-l-4 border-l-sage-600 bg-white">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-sage-700">ระบบประสานงานข้ามฝ่ายอัตโนมัติ</span>
+            <h2 class="font-heading text-lg font-bold text-slate-800 mt-0.5">ฝ่ายสถานที่ พัสดุ และยานยนต์ ➔ ฝ่ายประสานงาน (To-Do Checklist)</h2>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">
+              เมื่อ <strong>ฝ่ายสถานที่ พัสดุ และยานยนต์</strong> เพิ่มสถานที่ดูงานหรือแก้ไขข้อมูลจุดจอดรถบัส รายการจะเข้าสู่เช็คลิสต์ของ <strong>ฝ่ายประสานงาน</strong> ทันที เพื่อบันทึกสถานะว่าติดต่อหรือยัง และยืนยันผลเพราะอะไร
+            </p>
+          </div>
+          <button onclick="openVenueModal()" class="px-3.5 py-2 rounded-xl bg-terracotta-50 hover:bg-terracotta-500 hover:text-white text-terracotta-600 border border-terracotta-100 text-xs font-bold transition shrink-0 self-start">
+            <i class="fa-solid fa-bus mr-1"></i> + เพิ่มสถานที่ (ฝ่ายสถานที่ฯ)
+          </button>
+        </div>
+      </div>
+
+      <!-- Coordination Checklist Table -->
+      <div class="card-soft rounded-2xl overflow-hidden">
+        <div class="p-5 border-b border-warmborder flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-sand/60">
+          <div>
+            <h3 class="font-heading text-base font-bold text-slate-800">To-Do Checklist ติดต่อสถานที่ศึกษาดูงาน (ฝ่ายประสานงาน)</h3>
+            <p class="text-xs text-slate-500">ตรวจสอบสถานะการติดต่อ ช่องทางประสาน และเหตุผลยืนยัน/ไม่ยืนยันของแต่ละแห่ง</p>
+          </div>
+          <div id="coord-stats-badges" class="flex flex-wrap gap-2 text-xs font-bold">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-sand text-slate-600 text-xs uppercase border-b border-warmborder">
+                <th class="py-3.5 px-4">สถานที่ / สายงาน</th>
+                <th class="py-3.5 px-4">ข้อมูลติดต่อ &amp; จุดจอดรถบัส (จากฝ่ายสถานที่ฯ)</th>
+                <th class="py-3.5 px-4">สถานะการติดต่อ</th>
+                <th class="py-3.5 px-4">ยืนยันไหม / เหตุผลประกอบ</th>
+                <th class="py-3.5 px-4 text-right">อัปเดต</th>
+              </tr>
+            </thead>
+            <tbody id="coordination-table-body" class="divide-y divide-warmborder/70 text-sm">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 8 Departments Task Board -->
+      <div class="space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="font-heading text-lg font-bold text-slate-800">กระดานติดตามความคืบหน้างานทั้ง 8 ฝ่าย (ตามเอกสารหน้าที่ฯ)</h3>
+            <p class="text-xs text-slate-500">สมาชิกแต่ละฝ่ายเพิ่มและแก้ไขงานในฝ่ายตัวเองได้ • หัวหน้าฝ่าย (Head) หรือทีมบริหารเท่านั้นที่ลบงานได้</p>
+          </div>
+          <button onclick="openTaskModal()" class="px-4 py-2 rounded-xl bg-sage-600 hover:bg-sage-700 text-white text-xs sm:text-sm font-semibold transition flex items-center gap-2 self-start shadow-sm">
+            <i class="fa-solid fa-plus"></i> เพิ่มรายการงานในฝ่าย
+          </button>
+        </div>
+
+        <div id="departments-8-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 4: 8-DAY 7-NIGHT ITINERARY SCHEDULE                               -->
+    <!-- ===================================================================== -->
+    <section id="view-schedule" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="font-heading text-xl font-bold text-slate-800">ตารางกำหนดการเดินทาง 8 วัน 7 คืน (16 – 23 มกราคม 2570)</h2>
+          <p class="text-sm text-slate-500">อ้างอิงระยะทางจริงจาก Google Maps + ตัวคูณความเร็วรถบัส (+15–20%) และจังหวะแวะละหมาดตามเวลาจริง</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-sage-100 text-sage-700 px-3.5 py-2 rounded-xl font-bold">
+          <i class="fa-solid fa-mosque"></i> รองรับรุกเศาะฮ์: ละหมาดซุบฮิ &amp; ย่อ-รวม (กัศร์และญะมะอ์)
+        </div>
+      </div>
+
+      <!-- Day Filter Tabs -->
+      <div id="schedule-day-tabs" class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Timeline List -->
+      <div id="schedule-content" class="space-y-4">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 5: BUDGET & CLICK-TO-EXPAND CATEGORY CARDS                        -->
+    <!-- ===================================================================== -->
+    <section id="view-budget" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="font-heading text-xl font-bold text-slate-800">สรุปงบประมาณโครงการ (183,335 บาท) &amp; รายละเอียดรายหมวด</h2>
+          <p class="text-sm text-slate-500">กดที่การ์ดแต่ละหมวดด้านล่างเพื่อเปิดดูรายการย่อยทั้งหมดแบบละเอียด (อ้างอิงเรตรุ่นพี่ + คาดการณ์ ม.ค. 2570)</p>
+        </div>
+        <button onclick="toggleAllBudgetCategories()" class="px-3.5 py-2 rounded-xl bg-white border border-warmborder hover:bg-sage-50 text-xs font-bold text-sage-700 transition self-start">
+          <i class="fa-solid fa-layer-group mr-1"></i> เปิด/ปิดดูรายการย่อยทุกหมวด
+        </button>
+      </div>
+
+      <!-- Student Contribution Calculator -->
+      <div class="card-soft rounded-2xl p-5 sm:p-6 bg-gradient-to-br from-white via-sage-50/50 to-ambersoft-50/40">
+        <div class="flex items-center gap-2.5 mb-4">
+          <div class="w-8 h-8 rounded-xl bg-terracotta-500 text-white flex items-center justify-center">
+            <i class="fa-solid fa-calculator text-sm"></i>
+          </div>
+          <h3 class="font-heading text-base sm:text-lg font-bold text-slate-800">คำนวณยอดสมทบนักศึกษา 23 คน (แบ่งจ่าย 3 งวด)</h3>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-6 space-y-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">1. ยอดรวมงบประมาณโครงการทั้งหมด (บาท)</label>
+              <input type="number" id="calc-total" value="183335" oninput="recalculateBudget()" class="w-full px-3.5 py-2 rounded-xl border border-warmborder bg-white font-bold text-slate-800 focus:outline-none focus:border-sage-600" />
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">2. ขอเบิกคืนงบคณะฯ (อาจารย์ + พขร.)</label>
+                <input type="number" id="calc-reimburse" value="16690" oninput="recalculateBudget()" class="w-full px-3.5 py-2 rounded-xl border border-warmborder bg-white font-bold text-sage-700 focus:outline-none focus:border-sage-600" />
+                <span class="text-[11px] text-slate-500">ที่พัก อ. 9,600 + อาหาร อ. 3,390 + ที่พัก พขร. 3,700</span>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">3. งบสนับสนุนคณะฯ + เงินเอก</label>
+                <input type="number" id="calc-support" value="40000" oninput="recalculateBudget()" class="w-full px-3.5 py-2 rounded-xl border border-warmborder bg-white font-bold text-sage-700 focus:outline-none focus:border-sage-600" />
+                <span class="text-[11px] text-slate-500">อ้างอิงรุ่นพี่ได้งบคณะ 24,500 + เงินกองกลางสาขา</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-4 rounded-2xl bg-white border border-warmborder text-center">
+              <div class="text-xs text-slate-500 font-semibold">ยอดสุทธิส่วนนักศึกษา</div>
+              <div id="res-net-total" class="font-heading text-xl font-bold text-slate-800 mt-1">126,645 ฿</div>
+              <div class="text-[11px] text-slate-400 mt-1">หารนักศึกษา 23 คน</div>
+            </div>
+            <div class="p-4 rounded-2xl bg-sage-600 text-white text-center shadow-sm">
+              <div class="text-xs text-sage-100 font-semibold">เฉลี่ยต่อนักศึกษา 1 คน</div>
+              <div id="res-per-student" class="font-heading text-2xl font-bold mt-1">5,507 ฿</div>
+              <div class="text-[11px] text-sage-100 mt-1">รวมที่พัก 6 คืน + อาหาร</div>
+            </div>
+            <div class="p-4 rounded-2xl bg-terracotta-50 border border-terracotta-100 text-center">
+              <div class="text-xs text-terracotta-600 font-bold">แบ่งจ่าย 3 งวด / คน</div>
+              <div id="res-per-installment" class="font-heading text-xl font-bold text-terracotta-600 mt-1">1,836 ฿</div>
+              <div class="text-[11px] text-slate-500 mt-1">งวดละเท่าๆ กัน</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8 Interactive Budget Category Cards (Click to Expand Sub-items) -->
+      <div id="budget-cards-container" class="space-y-3.5">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Grand Total Footer Bar -->
+      <div class="card-soft rounded-2xl p-5 bg-sage-600 text-white flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div>
+          <div class="text-xs text-sage-100 font-semibold uppercase tracking-wider">รวมงบประมาณรายจ่ายทั้งโครงการ (8 วัน 7 คืน / พักโรงแรม 6 คืน)</div>
+          <div class="text-xs text-sage-100 mt-0.5">ตัดค่าประกันภัยอุบัติเหตุ ยาสามัญ/ชุดปฐมพยาบาล และป้ายคล้องคอออกแล้ว</div>
+        </div>
+        <div id="budget-grand-total-display" class="font-heading text-2xl sm:text-3xl font-bold">
+          183,335 บาท
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-warmborder py-5 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+      <div>สาขาวิชาเทคโนโลยีดิจิทัลและสื่อสารการศึกษา คณะศึกษาศาสตร์ มหาวิทยาลัยสงขลานครินทร์ วิทยาเขตปัตตานี</div>
+      <div>ไฟล์ระบบจัดการโครงการ (index.html) • อัปเดตข้อมูลพร้อมใช้งาน</div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- MODALS (Login/RBAC, Venue Form, Coordination Update, Task Form)       -->
+  <!-- ===================================================================== -->
+
+  <!-- 1. Multi-Role RBAC Login & Account Switcher Modal -->
+  <div id="modal-login" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-xl border border-warmborder max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-warmborder">
+        <div>
+          <h3 class="font-heading text-lg font-bold text-slate-800">เข้าสู่ระบบ / สลับบัญชีผู้ใช้ (RBAC 2 บทบาทต่อผู้ใช้)</h3>
+          <p class="text-xs text-slate-500">สมาชิกแต่ละฝ่ายเพิ่มและแก้ไขข้อมูลฝ่ายตนได้ • เฉพาะหัวหน้าฝ่าย (Head) หรือทีมบริหารเท่านั้นที่ลบข้อมูลได้</p>
+        </div>
+        <button onclick="closeModal('modal-login')" class="w-8 h-8 rounded-full bg-sand hover:bg-slate-200 flex items-center justify-center text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Preset Accounts -->
+      <div class="mt-4">
+        <div class="text-xs font-bold text-slate-600 mb-2">เลือกบัญชีตัวอย่าง (กำหนด 2 ฝ่ายงานต่อคน):</div>
+        <div id="login-accounts-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Custom User Role Builder -->
+      <form onsubmit="loginCustomUser(event)" class="mt-5 pt-4 border-t border-warmborder space-y-3 text-xs sm:text-sm">
+        <div class="font-heading font-bold text-sm text-sage-700">
+          <i class="fa-solid fa-user-plus mr-1"></i> หรือกำหนดชื่อและเลือก 2 ฝ่ายงานของคุณเอง:
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อ-สกุล ผู้ใช้งาน *</label>
+          <input type="text" id="custom-user-name" required placeholder="เช่น น.ส.มาริสา สาและมะ" class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-3 rounded-xl bg-sand/60 border border-warmborder space-y-2">
+            <div class="font-bold text-xs text-slate-700">บทบาทที่ 1 (หลัก)</div>
+            <select id="custom-role1-dept" class="w-full px-2.5 py-1.5 rounded-lg border border-warmborder bg-white text-xs"></select>
+            <select id="custom-role1-level" class="w-full px-2.5 py-1.5 rounded-lg border border-warmborder bg-white text-xs">
+              <option value="head">หัวหน้าฝ่าย (เพิ่ม/แก้ไข/ลบได้)</option>
+              <option value="member">สมาชิกฝ่าย (เพิ่ม/แก้ไขได้เท่านั้น)</option>
+            </select>
+          </div>
+          <div class="p-3 rounded-xl bg-sand/60 border border-warmborder space-y-2">
+            <div class="font-bold text-xs text-slate-700">บทบาทที่ 2 (ควบ/เสริม)</div>
+            <select id="custom-role2-dept" class="w-full px-2.5 py-1.5 rounded-lg border border-warmborder bg-white text-xs">
+              <option value="none">-- ไม่มีฝ่ายที่ 2 --</option>
+            </select>
+            <select id="custom-role2-level" class="w-full px-2.5 py-1.5 rounded-lg border border-warmborder bg-white text-xs">
+              <option value="member">สมาชิกฝ่าย (เพิ่ม/แก้ไขได้เท่านั้น)</option>
+              <option value="head">หัวหน้าฝ่าย (เพิ่ม/แก้ไข/ลบได้)</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <button type="submit" class="px-4 py-2 rounded-xl bg-sage-600 hover:bg-sage-700 text-white text-xs sm:text-sm font-semibold">
+            เข้าสู่ระบบด้วยสิทธิ์ที่เลือก
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Venue Add/Edit Modal -->
+  <div id="modal-venue" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-xl border border-warmborder max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-warmborder">
+        <div>
+          <h3 id="modal-venue-title" class="font-heading text-lg font-bold text-slate-800">เพิ่ม/แก้ไขข้อมูลสถานที่ (ฝ่ายสถานที่ พัสดุ และยานยนต์)</h3>
+          <p class="text-xs text-slate-500">ข้อมูลสถานที่ดูงานจะส่งต่อไปยังเช็คลิสต์ติดต่อของฝ่ายประสานงานอัตโนมัติ</p>
+        </div>
+        <button onclick="closeModal('modal-venue')" class="w-8 h-8 rounded-full bg-sand hover:bg-slate-200 flex items-center justify-center text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="form-venue" onsubmit="saveVenueForm(event)" class="mt-4 space-y-3.5 text-sm">
+        <input type="hidden" id="venue-id" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ชื่อสถานที่ / หน่วยงาน *</label>
+            <input type="text" id="venue-name" required class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">หมวดหมู่ *</label>
+            <select id="venue-category" class="w-full px-3.5 py-2 rounded-xl border border-warmborder bg-white">
+              <option value="study">สถานที่ศึกษาดูงาน (ซิงก์ไปฝ่ายประสานงาน)</option>
+              <option value="hotel">ที่พักหลัก</option>
+              <option value="photo">จุดถ่ายภาพ Photo 2</option>
+              <option value="rest">จุดแวะพัก &amp; อาหารฮาลาล</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">สายงาน / ประเภท</label>
+            <input type="text" id="venue-field" class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ละติจูด (Latitude) *</label>
+            <input type="number" step="any" id="venue-lat" required class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ลองจิจูด (Longitude) *</label>
+            <input type="number" step="any" id="venue-lng" required class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ที่ตั้ง / โซนการเดินทาง</label>
+            <input type="text" id="venue-location" class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ช่องทางติดต่อ / โทรศัพท์ / อีเมล</label>
+            <input type="text" id="venue-contact-info" class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">โอกาสอนุมัติ &amp; วันเวลาสะดวก</label>
+            <input type="text" id="venue-schedule-fit" class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ลิงก์แหล่งอ้างอิง (URL)</label>
+            <input type="url" id="venue-source" class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">สิ่งที่ได้เรียนรู้จริง</label>
+          <textarea id="venue-learning" rows="2" class="w-full px-3.5 py-2 rounded-xl border border-warmborder"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-bold text-sage-700 mb-1">ข้อดี / จุดเด่น</label>
+            <textarea id="venue-pros" rows="2" class="w-full px-3.5 py-2 rounded-xl border border-warmborder"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-terracotta-600 mb-1">ข้อเสีย / ข้อจำกัดจุดจอดรถบัส</label>
+            <textarea id="venue-cons" rows="2" class="w-full px-3.5 py-2 rounded-xl border border-warmborder"></textarea>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-3 border-t border-warmborder">
+          <button type="button" onclick="closeModal('modal-venue')" class="px-4 py-2 rounded-xl bg-sand text-slate-700 font-semibold">ยกเลิก</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-semibold">บันทึกข้อมูลสถานที่</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Coordination Status Update Modal -->
+  <div id="modal-coord" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-xl border border-warmborder">
+      <div class="flex items-center justify-between pb-3 border-b border-warmborder">
+        <div>
+          <h3 class="font-heading text-lg font-bold text-slate-800">อัปเดตสถานะติดต่อสถานที่ (ฝ่ายประสานงาน)</h3>
+          <p id="coord-modal-venue-name" class="text-xs font-bold text-sage-700 mt-0.5"></p>
+        </div>
+        <button onclick="closeModal('modal-coord')" class="w-8 h-8 rounded-full bg-sand hover:bg-slate-200 flex items-center justify-center text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="saveCoordStatus(event)" class="mt-4 space-y-4 text-sm">
+        <input type="hidden" id="coord-venue-id" />
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">สถานะการติดต่อ *</label>
+          <select id="coord-status" class="w-full px-3.5 py-2.5 rounded-xl border border-warmborder bg-white font-semibold">
+            <option value="not_contacted">1. ยังไม่ติดต่อ</option>
+            <option value="called">2. โทรเช็กคิวเบื้องต้นแล้ว</option>
+            <option value="letter_sent">3. ส่งหนังสือราชการ (ตราครุฑ) แล้ว</option>
+            <option value="confirmed">4. ยืนยันอนุมัติเข้าดูงานแล้ว</option>
+            <option value="rejected">5. ไม่สะดวก / คิวเต็ม (ใช้สถานที่สำรอง)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ยืนยันไหมเพราะอะไร / บันทึกการติดต่อ *</label>
+          <textarea id="coord-reason" rows="3" required class="w-full px-3.5 py-2 rounded-xl border border-warmborder" placeholder="ระบุเหตุผลที่ยืนยันหรือไม่ยืนยัน ชื่อผู้ประสานงาน และรอบเวลา..."></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-warmborder">
+          <button type="button" onclick="closeModal('modal-coord')" class="px-4 py-2 rounded-xl bg-sand text-slate-700 font-semibold">ยกเลิก</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-semibold">บันทึกสถานะ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Department Task Add/Edit Modal -->
+  <div id="modal-task" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-xl border border-warmborder">
+      <div class="flex items-center justify-between pb-3 border-b border-warmborder">
+        <h3 id="modal-task-title" class="font-heading text-lg font-bold text-slate-800">เพิ่ม/แก้ไขรายการงานของฝ่าย</h3>
+        <button onclick="closeModal('modal-task')" class="w-8 h-8 rounded-full bg-sand hover:bg-slate-200 flex items-center justify-center text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="form-task" onsubmit="saveTaskForm(event)" class="mt-4 space-y-4 text-sm">
+        <input type="hidden" id="task-id" />
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">เลือกฝ่ายงาน *</label>
+          <select id="task-dept" class="w-full px-3.5 py-2 rounded-xl border border-warmborder bg-white font-semibold"></select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">รายละเอียดงาน *</label>
+          <input type="text" id="task-title" required class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">สถานะ</label>
+            <select id="task-status" class="w-full px-3.5 py-2 rounded-xl border border-warmborder bg-white">
+              <option value="pending">รอดำเนินการ</option>
+              <option value="in_progress">กำลังดำเนินการ</option>
+              <option value="done">เสร็จสิ้นแล้ว</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">กำหนดเสร็จ</label>
+            <input type="text" id="task-due" class="w-full px-3.5 py-2 rounded-xl border border-warmborder" />
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-warmborder">
+          <button type="button" onclick="closeModal('modal-task')" class="px-4 py-2 rounded-xl bg-sand text-slate-700 font-semibold">ยกเลิก</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-semibold">บันทึกงาน</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Reset Confirmation Modal -->
+  <div id="modal-reset" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-xl border border-warmborder text-center">
+      <div class="w-12 h-12 rounded-2xl bg-terracotta-100 text-terracotta-600 flex items-center justify-center mx-auto mb-3 text-xl">
+        <i class="fa-solid fa-rotate-left"></i>
+      </div>
+      <h3 class="font-heading text-lg font-bold text-slate-800">รีเซ็ตข้อมูลกลับเป็นค่าเริ่มต้น?</h3>
+      <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
+        ระบบจะกู้คืนข้อมูลสถานที่ทั้ง 17 พิกัด สถานะประสานงาน และงานของทั้ง 8 ฝ่ายกลับเป็นค่าตั้งต้นทั้งหมด
+      </p>
+      <div class="flex justify-center gap-3 mt-5">
+        <button onclick="closeModal('modal-reset')" class="px-4 py-2 rounded-xl bg-sand text-slate-700 text-sm font-semibold">ยกเลิก</button>
+        <button onclick="executeResetData()" class="px-4 py-2 rounded-xl bg-terracotta-600 hover:bg-terracotta-500 text-white text-sm font-semibold">ยืนยันรีเซ็ต</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION JAVASCRIPT                                                -->
+  <!-- ===================================================================== -->
+  <script>
+    // -----------------------------------------------------------------------
+    // 1. EXACT 8 DEPARTMENTS FROM PDF ("สรุปหน้าที่และความรับผิดชอบของแต่ละฝ่าย")
+    // -----------------------------------------------------------------------
+    const DEPARTMENTS = [
+      {
+        id: 'coord',
+        num: 1,
+        name: 'ฝ่ายประสานงาน',
+        quota: '6 คน',
+        supervisor: 'รองประธานคนที่ 1',
+        icon: 'fa-handshake',
+        duties: 'ติดต่อหน่วยงานภายนอก ส่งหนังสือขอความอนุเคราะห์ ติดตามการตอบรับ ประสานเจ้าหน้าที่แต่ละสถานที่',
+        beforeTrip: 'ติดต่อสถานที่ ส่งหนังสือ และยืนยันการเข้าศึกษาดูงาน',
+        duringTrip: 'ประสานวิทยากรและเจ้าหน้าที่หน้างาน',
+        afterTrip: 'ติดตามหนังสือขอบคุณหน่วยงาน'
+      },
+      {
+        id: 'av',
+        num: 2,
+        name: 'ฝ่ายโสตทัศนูปกรณ์',
+        quota: '5 คน',
+        supervisor: 'รองประธานคนที่ 2',
+        icon: 'fa-camera',
+        duties: 'เตรียมและดูแลอุปกรณ์ถ่ายภาพและเสียง บันทึกภาพนิ่ง/วิดีโอ จัดเก็บไฟล์ภาพ และตัดต่อวิดีโอสรุปโครงการ',
+        beforeTrip: 'เตรียมและตรวจสอบอุปกรณ์ถ่ายภาพ/เสียง',
+        duringTrip: 'ถ่ายภาพ วิดีโอ และดูแลเครื่องเสียง',
+        afterTrip: 'จัดเก็บไฟล์ภาพและตัดต่อวิดีโอสรุปโครงการ'
+      },
+      {
+        id: 'academic',
+        num: 3,
+        name: 'ฝ่ายวิชาการ',
+        quota: '6 คน',
+        supervisor: 'รองประธานคนที่ 1',
+        icon: 'fa-book-open',
+        duties: 'จัดทำเล่มโครงการ หนังสือต่างๆ ออกแบบกิจกรรมระหว่างดำเนินกิจกรรม และสรุปเนื้อหาการเรียนรู้',
+        beforeTrip: 'จัดทำเล่มโครงการและออกแบบกิจกรรมเรียนรู้',
+        duringTrip: 'ดำเนินกิจกรรมวิชาการและกิจกรรม Reflection',
+        afterTrip: 'จัดทำรูปเล่มรายงานและสรุปองค์ความรู้'
+      },
+      {
+        id: 'pr',
+        num: 4,
+        name: 'ฝ่ายประชาสัมพันธ์',
+        quota: '4 คน',
+        supervisor: 'รองประธานคนที่ 1',
+        icon: 'fa-bullhorn',
+        duties: 'ออกแบบโปสเตอร์ ป้ายไวนิล ป้ายชื่อ กำหนดการประชาสัมพันธ์ อัปเดตข่าวสารและภาพกิจกรรม',
+        beforeTrip: 'ออกแบบโปสเตอร์ ป้ายไวนิล และกำหนดการ',
+        duringTrip: 'อัปเดตข่าวสารและภาพกิจกรรมระหว่างเดินทาง',
+        afterTrip: 'จัดทำสื่อสรุปและเผยแพร่ผลงานโครงการ'
+      },
+      {
+        id: 'eval',
+        num: 5,
+        name: 'ฝ่ายประเมินผล',
+        quota: '5 คน',
+        supervisor: 'รองประธานคนที่ 1',
+        icon: 'fa-chart-line',
+        duties: 'จัดทำแบบสำรวจและแบบประเมินการทำงาน เก็บรวบรวมข้อมูล วิเคราะห์คะแนนและข้อเสนอแนะ',
+        beforeTrip: 'จัดทำแบบสำรวจและแบบประเมินโครงการ',
+        duringTrip: 'แจก QR Code และเก็บข้อมูลประเมินรายวัน',
+        afterTrip: 'วิเคราะห์ผลและสรุปคะแนนประเมินโครงการ'
+      },
+      {
+        id: 'welfare',
+        num: 6,
+        name: 'ฝ่ายสวัสดิการ',
+        quota: '6 คน',
+        supervisor: 'รองประธานคนที่ 2',
+        icon: 'fa-utensils',
+        duties: 'สำรวจข้อมูลการแพ้อาหาร วางแผนและจองร้านอาหารฮาลาล ดูแลอาหารว่าง จัดสรรเวลาละหมาด และรวมใบเสร็จ',
+        beforeTrip: 'สำรวจการแพ้อาหารและจองร้านอาหารฮาลาล',
+        duringTrip: 'ดูแลอาหาร เครื่องดื่ม และจัดสรรเวลาละหมาด',
+        afterTrip: 'รวบรวมใบเสร็จค่าอาหารส่งเหรัญญิก'
+      },
+      {
+        id: 'medical',
+        num: 7,
+        name: 'ฝ่ายพยาบาล',
+        quota: '2 คน',
+        supervisor: 'รองประธานคนที่ 2',
+        icon: 'fa-kit-medical',
+        duties: 'สำรวจโรคประจำตัวและการแพ้ยา เตรียมยาและเวชภัณฑ์ ดูแลสุขภาพและปฐมพยาบาลเบื้องต้นระหว่างเดินทาง',
+        beforeTrip: 'สำรวจโรคประจำตัว/แพ้ยา และเตรียมเวชภัณฑ์',
+        duringTrip: 'ดูแลสุขภาพและปฐมพยาบาลเบื้องต้น',
+        afterTrip: 'ตรวจสอบเวชภัณฑ์และสรุปผลการดูแลสุขภาพ'
+      },
+      {
+        id: 'logistics',
+        num: 8,
+        name: 'ฝ่ายสถานที่ พัสดุ และยานยนต์',
+        quota: '6 คน',
+        supervisor: 'รองประธานคนที่ 2',
+        icon: 'fa-bus',
+        duties: 'ติดต่อรถโดยสาร วางแผนเส้นทาง จองที่พัก ดูแลสัมภาระและการจัดห้องพัก เตรียมของที่ระลึก และตรวจพัสดุ',
+        beforeTrip: 'จองรถบัส ที่พัก และวางแผนเส้นทาง',
+        duringTrip: 'ดูแลรถ สัมภาระ ห้องพัก และของที่ระลึก',
+        afterTrip: 'ตรวจสอบพัสดุและส่งคืนอุปกรณ์มหาวิทยาลัย'
+      }
+    ];
+
+    const PRESET_ACCOUNTS = [
+      {
+        id: 'acc_a',
+        short: 'A',
+        name: 'น.ส.ซอลีฮะห์ (บัญชี A)',
+        badgeColor: 'bg-sage-600',
+        roles: [
+          { deptId: 'coord', level: 'head', label: 'หัวหน้าฝ่ายประสานงาน' },
+          { deptId: 'academic', level: 'member', label: 'สมาชิกฝ่ายวิชาการ' }
+        ],
+        desc: 'มี 2 ฝ่ายงาน: ลบสถานะ/งานฝ่ายประสานงานได้ แต่ลบงานฝ่ายวิชาการไม่ได้'
+      },
+      {
+        id: 'acc_b',
+        short: 'B',
+        name: 'นายกามารู (บัญชี B)',
+        badgeColor: 'bg-terracotta-600',
+        roles: [
+          { deptId: 'logistics', level: 'head', label: 'หัวหน้าฝ่ายสถานที่ พัสดุ และยานยนต์' },
+          { deptId: 'av', level: 'member', label: 'สมาชิกฝ่ายโสตทัศนูปกรณ์' }
+        ],
+        desc: 'มี 2 ฝ่ายงาน: เพิ่ม/แก้ไข/ลบสถานที่และจุดจอดรถบัสได้ + แก้ไขงานฝ่ายโสตฯ'
+      },
+      {
+        id: 'acc_c',
+        short: 'C',
+        name: 'น.ส.กุสุมา (บัญชี C)',
+        badgeColor: 'bg-ambersoft-600',
+        roles: [
+          { deptId: 'welfare', level: 'head', label: 'หัวหน้าฝ่ายสวัสดิการ' },
+          { deptId: 'medical', level: 'member', label: 'สมาชิกฝ่ายพยาบาล' }
+        ],
+        desc: 'มี 2 ฝ่ายงาน: ลบงานฝ่ายสวัสดิการได้ + เพิ่ม/แก้ไขงานฝ่ายพยาบาล'
+      },
+      {
+        id: 'acc_d',
+        short: 'D',
+        name: 'นายพลพณัฐ (ประธาน / เหรัญญิก)',
+        badgeColor: 'bg-slate-800',
+        roles: [
+          { deptId: 'all', level: 'admin', label: 'ประธานโครงการ / ทีมบริหารสูงสุด' }
+        ],
+        desc: 'สิทธิ์ทีมบริหาร: เพิ่ม แก้ไข ลบ และจัดการข้อมูลได้ครบทั้ง 8 ฝ่ายและงบประมาณ'
+      }
+    ];
+
+    // -----------------------------------------------------------------------
+    // 2. VENUES DATA WITH REAL GPS COORDINATES & CURATED VISUALS
+    // -----------------------------------------------------------------------
+    const INITIAL_VENUES = [
+      {
+        id: 'v_hotel',
+        name: 'โรงแรมรีเจนท์ รามคำแหง 22 (ฐานที่พักหลัก 6 คืน)',
+        category: 'hotel',
+        field: 'ที่พักหลักคณะเดินทาง (15 ห้อง/คืน)',
+        lat: 13.7554,
+        lng: 100.6186,
+        location: 'เลขที่ 4 ซอยรามคำแหง 22 แขวงหัวหมาก เขตบางกะปิ กรุงเทพฯ',
+        contactInfo: 'โทร. 02-318-4444 / 094-464-9383 (เรตสถาบัน 800 บ./คืน)',
+        scheduleFit: 'พัก 6 คืน (16–22 ม.ค. 2570) | รวม 75 ห้อง-คืน',
+        learning: 'ศูนย์กลางกระจายตัวดูงานทุกโซน เดินไป กกท. ได้ใน 5 นาที มีห้องอาหารฮาลาลในโรงแรมและใกล้แหล่งอาหารฮาลาลซอยรามคำแหง 24',
+        pros: 'มีลานจอดรถบัสขนาดใหญ่รองรับได้จริง ใกล้มัสยิดและอาหารฮาลาลตลอดคืน ราคาประหยัด 800 บ./คืน',
+        cons: 'เรตหมู่คณะสถาบันการศึกษาไม่รวมอาหารเช้า (จัดงบอาหารเช้าแยกไว้ในหมวดสวัสดิการแล้ว)',
+        pastVisit: 'เป็นฐานที่พักมาตรฐานของคณะศึกษาดูงานจากมหาวิทยาลัยภาคใต้',
+        source: 'https://www.regentramkhamhaeng.com/',
+        photoUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#C87D55',
+        bannerIcon: 'fa-hotel',
+        contactStatus: 'confirmed',
+        contactReason: 'ล็อกโควตา 15 ห้อง × 6 คืน เรตหมู่คณะสถาบันการศึกษา 800 บ./ห้อง (พขร. 700 บ.)',
+        updatedAt: '24 พ.ย. 2569'
+      },
+      {
+        id: 'v_kantana',
+        name: 'Kantana Animation Studios (กันตนา สตูดิโอ)',
+        category: 'study',
+        field: 'ด้านกราฟิกและสื่อสร้างสรรค์',
+        lat: 13.7745,
+        lng: 100.5835,
+        location: '333/3 ซ.รัชดานิเวศน์ 19 ถ.ประชาอุทิศ แขวงสามเสนนอก เขตห้วยขวาง กทม.',
+        contactInfo: 'ฝ่ายประชาสัมพันธ์ / Kantana Institute (โทร. 02-275-0046)',
+        scheduleFit: 'ผ่าน 65–75% | จันทร์ที่ 18 ม.ค. 2570 (09.00–12.00 น.)',
+        learning: 'การออกแบบงานกราฟิก คาแรคเตอร์ คอนเซปต์อาร์ต งาน CG/แอนิเมชัน และกระบวนการผลิตสื่อสร้างสรรค์ในอุตสาหกรรมบันเทิงและดิจิทัลไทย',
+        pros: 'อยู่ใกล้ฐานที่พักรามคำแหง 22 เพียง 15–25 นาที มีชื่อเสียงด้านงานกราฟิกและสื่อสร้างสรรค์มายาวนาน',
+        cons: 'ซอยรัชดานิเวศน์ 19 ค่อนข้างจำกัด รถบัสใหญ่ควรจอดจุดเหมาะสมและห้ามถ่ายภาพพื้นที่การผลิต',
+        pastVisit: 'มีจริง — ต้อนรับคณะนักศึกษาและผู้เยี่ยมชมด้านแอนิเมชันและสื่อสร้างสรรค์อย่างต่อเนื่อง',
+        source: 'https://www.kantanaanimation.com/Our_Und_Service/66a30b0ab855b3001350b6dd',
+        photoUrl: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#2F5D50',
+        bannerIcon: 'fa-pen-nib',
+        contactStatus: 'letter_sent',
+        contactReason: 'โทรเช็กคิวเบื้องต้นแล้ว ส่งหนังสือราชการตราครุฑขอรอบเช้า 18 ม.ค. 2570 รอตอบกลับ',
+        updatedAt: '22 พ.ย. 2569'
+      },
+      {
+        id: 'v_igloo',
+        name: 'Igloo Studio (อิกลู สตูดิโอ)',
+        category: 'study',
+        field: 'ด้านแอนิเมชัน 2D/3D และ VFX',
+        lat: 13.8213,
+        lng: 100.5658,
+        location: '32 (2-1) ซ.พหลโยธิน 24 ถ.พหลโยธิน แขวงจอมพล เขตจตุจักร กทม.',
+        contactInfo: 'IGLOO STUDIO HQ (contact@igloostudio.com)',
+        scheduleFit: 'ผ่าน 55–70% | จันทร์ที่ 18 ม.ค. 2570 (14.00–16.30 น.)',
+        learning: 'กระบวนการผลิตแอนิเมชัน 2D/2.5D/3D งาน VFX และ Character Effects การพัฒนา Original IP และการทำงานร่วมกับพาร์ทเนอร์ระดับนานาชาติ',
+        pros: 'สตูดิโอแอนิเมชันไทยระดับสากล สร้างแรงบันดาลใจให้สายแอนิเมชันและ 3D ได้ดีมาก',
+        cons: 'อยู่ในซอยพหลโยธิน 24 รถบัสใหญ่จอดหน้าตึกไม่ได้ (ส่งปากซอยแล้วเดินเข้า) และมีข้อจำกัดความลับโปรเจกต์ (NDA)',
+        pastVisit: 'มีจริง — รับนักศึกษาฝึกงานและเปิดบ้านต้อนรับเครือข่ายสายแอนิเมชัน',
+        source: 'https://igloostudio.com/',
+        photoUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#24493E',
+        bannerIcon: 'fa-film',
+        contactStatus: 'called',
+        contactReason: 'โทรสอบถามแอดมินแล้ว แจ้งให้ส่งหนังสือราชการพร้อมหัวข้อที่สนใจเพื่อเช็กคิวทีมโปรดักชัน',
+        updatedAt: '21 พ.ย. 2569'
+      },
+      {
+        id: 'v_google',
+        name: 'Google Thailand (อาคารปาร์ค เวนเจอร์ส)',
+        category: 'study',
+        field: 'ด้านโปรแกรมและเทคโนโลยีระดับโลก',
+        lat: 13.7433,
+        lng: 100.5484,
+        location: 'อาคารปาร์ค เวนเจอร์ส อีโคเพล็กซ์ ชั้น 14–16 ถ.วิทยุ เพลินจิต กทม.',
+        contactInfo: 'ประสานผ่านเครือข่ายมหาวิทยาลัย / Google Developer Student',
+        scheduleFit: 'ผ่าน 35–50% | อังคารที่ 19 ม.ค. 2570 (09.00–11.30 น.)',
+        learning: 'วัฒนธรรมการทำงานในองค์กรเทคโนโลยีระดับโลก การพัฒนาผลิตภัณฑ์ดิจิทัล เครื่องมือแพลตฟอร์ม Google และทักษะสายซอฟต์แวร์',
+        pros: 'องค์กรเทคโนโลยีในฝันของสายโปรแกรมเมอร์ เปิดโลกทัศน์มาตรฐานสากล',
+        cons: 'ไม่เปิดรับกรุ๊ปดูงานทั่วไปแบบ walk-in โอกาสอนุมัติจำกัด ต้องเตรียม Arise by Infinitas / Agoda เป็นแผนสำรอง',
+        pastVisit: 'มีจริงเฉพาะบางกลุ่มที่ผ่านโครงการความร่วมมือหรือกิจกรรมนักศึกษาที่ได้รับเชิญ',
+        source: 'https://www.ise.eng.chula.ac.th/news/ise-student-activities-google-thailand-visit',
+        photoUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#3D7A68',
+        bannerIcon: 'fa-code',
+        contactStatus: 'called',
+        contactReason: 'อยู่ระหว่างประสานผ่านเครือข่ายอาจารย์และยื่นเรื่องคู่ขนานกับ Arise by Infinitas เป็นแผนสำรอง',
+        updatedAt: '23 พ.ย. 2569'
+      },
+      {
+        id: 'v_ch3',
+        name: 'สถานีวิทยุโทรทัศน์ไทยทีวีสีช่อง 3 (อาคารมาลีนนท์)',
+        category: 'study',
+        field: 'ด้านสื่อและกระจายเสียง (สื่อเชิงพาณิชย์)',
+        lat: 13.7191,
+        lng: 100.5732,
+        location: 'อาคารมาลีนนท์ ทาวเวอร์ 3199 ถ.พระราม 4 แขวงคลองตัน เขตคลองเตย กทม.',
+        contactInfo: 'แผนกองค์กรสัมพันธ์ BEC World (โทร. 02-262-3333)',
+        scheduleFit: 'ผ่าน 65–75% | อังคารที่ 19 ม.ค. 2570 (14.00–16.30 น.)',
+        learning: 'การบริหารสถานีโทรทัศน์เชิงพาณิชย์ การผลิตข่าว ละคร ระบบออกอากาศ โครงสร้างไอทีสื่อ และการปรับตัวสู่สื่อออนไลน์/OTT',
+        pros: 'เดินทางจากรามคำแหง–พระราม 4 สะดวก เห็นภาพรวมสถานีโทรทัศน์เอกชนขนาดใหญ่',
+        cons: 'พื้นที่บางส่วนห้ามบันทึกภาพ และรถบัสใหญ่จอดรอหน้าอาคารมาลีนนท์ได้ชั่วคราวเท่านั้น',
+        pastVisit: 'มีจริง — สถานีเปิดรับการเยี่ยมชมองค์กรจากสถาบันการศึกษาอย่างต่อเนื่อง',
+        source: 'https://www.becworld.com/en/news-and-media/company-visited',
+        photoUrl: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#2F5D50',
+        bannerIcon: 'fa-tv',
+        contactStatus: 'letter_sent',
+        contactReason: 'ส่งหนังสือราชการถึงแผนกองค์กรสัมพันธ์ BEC World เรียบร้อยแล้ว รอแจ้งผลยืนยันคิว',
+        updatedAt: '20 พ.ย. 2569'
+      },
+      {
+        id: 'v_thaipbs',
+        name: 'ไทยพีบีเอส (Thai PBS)',
+        category: 'study',
+        field: 'ด้านสื่อและกระจายเสียง (สื่อสาธารณะ)',
+        lat: 13.8788,
+        lng: 100.5772,
+        location: '145 ถ.วิภาวดีรังสิต แขวงตลาดบางเขน เขตหลักสี่ กทม.',
+        contactInfo: 'ระบบจองเยี่ยมชม visit.thaipbs.or.th (โทร. 02-790-2000)',
+        scheduleFit: 'ผ่าน 75–85% | เฉพาะวันพุธที่ 20 ม.ค. 2570 (09.30–12.00 น.)',
+        learning: 'ภารกิจสื่อสาธารณะ กระบวนการผลิตและออกอากาศรายการ ระบบเทคนิควิศวกรรม และสื่อดิจิทัล/ออนไลน์',
+        pros: 'ระบบจองรอบชัดเจน (รับ 20–50 คน/รอบ) ลานจอดรถบัสกว้างขวาง เห็นความต่างของสื่อสาธารณะชัดเจน',
+        cons: 'เปิดรับเฉพาะวันพุธ–พฤหัสบดีเท่านั้น และอยู่โซนวิภาวดี–หลักสี่',
+        pastVisit: 'มีจริงอย่างเป็นระบบ — คณะสายสื่อสารมวลชนเข้าดูงานประจำทุกสัปดาห์',
+        source: 'https://visit.thaipbs.or.th/',
+        photoUrl: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#24493E',
+        bannerIcon: 'fa-tower-broadcast',
+        contactStatus: 'confirmed',
+        contactReason: 'ยืนยันคิวรอบเช้าวันพุธที่ 20 ม.ค. 2570 (25 ท่าน) ตามเกณฑ์ 20–50 คน/รอบเรียบร้อยแล้ว',
+        updatedAt: '24 พ.ย. 2569'
+      },
+      {
+        id: 'v_vmlab',
+        name: 'Virtual Media Lab @ TCDC กรุงเทพฯ (CEA)',
+        category: 'study',
+        field: 'ด้านนวัตกรรมและเทคโนโลยีเพื่อการศึกษา',
+        lat: 13.7277,
+        lng: 100.5159,
+        location: 'ชั้น 4 อาคารไปรษณีย์กลาง 1160 ถ.เจริญกรุง เขตบางรัก กทม.',
+        contactInfo: 'CEA / TCDC Virtual Media Lab (โทร. 02-105-7400)',
+        scheduleFit: 'ผ่าน 75–85% | พุธที่ 20 ม.ค. 2570 (14.30–16.30 น.)',
+        learning: 'เทคโนโลยี VR/AR/Metaverse และ Virtual Production จอ LED Full Screen 45 ตร.ม. Unreal Engine, Blender เพื่อนวัตกรรมการเรียนรู้',
+        pros: 'ตรงกับสายนวัตกรรมทางการศึกษาและสื่อดิจิทัลของคณะศึกษาศาสตร์อย่างยิ่ง ได้เห็น Virtual Production จริง',
+        cons: 'ย่านเจริญกรุง–บางรักรถติดช่วงเย็น รถบัสต้องจอดส่งหน้าไปรษณีย์กลางแล้ววนไปรอ',
+        pastVisit: 'มีจริง — คณะนักศึกษาสาขาเทคโนโลยีสื่อดิจิทัลเข้าศึกษาดูงานต่อเนื่อง',
+        source: 'https://www.cea.or.th/single-project/virtual-media-lab',
+        photoUrl: 'https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#3D7A68',
+        bannerIcon: 'fa-vr-cardboard',
+        contactStatus: 'letter_sent',
+        contactReason: 'ประสานเจ้าหน้าที่ CEA แล้ว ส่งหนังสือขอเข้าชมและสาธิต Virtual Production บ่าย 20 ม.ค. 2570',
+        updatedAt: '22 พ.ย. 2569'
+      },
+      {
+        id: 'v_garena',
+        name: 'บริษัท การีนา ออนไลน์ (ประเทศไทย) จำกัด',
+        category: 'study',
+        field: 'ด้านคอมพิวเตอร์ เกม และอีสปอร์ต',
+        lat: 13.7663,
+        lng: 100.5686,
+        location: 'อาคาร AIA Capital Center ชั้น 24 ถ.รัชดาภิเษก ดินแดง กทม.',
+        contactInfo: 'Garena Academy / ฝ่าย People (www.garena.co.th)',
+        scheduleFit: 'ผ่าน 65–75% | พฤหัสบดีที่ 21 ม.ค. 2570 (09.00–11.30 น.)',
+        learning: 'ระบบนิเวศอุตสาหกรรมเกมและอีสปอร์ต การบริหารแพลตฟอร์มออนไลน์ โครงสร้างอาชีพสายเกมและ Garena Academy',
+        pros: 'ตรงความสนใจนักศึกษาสายเกมและสื่อดิจิทัล เปิดมุมมองอาชีพใหม่ในอุตสาหกรรมเกม',
+        cons: 'ตรวจแลกบัตรเข้มงวด (ต้องส่งรายชื่อ/เลขบัตรประชาชนล่วงหน้า) ห้ามถ่ายภาพในพื้นที่ปฏิบัติงาน',
+        pastVisit: 'มีจริง — มีโครงการด้านการศึกษาและกิจกรรมร่วมกับนักศึกษามหาวิทยาลัยต่อเนื่อง',
+        source: 'https://www.garena.co.th/',
+        photoUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#2F5D50',
+        bannerIcon: 'fa-gamepad',
+        contactStatus: 'called',
+        contactReason: 'ติดต่อทีม Garena Academy แล้ว เตรียมส่งหนังสือราชการพร้อมรายชื่อผู้เข้าชม 25 ท่าน',
+        updatedAt: '19 พ.ย. 2569'
+      },
+      {
+        id: 'v_amarin',
+        name: 'บมจ. อมรินทร์ คอร์เปอเรชั่นส์ (อมรินทร์พริ้นติ้ง)',
+        category: 'study',
+        field: 'ด้านสื่อสิ่งพิมพ์และกราฟิก (ตัวเลือกหลัก)',
+        lat: 13.7885,
+        lng: 100.4438,
+        location: 'ถ.ชัยพฤกษ์ / บรมราชชนนี เขตตลิ่งชัน กทม.',
+        contactInfo: 'ฝ่ายทรัพยากรบุคคล / สื่อสารองค์กร อมรินทร์ (โทร. 02-422-9999)',
+        scheduleFit: 'ผ่าน 55–65% | พฤหัสบดีที่ 21 ม.ค. 2570 (14.00–16.30 น.)',
+        learning: 'กระบวนการผลิตสื่อสิ่งพิมพ์และบรรจุภัณฑ์ครบวงจร เทคโนโลยีการพิมพ์สมัยใหม่ การคุมคุณภาพสี และการเชื่อมโยงสื่อสิ่งพิมพ์สู่ดิจิทัล',
+        pros: 'อยู่ในเขตกรุงเทพฯ (ตลิ่งชัน) ใกล้กว่าโรงงานสิริวัฒนาที่อยู่บางปะกง เห็นการแปรรูปงานกราฟิกสู่สิ่งพิมพ์จริง',
+        cons: 'อยู่ฝั่งธนบุรี ต้องเผื่อเวลารถติดข้ามเมืองช่วงเย็น และโรงพิมพ์มีกฎความปลอดภัย/ห้ามถ่ายภาพบางจุด',
+        pastVisit: 'มีจริง — รับคณะนักศึกษาเข้าศึกษาดูงานและสหกิจศึกษาเป็นประจำ',
+        source: 'https://www.yellowpages.co.th/en/profile/Amarin-Printing-Publishing-Public-Co-Ltd-3bXV9FVto',
+        photoUrl: 'https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#24493E',
+        bannerIcon: 'fa-print',
+        contactStatus: 'not_contacted',
+        contactReason: 'เลือกใช้เป็นสถานที่หลักด้านสื่อสิ่งพิมพ์แทนบางปะกง เตรียมโทรเช็กคิวฝ่ายสื่อสารองค์กรสัปดาห์นี้',
+        updatedAt: '24 พ.ย. 2569'
+      },
+      {
+        id: 'v_sirivatana',
+        name: 'บมจ. สิริวัฒนา อินเตอร์พริ้นท์ (ตัวเลือกเปรียบเทียบ)',
+        category: 'study',
+        field: 'ด้านสื่อสิ่งพิมพ์อุตสาหกรรม (ตัวเลือกสำรอง)',
+        lat: 13.5688,
+        lng: 100.9654,
+        location: '14/8 หมู่ 12 ถ.บางนา–ตราด กม.46 อ.บางปะกง จ.ฉะเชิงเทรา',
+        contactInfo: 'สำนักงานโรงงานบางปะกง (สายบางนา–ตราด)',
+        scheduleFit: 'ผ่าน 50–65% | จันทร์–ศุกร์ เวลาทำการโรงงาน',
+        learning: 'กระบวนการผลิตสื่อสิ่งพิมพ์อุตสาหกรรมขนาดใหญ่ ระบบออฟเซต/เพลท และการควบคุมคุณภาพสีระดับโรงงาน',
+        pros: 'เห็นสเกลโรงพิมพ์อุตสาหกรรมขนาดใหญ่ชัดเจน',
+        cons: 'อยู่ไกลถึง อ.บางปะกง จ.ฉะเชิงเทรา ใช้เวลาเดินทางไป–กลับจาก กทม. มากกว่าอมรินทร์พริ้นติ้ง (ตลิ่งชัน)',
+        pastVisit: 'มีบางส่วนตามการประสานงานเฉพาะกิจ',
+        source: 'https://pmaward.ditp.go.th/winner-directory/sirivatana-interprint-public-co-ltd/',
+        photoUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#475569',
+        bannerIcon: 'fa-industry',
+        contactStatus: 'rejected',
+        contactReason: 'เก็บเป็นตัวเลือกสำรอง เนื่องจากโรงงานอยู่บางปะกง จ.ฉะเชิงเทรา จึงเลือกอมรินทร์พริ้นติ้ง (ตลิ่งชัน) ใน กทม. แทน',
+        updatedAt: '24 พ.ย. 2569'
+      },
+      {
+        id: 'v_wat_chai',
+        name: 'วัดไชยวัฒนาราม จ.พระนครศรีอยุธยา',
+        category: 'photo',
+        field: 'One Day Trip รายวิชา Photo 2 (ช่วงเช้า)',
+        lat: 14.3432,
+        lng: 100.5418,
+        location: 'ต.บ้านป้อม อ.พระนครศรีอยุธยา จ.พระนครศรีอยุธยา',
+        contactInfo: 'อุทยานประวัติศาสตร์พระนครศรีอยุธยา (ค่าเข้าคนไทย 10 บ.)',
+        scheduleFit: 'ผ่าน 100% | อาทิตย์ที่ 17 ม.ค. 2570 (09.45–11.00 น.)',
+        learning: 'โจทย์ถ่ายภาพสถาปัตยกรรม (Architecture) เส้นนำสายตา (Leading Lines) และการถ่ายภาพบุคคลร่วมกับชุดไทยย้อนยุค',
+        pros: 'ลานจอดรถบัสกว้างขวางมาก อากาศเดือน ม.ค. เย็นสบาย ค่าเข้าชมเพียง 10 บาท/คน',
+        cons: 'พื้นที่กลางแจ้งแดดแรงหลัง 10.30 น. ควรเริ่มถ่ายช่วงเช้าและเตรียมร่ม/หมวก',
+        pastVisit: 'มีจริงอย่างแพร่หลาย — จุดฝึกปฏิบัติภาคสนามยอดนิยมของรายวิชาการถ่ายภาพ',
+        source: 'https://www.tripthaitour.com/Bangkok/Ayutthaya',
+        photoUrl: 'https://images.unsplash.com/photo-1563492065599-3520f775eeed?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#D97706',
+        bannerIcon: 'fa-camera-retro',
+        contactStatus: 'confirmed',
+        contactReason: 'แหล่งท่องเที่ยวสาธารณะ เปิด 08.00–18.00 น. จัดสรรงบค่าเข้า 10 บ. ไว้แล้ว',
+        updatedAt: '24 พ.ย. 2569'
+      },
+      {
+        id: 'v_wat_maha',
+        name: 'วัดมหาธาตุ & ป้อมเพชร จ.พระนครศรีอยุธยา',
+        category: 'photo',
+        field: 'One Day Trip รายวิชา Photo 2 (สาย & เย็น)',
+        lat: 14.3569,
+        lng: 100.5675,
+        location: 'อุทยานประวัติศาสตร์พระนครศรีอยุธยา (ใกล้ตลาดเจ้าพรหม)',
+        contactInfo: 'อุทยานประวัติศาสตร์พระนครศรีอยุธยา (ค่าเข้าคนไทย 10 บ.)',
+        scheduleFit: 'ผ่าน 100% | อาทิตย์ที่ 17 ม.ค. 2570 (11.00–16.15 น.)',
+        learning: 'การถ่ายภาพแนวสารคดี วัฒนธรรม แสงเงาผ่านกรอบหน้าต่างคาเฟ่ริมน้ำ และแสงเย็น Golden Hour ที่ป้อมเพชร',
+        pros: 'เดินทางเชื่อมถึงกันภายใน 10 นาที ใกล้ชุมชนมุสลิมคลองตะเคียน',
+        cons: 'ต้องระมัดระวังกฎระเบียบการถ่ายภาพเศียรพระพุทธรูปในรากไม้ (ห้ามยืนสูงกว่า)',
+        pastVisit: 'มีจริง — เส้นทางมาตรฐานทริปถ่ายภาพอยุธยา',
+        source: 'https://www.tripthaitour.com/Bangkok/Ayutthaya',
+        photoUrl: 'https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#A66F15',
+        bannerIcon: 'fa-sun',
+        contactStatus: 'confirmed',
+        contactReason: 'บรรจุในแผน One Day Trip วันอาทิตย์ที่ 17 ม.ค. 2570 เรียบร้อย',
+        updatedAt: '24 พ.ย. 2569'
+      },
+      {
+        id: 'v_khao_luang',
+        name: 'ถ้ำเขาหลวง จ.เพชรบุรี (จุดถ่ายภาพขากลับ)',
+        category: 'photo',
+        field: 'One Day Trip รายวิชา Photo 2 (ขากลับภาคใต้)',
+        lat: 13.1364,
+        lng: 99.9342,
+        location: 'ต.ธงชัย อ.เมืองเพชรบุรี จ.เพชรบุรี (ติดเส้นทางลงใต้)',
+        contactInfo: 'จุดบริการนักท่องเที่ยวถ้ำเขาหลวง (ค่าเข้า 25 บ./คน)',
+        scheduleFit: 'ผ่าน 100% | ศุกร์ที่ 22 ม.ค. 2570 (09.45–11.15 น.)',
+        learning: 'ฝึกถ่ายภาพลำแสงอาทิตย์ส่องผ่านปล่องเพดานถ้ำ (God Rays) และการวัดแสงในสภาพแสงคอนทราสต์สูง',
+        pros: 'อยู่บนเส้นทางขากลับภาคใต้โดยไม่ต้องอ้อม ค่าเข้าถูกมาก (25 บาท/คน)',
+        cons: 'ต้องเดินขึ้น-ลงบันไดภายในถ้ำ ระวังลื่น และลำแสงสวยที่สุดช่วง 09.30–10.30 น. ควรเช็กเอาต์ กทม. 07.15–07.30 น.',
+        pastVisit: 'มีจริง — จุดแวะถ่ายภาพยอดนิยมของคณะเดินทางสายใต้',
+        source: 'https://th.trip.com/moments/detail/phetchaburi-1447089-138026870/',
+        photoUrl: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#D97706',
+        bannerIcon: 'fa-mountain-sun',
+        contactStatus: 'confirmed',
+        contactReason: 'เปิดทุกวัน 08.00–16.00 น. กำหนดออก กทม. เช้าวันศุกร์ที่ 22 ม.ค. เพื่อทันแสงลอดถ้ำ',
+        updatedAt: '24 พ.ย. 2569'
+      },
+      {
+        id: 'v_psu',
+        name: 'ม.อ.ปัตตานี (จุดเริ่มต้นและสิ้นสุดการเดินทาง)',
+        category: 'rest',
+        field: 'อาคารเทคโนโลยีการศึกษา / ลานพระบิดา',
+        lat: 6.8806,
+        lng: 101.2367,
+        location: '181 ถ.เจริญประดิษฐ์ ต.รูสะมิแล อ.เมือง จ.ปัตตานี',
+        contactInfo: 'กองอาคารสถานที่ ม.อ.ปัตตานี (ขอใช้รถบัสปรับอากาศ)',
+        scheduleFit: 'ออกเดินทาง 16 ม.ค. (01.00 น.) | กลับถึง 23 ม.ค. (07.15 น.)',
+        learning: 'จุดเช็กชื่อ ตรวจสัมภาระ ถ่ายภาพหมู่หน้าลานพระบิดา และส่งคืนรถบัสมหาวิทยาลัย',
+        pros: 'ใช้เส้นทางสายหลักเอเชีย AH2 (ผ่านหาดใหญ่–พัทลุง–ทุ่งสง–พุนพิน 422 กม.) ถนน 4 เลนปลอดภัยสำหรับรถบัสใหญ่',
+        cons: 'ต้องเผื่อเวลาผ่านจุดตรวจความมั่นคงช่วงดึก',
+        pastVisit: 'จุดเริ่มต้นโครงการภาคสนามประจำปีของสาขา',
+        source: 'https://pattani.psu.ac.th/',
+        photoUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#0284C7',
+        bannerIcon: 'fa-graduation-cap',
+        contactStatus: 'confirmed',
+        contactReason: 'กำหนดจุดนัดพบอาคารเทคโนโลยีการศึกษา เวลา 00.15 น. วันที่ 16 ม.ค. 2570',
+        updatedAt: '24 พ.ย. 2569'
+      },
+      {
+        id: 'v_punpin',
+        name: 'ปตท.พุนพิน จ.สุราษฎร์ธานี (จุดเชื่อมต่อเส้นทาง AH2)',
+        category: 'rest',
+        field: 'จุดพักรถและตรวจเช็กระยะทางสายใต้',
+        lat: 9.1065,
+        lng: 99.2188,
+        location: 'ถ.เอเชีย 41 อ.พุนพิน จ.สุราษฎร์ธานี (422 กม. จากปัตตานี)',
+        contactInfo: 'สถานีบริการ ปตท. พุนพิน สุราษฎร์ธานี',
+        scheduleFit: 'ขาไป 16 ม.ค. (ช่วงเช้าหลังละหมาดซุบฮิโซนทุ่งสง/เวียงสระ)',
+        learning: 'จุดเชื่อมต่อเส้นทาง AH2 จากปัตตานี (Maps 6 ชม. 2 นาที → เวลารถบัสจริง ~6 ชม. 45 นาที)',
+        pros: 'ถนน 4 เลนตลอดสายปลอดภัยกว่าระโนด–ขนอม และมีปั๊มใหญ่รองรับรถบัส',
+        cons: 'ควรแวะละหมาดซุบฮิช่วง 05.30 น. ตั้งแต่โซนทุ่งสง/เวียงสระก่อนถึงพุนพินเพื่อให้ทันก่อนพระอาทิตย์ขึ้น',
+        pastVisit: 'เส้นทางหลักของรถบัสมหาวิทยาลัย',
+        source: 'https://www.google.com/maps',
+        photoUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#0284C7',
+        bannerIcon: 'fa-road',
+        contactStatus: 'confirmed',
+        contactReason: 'อ้างอิงพิกัดเส้นทางสายหลัก AH2 เรียบร้อย',
+        updatedAt: '24 พ.ย. 2569'
+      },
+      {
+        id: 'v_khunsarai',
+        name: 'ร้านอาหารคุณสาหร่าย จ.ชุมพร (จุดพักรถหลัก)',
+        category: 'rest',
+        field: 'จุดพักรถ อาหารฮาลาล และสลับคนขับ',
+        lat: 10.5562,
+        lng: 99.1342,
+        location: 'ถ.เพชรเกษม ต.ท่าแซะ อ.ท่าแซะ จ.ชุมพร',
+        contactInfo: 'ศูนย์อาหารและของฝากคุณสาหร่าย (รองรับรถทัวร์)',
+        scheduleFit: 'ขาไป 16 ม.ค. (10.30 น.) | ขากลับ 22 ม.ค. (18.45 น.)',
+        learning: 'จุดพักรับประทานอาหารฮาลาล ห้องน้ำสะอาด สลับพนักงานขับรถบัส และละหมาดย่อ-รวม',
+        pros: 'ลานจอดรถบัสขนาดใหญ่ รองรับกรุ๊ปทัวร์ได้รวดเร็ว มีโซนอาหารฮาลาลชัดเจน',
+        cons: 'ช่วงวันหยุดอาจมีกรุ๊ปทัวร์ลงพร้อมกันหลายคัน ควรโทรสั่งอาหารล่วงหน้า 30 นาที',
+        pastVisit: 'จุดแวะพักมาตรฐานของรถบัส ม.อ.ปัตตานี',
+        source: 'https://www.google.com/maps',
+        photoUrl: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#0284C7',
+        bannerIcon: 'fa-utensils',
+        contactStatus: 'confirmed',
+        contactReason: 'กำหนดเป็นจุดพักหลักทั้งขาไปและขากลับ',
+        updatedAt: '24 พ.ย. 2569'
+      },
+      {
+        id: 'v_lungteng',
+        name: 'ปั๊ม ปตท. ลุงเท่ง อ.ชะอำ จ.เพชรบุรี',
+        category: 'rest',
+        field: 'จุดพักรถ ละหมาดย่อ-รวม และของฝาก',
+        lat: 12.8364,
+        lng: 99.9355,
+        location: 'ถ.เพชรเกษม อ.ชะอำ จ.เพชรบุรี (292 กม. จากชุมพร)',
+        contactInfo: 'สถานีบริการ ปตท. ลุงเท่ง ชะอำ',
+        scheduleFit: 'ขาไป 16 ม.ค. (16.15–17.00 น.)',
+        learning: 'จุดแวะทำธุระส่วนตัว ซื้อของว่าง และละหมาดย่อและรวม (กัศร์และญะมะอ์ ตะอ์คีร: ซุฮฺริ + อัศริ)',
+        pros: 'มีห้องละหมาดสะอาด ลานจอดรถบัสกว้าง และร้านสะดวกซื้อ/คาเฟ่ครบ',
+        cons: 'ช่วงเย็นวันเสาร์การจราจรบนถนนเพชรเกษม–พระราม 2 ขาเข้า กทม. ค่อนข้างหนาแน่น',
+        pastVisit: 'จุดแวะพักมาตรฐานก่อนเข้ากรุงเทพฯ',
+        source: 'https://www.google.com/maps',
+        photoUrl: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#0284C7',
+        bannerIcon: 'fa-mosque',
+        contactStatus: 'confirmed',
+        contactReason: 'กำหนดเป็นจุดแวะละหมาดซุฮฺริ+อัศริ ขาไป',
+        updatedAt: '24 พ.ย. 2569'
+      }
+    ];
+
+    const INITIAL_TASKS = [
+      { id: 't1', deptId: 'coord', title: 'โทรเช็กคิวเบื้องต้นทั้ง 8 บริษัทและขอชื่อผู้รับหนังสือราชการ', status: 'done', due: '25 พ.ย. 2569' },
+      { id: 't2', deptId: 'coord', title: 'ติดตามผลอนุมัติหนังสือตราครุฑ (Kantana, ช่อง 3, VMLab, Garena)', status: 'in_progress', due: '10 ธ.ค. 2569' },
+      { id: 't3', deptId: 'coord', title: 'ส่งรายชื่อและเลขบัตรประชาชน 25 ท่านให้ Garena ล่วงหน้า', status: 'pending', due: '25 ธ.ค. 2569' },
+
+      { id: 't4', deptId: 'av', title: 'ตรวจเช็กกล้อง DSLR/Mirrorless ขาตั้งกล้อง และไมโครโฟนส่วนกลาง', status: 'in_progress', due: '15 ธ.ค. 2569' },
+      { id: 't5', deptId: 'av', title: 'จัดซื้อซองกันชื้น ผ้าเช็ดเลนส์ และเมมโมรีการ์ดสำรองสำหรับทริป 8 วัน', status: 'pending', due: '10 ม.ค. 2570' },
+
+      { id: 't6', deptId: 'academic', title: 'จัดทำเล่มโครงการและกำหนดการ 8 วัน 7 คืน เสนอคณบดีอนุมัติ', status: 'done', due: '28 พ.ย. 2569' },
+      { id: 't7', deptId: 'academic', title: 'ประสานอาจารย์วิชา Photo 2 กำหนดโจทย์ถ่ายภาพอยุธยา & ถ้ำเขาหลวง', status: 'in_progress', due: '12 ธ.ค. 2569' },
+
+      { id: 't8', deptId: 'pr', title: 'ออกแบบโปสเตอร์ประชาสัมพันธ์โครงการ และป้ายไวนิลถ่ายภาพหมู่', status: 'in_progress', due: '18 ธ.ค. 2569' },
+      { id: 't9', deptId: 'pr', title: 'วางแผนอัปเดตข่าวสารและภาพกิจกรรมรายวันลงเพจสาขา', status: 'pending', due: '10 ม.ค. 2570' },
+
+      { id: 't10', deptId: 'eval', title: 'สร้างแบบประเมินความพึงพอใจและแบบสะท้อนคิด (QR Code รายวัน)', status: 'in_progress', due: '22 ธ.ค. 2569' },
+      { id: 't11', deptId: 'eval', title: 'สรุปคะแนนประเมินรายวันและภาพรวมโครงการหลังเดินทางกลับ', status: 'pending', due: '28 ม.ค. 2570' },
+
+      { id: 't12', deptId: 'welfare', title: 'สำรวจข้อมูลการแพ้อาหารของสมาชิก 25 ท่าน และลิสต์ร้านฮาลาลทุกจุด', status: 'done', due: '5 ธ.ค. 2569' },
+      { id: 't13', deptId: 'welfare', title: 'จองร้านปิ้งย่าง/ชาบูฮาลาลเลี้ยงปิดทริปคืนวันที่ 21 ม.ค. 2570', status: 'pending', due: '20 ธ.ค. 2569' },
+
+      { id: 't14', deptId: 'medical', title: 'สำรวจโรคประจำตัวและการแพ้ยาของผู้เดินทางทั้งหมด 27 ท่าน', status: 'done', due: '5 ธ.ค. 2569' },
+      { id: 't15', deptId: 'medical', title: 'จัดเตรียมกระเป๋าปฐมพยาบาล ยาแก้เมารถ และยาสามัญประจำทริป', status: 'pending', due: '12 ม.ค. 2570' },
+
+      { id: 't16', deptId: 'logistics', title: 'จองห้องพักหมู่คณะ รร.รีเจนท์ รามคำแหง 22 (15 ห้อง × 6 คืน)', status: 'done', due: '26 พ.ย. 2569' },
+      { id: 't17', deptId: 'logistics', title: 'ยื่นบันทึกข้อความขอใช้รถบัสปรับอากาศ ม.อ.ปัตตานี (16–23 ม.ค. 70)', status: 'in_progress', due: '4 ธ.ค. 2569' },
+      { id: 't18', deptId: 'logistics', title: 'จัดเตรียมชุดของที่ระลึกอัตลักษณ์ปัตตานี 8 ชุด + ของฝาก พขร. 2 ท่าน', status: 'pending', due: '8 ม.ค. 2570' }
+    ];
+
+    // -----------------------------------------------------------------------
+    // 3. DETAILED BUDGET CATEGORIES WITH CLICK-TO-EXPAND LINE ITEMS
+    // -----------------------------------------------------------------------
+    const INITIAL_BUDGET_CATEGORIES = [
+      {
+        id: 'b_cat1',
+        title: 'หมวดที่ 1: ค่าที่พัก (6 คืน) — โรงแรมรีเจนท์ รามคำแหง 22',
+        summary: 'เรตหมู่คณะสถาบันการศึกษา (Room Only) รวม 15 ห้อง/คืน × 6 คืน (90 ห้อง-คืน)',
+        icon: 'fa-hotel',
+        items: [
+          { code: '1.1', name: 'ห้องพักนักศึกษา แบบพักคู่ (Standard Twin) 22 คน', calc: '11 ห้อง × 800 บาท × 6 คืน', amount: 52800 },
+          { code: '1.2', name: 'ห้องพักนักศึกษา (1 คน) + ห้องเก็บอุปกรณ์กล้องรายวิชา Photo 2', calc: '1 ห้อง × 800 บาท × 6 คืน', amount: 4800 },
+          { code: '1.3', name: 'ห้องพักอาจารย์ผู้ดูแลโครงการ (พักเดี่ยว 2 ท่าน) [ขอเบิกคืนงบคณะฯ]', calc: '2 ห้อง × 800 บาท × 6 คืน', amount: 9600 },
+          { code: '1.4', name: 'ห้องพักพนักงานขับรถบัสมหาวิทยาลัย (พักคู่ 2 ท่าน) [ขอเบิกคืนงบคณะฯ]', calc: '1 ห้อง × 700 บาท × 6 คืน', amount: 4200 }
+        ]
+      },
+      {
+        id: 'b_cat2',
+        title: 'หมวดที่ 2: ค่าอาหารมื้อหลัก มื้อพิเศษ และของว่าง (8 วัน)',
+        summary: 'ครอบคลุมอาหารหลักฮาลาล 19 มื้อ + ปิ้งย่างเลี้ยงปิดทริป + คาเฟ่อยุธยา + ของว่าง/น้ำดื่ม',
+        icon: 'fa-utensils',
+        items: [
+          { code: '2.1', name: 'ค่าอาหารมื้อหลักฮาลาลสำหรับนักศึกษา (19 มื้อปกติ ตลอด 8 วัน)', calc: '65 บาท/มื้อ × 23 คน × 19 มื้อ', amount: 28405 },
+          { code: '2.2', name: 'ค่าอาหารมื้อหลักฮาลาลสำหรับอาจารย์ผู้ดูแล (19 มื้อปกติ) [ขอเบิกคืนงบคณะฯ]', calc: '85 บาท/มื้อ × 2 ท่าน × 19 มื้อ', amount: 3230 },
+          { code: '2.3', name: 'ค่าอาหารมื้อพิเศษเลี้ยงปิดทริปดูงาน (ปิ้งย่าง/ชาบูฮาลาล คืนวันที่ 21 ม.ค.)', calc: '150 บาท/คน × 25 ท่าน × 1 มื้อ', amount: 3750 },
+          { code: '2.4', name: 'ค่าเครื่องดื่มและเข้าใช้พื้นที่คาเฟ่ริมแม่น้ำเจ้าพระยา จ.อยุธยา (Photo 2)', calc: '80 บาท/คน × 25 ท่าน × 1 รอบ', amount: 2000 },
+          { code: '2.5', name: 'ค่าขนมและของว่างบนรถบัส (ขนมปี๊บ นมกล่อง ผลไม้ ลูกอม อ้างอิงรุ่นพี่)', calc: 'เหมาจ่ายตลอดการเดินทาง 8 วัน', amount: 2500 },
+          { code: '2.6', name: 'น้ำดื่มแพ็กใหญ่สำหรับแจกบนรถบัสตลอดโครงการ', calc: '60 บาท/แพ็ก × 15 แพ็ก', amount: 900 }
+        ]
+      },
+      {
+        id: 'b_cat3',
+        title: 'หมวดที่ 3: ค่าน้ำมันเชื้อเพลิง (คาดการณ์ ม.ค. 2570 ที่ 40.50 บาท/ลิตร)',
+        summary: 'ระยะทางรวม ~2,710 กม. อัตราสิ้นเปลืองรถบัสปรับอากาศ 2.5 กม./ลิตร (1,084 ลิตร)',
+        icon: 'fa-gas-pump',
+        items: [
+          { code: '3.1', name: 'ค่าน้ำมันเดินทางไป–กลับ (ม.อ.ปัตตานี – กรุงเทพฯ เส้นทางหลัก AH2)', calc: '~2,100 กม. (840 ลิตร × 40.50 บาท)', amount: 34020 },
+          { code: '3.2', name: 'ค่าน้ำมันวิ่งศึกษาดูงาน 8 แห่งในกรุงเทพฯ และปริมณฑล (4 วันทำการ)', calc: '~440 กม. (176 ลิตร × 40.50 บาท)', amount: 7128 },
+          { code: '3.3', name: 'ค่าน้ำมัน One Day Trip รายวิชา Photo 2 (ไป–กลับ จ.พระนครศรีอยุธยา)', calc: '~170 กม. (68 ลิตร × 40.50 บาท)', amount: 2754 },
+          { code: '3.4', name: 'สำรองส่วนต่างราคาน้ำมันดีเซลหน้าปั๊มรายจังหวัด', calc: 'เหมาจ่ายปรับยอดกลม', amount: 98 }
+        ]
+      },
+      {
+        id: 'b_cat4',
+        title: 'หมวดที่ 4: ค่าตอบแทนพนักงานขับรถ (พขร.) ค่าทางด่วน และรถบัส',
+        summary: 'อ้างอิงเรตรุ่นพี่ (วันธรรมดา 430 บ./วัน, วันหยุด 500 บ./วัน) รวม 8 วัน + ค่าทางด่วนพิเศษ',
+        icon: 'fa-bus',
+        items: [
+          { code: '4.1', name: 'ค่าตอบแทนพนักงานขับรถ วันธรรมดา (จันทร์–ศุกร์ รวม 5 วัน)', calc: '430 บาท/คน × 5 วัน × 2 ท่าน', amount: 4300 },
+          { code: '4.2', name: 'ค่าตอบแทนพนักงานขับรถ วันหยุดเสาร์–อาทิตย์ (รวม 3 วัน: 16, 17, 23 ม.ค.)', calc: '500 บาท/คน × 3 วัน × 2 ท่าน', amount: 3000 },
+          { code: '4.3', name: 'ค่าทางด่วนพิเศษ (ทางด่วนศรีรัช ฉลองรัช ประจิมรัถยา และอุดรรัถยา)', calc: 'เฉลี่ย 200 บาท × 17 เที่ยว', amount: 3400 },
+          { code: '4.4', name: 'ค่าจอดรถบัสชั่วคราวตามจุดรับ–ส่งใจกลางเมืองและค่าล้างรถก่อนส่งคืน', calc: 'ค่าจอด 1,260 บ. + ล้างรถ 500 บ.', amount: 1760 }
+        ]
+      },
+      {
+        id: 'b_cat5',
+        title: 'หมวดที่ 5: ค่าเข้าชมสถานที่ และค่าเดินทางย่อยสำหรับคณะทัวร์ (25 ท่าน)',
+        summary: 'ค่าบัตรเข้าชมโบราณสถานอยุธยา ถ้ำเขาหลวง เพชรบุรี และรถไฟฟ้า BTS/MRT กรณีรถบัสเข้าซอยไม่ได้',
+        icon: 'fa-ticket',
+        items: [
+          { code: '5.1', name: 'ค่าเข้าศึกษาดูงานบริษัทเอกชนและหน่วยงานทั้ง 8 แห่ง', calc: 'ฟรี (ในนามสถาบันการศึกษา)', amount: 0 },
+          { code: '5.2', name: 'ค่าเข้าชมวัดไชยวัฒนาราม และวัดมหาธาตุ จ.อยุธยา (อัตราคนไทย)', calc: '(10 + 10 บาท) × 25 ท่าน', amount: 500 },
+          { code: '5.3', name: 'ค่าเข้าชมถ้ำเขาหลวง จ.เพชรบุรี (แวะถ่ายภาพแสงลอดถ้ำขากลับ)', calc: '25 บาท × 25 ท่าน', amount: 625 },
+          { code: '5.4', name: 'ค่าเข้าชมโบราณสถาน/สถานที่สำรองเพิ่มเติมใน จ.อยุธยา', calc: '20 บาท × 25 ท่าน', amount: 500 },
+          { code: '5.5', name: 'ค่าโดยสารรถไฟฟ้า BTS/MRT และรถรับส่งย่อยในจุดที่รถบัสใหญ่เข้าไม่ได้', calc: 'เฉลี่ย 60 บาท × 25 ท่าน', amount: 1500 }
+        ]
+      },
+      {
+        id: 'b_cat6',
+        title: 'หมวดที่ 6: ค่าของที่ระลึกมอบให้หน่วยงานและพนักงานขับรถ',
+        summary: 'ชุดของที่ระลึกอัตลักษณ์ปัตตานีสำหรับ 8 หน่วยงาน และของสินน้ำใจขอบคุณ พขร. 2 ท่าน',
+        icon: 'fa-gift',
+        items: [
+          { code: '6.1', name: 'ชุดของที่ระลึกอัตลักษณ์ปัตตานี มอบให้หน่วยงานศึกษาดูงาน (อ้างอิงรุ่นพี่)', calc: '500 บาท × 8 หน่วยงาน', amount: 4000 },
+          { code: '6.2', name: 'ของฝาก/ของสินน้ำใจขอบคุณทีมพนักงานขับรถ ม.อ.ปัตตานี', calc: '350 บาท × 2 ท่าน', amount: 700 }
+        ]
+      },
+      {
+        id: 'b_cat7',
+        title: 'หมวดที่ 7: ค่าพัสดุ สวัสดิการ และเอกสารโครงการ',
+        summary: 'ตัดค่าประกันภัยอุบัติเหตุ ยาสามัญ/ชุดปฐมพยาบาล และป้ายคล้องคอออกแล้ว',
+        icon: 'fa-folder-open',
+        items: [
+          { code: '7.1', name: 'ค่าป้ายไวนิลโครงการสำหรับถ่ายภาพหมู่ร่วมกับหน่วยงาน (อ้างอิงรุ่นพี่)', calc: '600 บาท × 1 ผืน', amount: 600 },
+          { code: '7.2', name: 'ค่าถุงดำสำหรับใช้บนรถบัสตลอดการเดินทาง 8 วัน (อ้างอิงรุ่นพี่)', calc: '55 บาท × 3 แพ็ก', amount: 165 },
+          { code: '7.3', name: 'ค่าพิมพ์หนังสือราชการ เอกสารประเมินผล รูปเล่มรายงาน และจัดบอร์ดสรุปผล', calc: 'เหมาจ่าย 1 โครงการ', amount: 1800 },
+          { code: '7.4', name: 'ค่าโทรศัพท์ประสานงานหน้างานและค่าใช้จ่ายเบ็ดเตล็ดอื่น ๆ', calc: 'เหมาจ่าย 1 โครงการ', amount: 800 }
+        ]
+      },
+      {
+        id: 'b_cat8',
+        title: 'หมวดที่ 8: งบสำรองฉุกเฉินหน้างาน',
+        summary: 'เงินสำรองกรณีเหตุสุดวิสัยระหว่างเดินทาง 8 วัน 7 คืน (หากไม่ใช้คืนเข้ากองกลาง)',
+        icon: 'fa-shield-heart',
+        items: [
+          { code: '8.1', name: 'เงินสำรองฉุกเฉินระหว่างดำเนินโครงการ (เผื่อรถติด/เปลี่ยนเส้นทาง)', calc: 'เหมาจ่าย 1 โครงการ', amount: 3500 }
+        ]
+      }
+    ];
+
+    const SCHEDULE_DAYS = [
+      {
+        dayNum: 1,
+        dateLabel: 'เสาร์ที่ 16 ม.ค. 2570',
+        theme: 'ออกเดินทางจาก ม.อ.ปัตตานี สู่กรุงเทพมหานคร (เส้นทางสายหลักเอเชีย AH2)',
+        stay: 'พักโรงแรมรีเจนท์ รามคำแหง 22 (คืนที่ 1)',
+        items: [
+          { time: '00.15 – 01.00 น.', title: 'รวมตัว ณ อาคารเทคโนโลยีการศึกษา ม.อ.ปัตตานี & ถ่ายภาพหมู่ลานพระบิดา', desc: 'เช็กชื่อ ขนสัมภาระขึ้นรถบัส (30 นาที) ถ่ายภาพหมู่ (15 นาที) และล้อหมุนเวลา 01.00 น. ใช้เส้นทาง AH2 ผ่านหาดใหญ่–พัทลุง–ทุ่งสง–พุนพิน (422 กม. | Maps 6 ชม. 2 นาที → เวลารถบัสจริง ~6 ชม. 45 นาที)', dept: 'เลขานุการ / ฝ่ายสถานที่ฯ', tag: 'เดินทางไกล' },
+          { time: '05.30 – 06.00 น.', title: 'แวะปั๊มน้ำมันขนาดใหญ่โซน อ.ทุ่งสง / อ.เวียงสระ และละหมาดซุบฮิ', desc: 'ทำธุระส่วนตัว และละหมาดซุบฮิทันก่อนพระอาทิตย์ขึ้น (~06.25 น.)', dept: 'ฝ่ายสวัสดิการ / สถานที่ฯ', tag: 'ละหมาดซุบฮิ' },
+          { time: '10.30 – 11.45 น.', title: 'แวะจุดพักรถ ร้านอาหารคุณสาหร่าย จ.ชุมพร', desc: 'รับประทานอาหารเช้าควบเที่ยง (ฮาลาล) พักผ่อน และสลับพนักงานขับรถ (1 ชม. 15 นาที)', dept: 'ฝ่ายสวัสดิการ', tag: 'อาหารฮาลาล' },
+          { time: '16.15 – 17.00 น.', title: 'แวะจุดพักรถ ปั๊ม ปตท. ลุงเท่ง อ.ชะอำ จ.เพชรบุรี', desc: 'ทำธุระส่วนตัว ซื้อของว่าง และละหมาดย่อและรวม (กัศร์และญะมะอ์ ตะอ์คีร: ซุฮฺริ + อัศริ)', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '20.45 – 22.30 น.', title: 'ถึงโรงแรมรีเจนท์ รามคำแหง 22 เช็กอิน ทานมื้อเย็นฮาลาล และละหมาด', desc: 'เผื่อรถติดเย็นวันเสาร์บน ถ.พระราม 2 เข้าที่พัก ทานอาหารเย็นย่านรามคำแหง 22/24 และละหมาดย่อ-รวม (มัฆริบ + อิชาอ์)', dept: 'ทุกฝ่าย', tag: 'พักโรงแรม คืนที่ 1' }
+        ]
+      },
+      {
+        dayNum: 2,
+        dateLabel: 'อาทิตย์ที่ 17 ม.ค. 2570',
+        theme: 'One Day Trip รายวิชา Photo 2 & ศึกษาวิถีชีวิตพหุวัฒนธรรม จ.พระนครศรีอยุธยา',
+        stay: 'พักโรงแรมรีเจนท์ รามคำแหง 22 (คืนที่ 2)',
+        items: [
+          { time: '07.00 – 09.45 น.', title: 'อาหารเช้า และออกเดินทางมุ่งหน้าสู่ วัดไชยวัฒนาราม จ.อยุธยา', desc: 'Maps 86.7 กม. (รถยนต์ 1 ชม. 30 นาที → เวลารถบัสจริง 1 ชม. 45 นาที)', dept: 'ฝ่ายสถานที่ฯ / สวัสดิการ', tag: 'เดินทาง' },
+          { time: '09.45 – 12.00 น.', title: 'ฝึกทักษะการถ่ายภาพภาคสนามรายวิชา Photo 2 ณ วัดไชยวัฒนาราม และวัดมหาธาตุ', desc: 'ฝึกองค์ประกอบภาพสถาปัตยกรรม เส้นนำสายตา และการถ่ายภาพบุคคล', dept: 'ฝ่ายวิชาการ / ฝ่ายโสตฯ', tag: 'Photo 2' },
+          { time: '12.00 – 13.30 น.', title: 'อาหารกลางวันฮาลาล (ชุมชนมุสลิมคลองตะเคียน) และละหมาดย่อ-รวม', desc: 'ทานอาหารกลางวันฮาลาล ซื้อโรตีสายไหมฮาลาล และละหมาด (ซุฮฺริ + อัศริ) ณ มัสยิดในชุมชน', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '13.30 – 16.15 น.', title: 'ศึกษาวิถีชีวิตชุมชนริมน้ำและฝึกถ่ายภาพ ณ คาเฟ่ริมแม่น้ำเจ้าพระยา และป้อมเพชร', desc: 'ฝึกถ่ายภาพแสงผ่านกรอบหน้าต่าง (Window Light) และแสงเย็น Golden Hour', dept: 'ฝ่ายวิชาการ / ฝ่ายโสตฯ', tag: 'Photo 2' },
+          { time: '16.15 – 21.00 น.', title: 'เดินทางกลับรามคำแหง ทานมื้อเย็น ละหมาด และประชุมบรีฟดูงาน', desc: 'เผื่อรถติดเย็นวันอาทิตย์โซนรังสิต–ดอนเมือง–รามอินทรา 2 ชม. 15 นาที ทานมื้อเย็น ละหมาด (มัฆริบ + อิชาอ์) และประชุมเตรียมดูงานวันจันทร์', dept: 'ฝ่ายวิชาการ / ทุกฝ่าย', tag: 'พักโรงแรม คืนที่ 2' }
+        ]
+      },
+      {
+        dayNum: 3,
+        dateLabel: 'จันทร์ที่ 18 ม.ค. 2570',
+        theme: 'โซนห้วยขวาง – รัชดาฯ – จตุจักร (ด้านกราฟิกและด้านแอนิเมชัน)',
+        stay: 'พักโรงแรมรีเจนท์ รามคำแหง 22 (คืนที่ 3)',
+        items: [
+          { time: '06.15 – 08.30 น.', title: 'อาหารเช้า และออกเดินทางสู่ ซ.รัชดานิเวศน์ 19 เขตห้วยขวาง', desc: 'Maps 8.5 กม. (เผื่อรถติดหนักเช้าวันจันทร์เส้นรามคำแหง–พระราม 9 รวม 1 ชม. 15 นาที)', dept: 'ฝ่ายสถานที่ฯ / เลขาฯ', tag: 'เดินทาง' },
+          { time: '09.00 – 12.00 น.', title: 'ศึกษาดูงานแห่งที่ 1: Kantana Animation Studios (ด้านกราฟิก)', desc: 'เรียนรู้การผลิตสื่อดิจิทัลและงานกราฟิก คาแรคเตอร์ และคอนเซปต์อาร์ต (3 ชม.)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #1' },
+          { time: '12.00 – 13.15 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันโซนห้วยขวาง/รัชดาฯ และละหมาดก่อนเดินทางต่อไปจตุจักร', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '14.00 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 2: Igloo Studio ซ.พหลโยธิน 24 (ด้านแอนิเมชัน)', desc: 'เจาะลึกกระบวนการผลิตแอนิเมชัน 2D/3D, VFX และ Original IP ระดับสากล (2 ชม. 30 นาที)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #2' },
+          { time: '16.30 – 20.45 น.', title: 'เดินทางกลับที่พัก ทานมื้อเย็น ละหมาด และกิจกรรม Reflection วันที่ 1', desc: 'เผื่อรถติดเย็นเส้นพหลโยธิน–ลาดพร้าว 1 ชม. 45 นาที ทานมื้อเย็น ละหมาด (มัฆริบ + อิชาอ์) และสรุปองค์ความรู้', dept: 'ฝ่ายวิชาการ / ประเมินผล', tag: 'พักโรงแรม คืนที่ 3' }
+        ]
+      },
+      {
+        dayNum: 4,
+        dateLabel: 'อังคารที่ 19 ม.ค. 2570',
+        theme: 'โซนเพลินจิต – พระราม 4 (ด้านโปรแกรมและด้านสื่อกระจายเสียง)',
+        stay: 'พักโรงแรมรีเจนท์ รามคำแหง 22 (คืนที่ 4)',
+        items: [
+          { time: '06.15 – 08.30 น.', title: 'อาหารเช้า และเดินทางสู่อาคารปาร์ค เวนเจอร์ส อีโคเพล็กซ์ ถ.วิทยุ', desc: 'Maps 12.4 กม. (เผื่อรถติดเช้าทางด่วนศรีรัช–เพลินจิต รวม 1 ชม. 15 นาที)', dept: 'ฝ่ายสถานที่ฯ / ประสานงาน', tag: 'เดินทาง' },
+          { time: '09.00 – 11.30 น.', title: 'ศึกษาดูงานแห่งที่ 3: Google Thailand (ด้านการเขียนโปรแกรมและระบบดิจิทัล)', desc: 'เรียนรู้วัฒนธรรมองค์กรเทคโนโลยีระดับโลก (หรือหน่วยงานสำรองสายซอฟต์แวร์)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #3' },
+          { time: '11.30 – 13.00 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันโซนเพลินจิต/นานา และละหมาดก่อนเดินทางไป ถ.พระราม 4', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '14.00 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 4: สถานีวิทยุโทรทัศน์ไทยทีวีสีช่อง 3 (อาคารมาลีนนท์)', desc: 'เรียนรู้การผลิตสื่อเสียง วิดีโอ งานกระจายเสียง และแพลตฟอร์มออนไลน์/OTT', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #4' },
+          { time: '16.30 – 20.45 น.', title: 'เดินทางกลับที่พัก ทานมื้อเย็น ละหมาด และกิจกรรม Reflection วันที่ 2', desc: 'เผื่อรถติดเย็นพระราม 4–ทางด่วนฉลองรัช 1 ชม. 45 นาที ทานมื้อเย็น ละหมาด และสรุปองค์ความรู้', dept: 'ฝ่ายวิชาการ / ประเมินผล', tag: 'พักโรงแรม คืนที่ 4' }
+        ]
+      },
+      {
+        dayNum: 5,
+        dateLabel: 'พุธที่ 20 ม.ค. 2570',
+        theme: 'โซนวิภาวดี – บางรัก (ด้านสื่อสาธารณะและด้านนวัตกรรมทางการศึกษา)',
+        stay: 'พักโรงแรมรีเจนท์ รามคำแหง 22 (คืนที่ 5)',
+        items: [
+          { time: '06.30 – 09.00 น.', title: 'อาหารเช้า และเดินทางสู่ ถ.วิภาวดีรังสิต เขตหลักสี่', desc: 'Maps 25.1 กม. (เผื่อรถติดเช้าทางด่วนฉลองรัช–รามอินทรา–วิภาวดีฯ รวม 1 ชม. 30 นาที)', dept: 'ฝ่ายสถานที่ฯ / ประสานงาน', tag: 'เดินทาง' },
+          { time: '09.30 – 12.00 น.', title: 'ศึกษาดูงานแห่งที่ 5: สถานีโทรทัศน์ Thai PBS (รอบวันพุธช่วงเช้า)', desc: 'เรียนรู้ภารกิจสื่อสาธารณะ การผลิตรายการ และระบบวิศวกรรมออกอากาศ (2 ชม. 30 นาที)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #5' },
+          { time: '12.00 – 13.15 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันและละหมาด ก่อนขึ้นทางด่วนศรีรัชไปยังอาคารไปรษณีย์กลาง บางรัก', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '14.30 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 6: Virtual Media Lab (CEA / TCDC กรุงเทพฯ)', desc: 'ศึกษานวัตกรรมและเทคโนโลยีเพื่อการศึกษา จอ LED Virtual Production และ VR/AR', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #6' },
+          { time: '16.30 – 21.00 น.', title: 'เดินทางกลับที่พัก ทานมื้อเย็น ละหมาด และกิจกรรม Reflection วันที่ 3', desc: 'เผื่อรถติดเย็นย่านเจริญกรุง–สีลม–ทางด่วนศรีรัช 2 ชม. ทานมื้อเย็น ละหมาด และสรุปองค์ความรู้', dept: 'ฝ่ายวิชาการ / ประเมินผล', tag: 'พักโรงแรม คืนที่ 5' }
+        ]
+      },
+      {
+        dayNum: 6,
+        dateLabel: 'พฤหัสบดีที่ 21 ม.ค. 2570',
+        theme: 'โซนรัชดาฯ – ตลิ่งชัน (ด้านคอมพิวเตอร์/เทคโนโลยี และด้านสื่อสิ่งพิมพ์)',
+        stay: 'พักโรงแรมรีเจนท์ รามคำแหง 22 (คืนที่ 6)',
+        items: [
+          { time: '06.15 – 08.30 น.', title: 'อาหารเช้า และเดินทางสู่อาคาร AIA Capital Center ถ.รัชดาภิเษก', desc: 'Maps 8.1 กม. (เผื่อรถติดเช้าเส้นพระราม 9–รัชดาภิเษก รวม 1 ชม. 15 นาที)', dept: 'ฝ่ายสถานที่ฯ / ประสานงาน', tag: 'เดินทาง' },
+          { time: '09.00 – 11.30 น.', title: 'ศึกษาดูงานแห่งที่ 7: บริษัท การีนา ออนไลน์ (ประเทศไทย) จำกัด', desc: 'เรียนรู้ด้านเทคโนโลยีดิจิทัล คอมพิวเตอร์ อุตสาหกรรมเกม และ Garena Academy', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #7' },
+          { time: '11.30 – 12.45 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันและละหมาด ก่อนขึ้นทางด่วนประจิมรัถยาข้ามไปเขตตลิ่งชัน', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '14.00 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 8: บมจ. อมรินทร์ คอร์เปอเรชั่นส์ (อมรินทร์พริ้นติ้ง)', desc: 'เรียนรู้การผลิตสื่อดิจิทัลและงานกราฟิก (สื่อสิ่งพิมพ์ครบวงจร)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #8' },
+          { time: '18.45 – 20.45 น.', title: 'เลี้ยงมื้อพิเศษปิดท้ายดูงาน (ปิ้งย่าง/ชาบูฮาลาล) & ละหมาด', desc: 'เดินทางกลับจากตลิ่งชัน ทานมื้อพิเศษปิดทริป ละหมาด (มัฆริบ + อิชาอ์) และเก็บสัมภาระ', dept: 'ฝ่ายสวัสดิการ / ทุกฝ่าย', tag: 'พักโรงแรม คืนที่ 6' }
+        ]
+      },
+      {
+        dayNum: 7,
+        dateLabel: 'ศุกร์ที่ 22 ม.ค. 2570',
+        theme: 'ฝึกปฏิบัติภาคสนามขากลับ ณ ถ้ำเขาหลวง จ.เพชรบุรี & เดินทางลงสู่ภาคใต้',
+        stay: 'พักผ่อนบนรถบัสปรับอากาศ (คืนที่ 1)',
+        items: [
+          { time: '06.30 – 07.30 น.', title: 'อาหารเช้า ขนสัมภาระขึ้นรถ และเช็กเอาต์ออกจากโรงแรม', desc: 'แนะนำออกเดินทางเวลา 07.30 น. เพื่อเลี่ยงรถติดขาออก ถ.พระราม 2 และทันแสงลอดถ้ำสวยที่สุด', dept: 'ฝ่ายสถานที่ฯ / เลขาฯ', tag: 'เช็กเอาต์' },
+          { time: '10.00 – 11.15 น.', title: 'ฝึกทักษะการถ่ายภาพแสงลอดปล่องถ้ำรายวิชา Photo 2 ณ ถ้ำเขาหลวง จ.เพชรบุรี', desc: 'ถ่ายภาพลำแสงอาทิตย์ส่องทะลุปล่องเพดานถ้ำ (God Rays) ที่สวยงามเป็นเอกลักษณ์', dept: 'ฝ่ายวิชาการ / ฝ่ายโสตฯ', tag: 'Photo 2' },
+          { time: '11.45 – 13.30 น.', title: 'จุดพักรถโซนชะอำ/หัวหิน ทานอาหารกลางวันฮาลาล ซื้อของฝาก และละหมาด', desc: 'ทานมื้อเที่ยง ซื้อของฝาก และละหมาดย่อและรวม (กัศร์และญะมะอ์ ตักดีม: ซุฮฺริ + อัศริ)', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '18.45 – 20.00 น.', title: 'แวะร้านอาหารคุณสาหร่าย จ.ชุมพร ทานอาหารเย็นฮาลาล และละหมาด', desc: 'รับประทานอาหารเย็น สลับพนักงานขับรถ และละหมาดย่อ-รวม (มัฆริบ + อิชาอ์)', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '20.00 – 05.15 น.', title: 'เดินทางต่อเนื่องจาก จ.ชุมพร มุ่งหน้าสู่โซน อ.หาดใหญ่ / อ.จะนะ จ.สงขลา', desc: 'ช่วงชุมพร–พัทลุง–สงขลา ~510 กม. เวลารถบัสจริงพร้อมแวะพักสลับคนขับรวม 9 ชม. 15 นาที (นอนบนรถบัส)', dept: 'ฝ่ายสถานที่ฯ และยานยนต์', tag: 'นอนบนรถบัส' }
+        ]
+      },
+      {
+        dayNum: 8,
+        dateLabel: 'เสาร์ที่ 23 ม.ค. 2570',
+        theme: 'เดินทางถึงมหาวิทยาลัยสงขลานครินทร์ วิทยาเขตปัตตานี โดยสวัสดิภาพ',
+        stay: 'สิ้นสุดโครงการ',
+        items: [
+          { time: '05.15 – 06.00 น.', title: 'แวะปั๊มน้ำมันขนาดใหญ่โซน อ.หาดใหญ่ / อ.จะนะ ละหมาดซุบฮิ และรองท้อง', desc: 'ทำธุระส่วนตัว ละหมาดซุบฮิ และทานอาหารเช้า/เครื่องดื่มรองท้อง (45 นาที)', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดซุบฮิ' },
+          { time: '06.00 – 07.15 น.', title: 'ออกเดินทางช่วงสุดท้ายกลับสู่ มหาวิทยาลัยสงขลานครินทร์ วิทยาเขตปัตตานี', desc: 'ระยะทางที่เหลือ ~75–95 กม. เวลารถบัสจริง 1 ชม. 15 นาที', dept: 'ฝ่ายสถานที่ฯ และยานยนต์', tag: 'เดินทาง' },
+          { time: '07.15 น.', title: 'เดินทางถึง ม.อ.ปัตตานี ตรวจนับพัสดุ/อุปกรณ์ และแยกย้ายกลับโดยสวัสดิภาพ', desc: 'ส่งคืนอุปกรณ์กล้อง พัสดุโครงการ และสรุปบัญชีส่งเหรัญญิก', dept: 'ทุกฝ่าย', tag: 'สำเร็จโครงการ' }
+        ]
+      }
+    ];
+
+    // -----------------------------------------------------------------------
+    // 4. STATE MANAGEMENT & LOCALSTORAGE
+    // -----------------------------------------------------------------------
+    const STORAGE_KEYS = {
+      VENUES: 'psu_ft_index_venues_v2',
+      TASKS: 'psu_ft_index_tasks_v2',
+      USER: 'psu_ft_index_user_v2',
+      BUDGET_OPEN: 'psu_ft_index_budget_open_v2'
+    };
+
+    let venues = [];
+    let tasks = [];
+    let currentUser = PRESET_ACCOUNTS[0];
+    let currentVenueFilter = 'all';
+    let currentScheduleDay = 'all';
+    let openBudgetIds = ['b_cat1']; // First category expanded by default to demonstrate detail view
+    let leafletMap = null;
+    let mapMarkers = {};
+
+    function loadState() {
+      try {
+        const sVenues = localStorage.getItem(STORAGE_KEYS.VENUES);
+        const sTasks = localStorage.getItem(STORAGE_KEYS.TASKS);
+        const sUser = localStorage.getItem(STORAGE_KEYS.USER);
+
+        venues = sVenues ? JSON.parse(sVenues) : JSON.parse(JSON.stringify(INITIAL_VENUES));
+        tasks = sTasks ? JSON.parse(sTasks) : JSON.parse(JSON.stringify(INITIAL_TASKS));
+        if (sUser) {
+          currentUser = JSON.parse(sUser);
+        }
+      } catch (e) {
+        venues = JSON.parse(JSON.stringify(INITIAL_VENUES));
+        tasks = JSON.parse(JSON.stringify(INITIAL_TASKS));
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.VENUES, JSON.stringify(venues));
+        localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(tasks));
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(currentUser));
+      } catch (e) {
+        console.warn('LocalStorage unavailable');
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // 5. RBAC PERMISSION HELPERS (2 Roles per User, Head-only Delete)
+    // -----------------------------------------------------------------------
+    function isAdmin() {
+      return currentUser.roles.some(r => r.level === 'admin');
+    }
+
+    function canEditDept(deptId) {
+      if (isAdmin()) return true;
+      return currentUser.roles.some(r => r.deptId === deptId);
+    }
+
+    function canDeleteDept(deptId) {
+      if (isAdmin()) return true;
+      return currentUser.roles.some(r => r.deptId === deptId && r.level === 'head');
+    }
+
+    function renderUserHeader() {
+      document.getElementById('user-avatar').textContent = currentUser.short || 'U';
+      document.getElementById('user-avatar').className = `w-8 h-8 rounded-xl ${currentUser.badgeColor || 'bg-sage-600'} text-white font-heading font-bold text-sm flex items-center justify-center shrink-0`;
+      document.getElementById('user-name-display').textContent = currentUser.name;
+      document.getElementById('user-roles-display').textContent = currentUser.roles.map(r => r.label).join(' • ');
+
+      const summaryHtml = currentUser.roles.map(r => {
+        if (r.level === 'admin') return `<strong>${r.label} (เพิ่ม/แก้ไข/ลบได้ทุกฝ่าย)</strong>`;
+        if (r.level === 'head') return `<strong>${r.label} (เพิ่ม/แก้ไข/ลบได้)</strong>`;
+        return `<strong>${r.label} (เพิ่ม/แก้ไขได้เท่านั้น)</strong>`;
+      }).join(' • ');
+      document.getElementById('permission-summary-text').innerHTML = `สิทธิ์ปัจจุบัน: ${summaryHtml}`;
+
+      const quickPills = document.getElementById('quick-switch-pills');
+      quickPills.innerHTML = PRESET_ACCOUNTS.map(acc => {
+        const active = acc.id === currentUser.id;
+        return `
+          <button onclick="switchPresetUser('${acc.id}')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+            active ? 'bg-sage-600 text-white shadow-xs' : 'bg-white border border-sage-200 text-slate-600 hover:bg-sage-100'
+          }">
+            บัญชี ${acc.short}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function switchPresetUser(accId) {
+      const found = PRESET_ACCOUNTS.find(a => a.id === accId);
+      if (!found) return;
+      currentUser = found;
+      saveState();
+      renderAll();
+      closeModal('modal-login');
+      showToast(`เปลี่ยนสิทธิ์ผู้ใช้งานเป็น ${currentUser.name}`, 'success');
+    }
+
+    function openLoginModal() {
+      const list = document.getElementById('login-accounts-list');
+      list.innerHTML = PRESET_ACCOUNTS.map(acc => {
+        const isCurrent = acc.id === currentUser.id;
+        return `
+          <div onclick="switchPresetUser('${acc.id}')" class="cursor-pointer p-3.5 rounded-2xl border transition flex items-start gap-3 ${
+            isCurrent ? 'border-sage-600 bg-sage-50/80' : 'border-warmborder hover:border-sage-400 bg-white'
+          }">
+            <div class="w-9 h-9 rounded-xl ${acc.badgeColor} text-white font-heading font-bold flex items-center justify-center shrink-0">
+              ${acc.short}
+            </div>
+            <div class="min-w-0">
+              <div class="font-bold text-xs sm:text-sm text-slate-800 truncate">${acc.name}</div>
+              <div class="flex flex-wrap gap-1 mt-1">
+                ${acc.roles.map(r => `
+                  <span class="text-[10px] px-2 py-0.5 rounded-md font-bold ${
+                    r.level === 'head' || r.level === 'admin'
+                      ? 'bg-terracotta-100 text-terracotta-600'
+                      : 'bg-ambersoft-100 text-ambersoft-600'
+                  }">${r.label}</span>
+                `).join('')}
+              </div>
+              <p class="text-[11px] text-slate-500 mt-1 leading-snug">${acc.desc}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Populate custom role selects
+      const deptOptions = DEPARTMENTS.map(d => `<option value="${d.id}">${d.num}. ${d.name}</option>`).join('');
+      document.getElementById('custom-role1-dept').innerHTML = deptOptions;
+      document.getElementById('custom-role2-dept').innerHTML = `<option value="none">-- ไม่มีฝ่ายที่ 2 --</option>` + deptOptions;
+
+      document.getElementById('modal-login').classList.remove('hidden');
+    }
+
+    function loginCustomUser(e) {
+      e.preventDefault();
+      const name = document.getElementById('custom-user-name').value.trim();
+      const d1 = document.getElementById('custom-role1-dept').value;
+      const l1 = document.getElementById('custom-role1-level').value;
+      const d2 = document.getElementById('custom-role2-dept').value;
+      const l2 = document.getElementById('custom-role2-level').value;
+
+      const dept1Obj = DEPARTMENTS.find(d => d.id === d1);
+      const roles = [{
+        deptId: d1,
+        level: l1,
+        label: `${l1 === 'head' ? 'หัวหน้า' : 'สมาชิก'}${dept1Obj.name}`
+      }];
+
+      if (d2 !== 'none' && d2 !== d1) {
+        const dept2Obj = DEPARTMENTS.find(d => d.id === d2);
+        roles.push({
+          deptId: d2,
+          level: l2,
+          label: `${l2 === 'head' ? 'หัวหน้า' : 'สมาชิก'}${dept2Obj.name}`
+        });
+      }
+
+      currentUser = {
+        id: 'custom_' + Date.now(),
+        short: name.charAt(0) || 'U',
+        name,
+        badgeColor: 'bg-sage-700',
+        roles
+      };
+
+      saveState();
+      renderAll();
+      closeModal('modal-login');
+      showToast(`เข้าสู่ระบบในชื่อ ${name} เรียบร้อยแล้ว`, 'success');
+    }
+
+    // -----------------------------------------------------------------------
+    // 6. TAB SWITCHING, TOASTS & DOWNLOAD STANDALONE index.html
+    // -----------------------------------------------------------------------
+    function switchTab(tabName) {
+      ['dashboard', 'venues', 'coordination', 'schedule', 'budget'].forEach(v => {
+        document.getElementById(`view-${v}`).classList.add('hidden');
+        const btn = document.getElementById(`nav-${v}`);
+        btn.classList.remove('tab-active');
+        btn.classList.add('text-slate-600', 'hover:bg-sand');
+      });
+
+      document.getElementById(`view-${tabName}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`nav-${tabName}`);
+      activeBtn.classList.add('tab-active');
+      activeBtn.classList.remove('text-slate-600', 'hover:bg-sand');
+
+      if (tabName === 'venues') {
+        setTimeout(() => {
+          initMap();
+          if (leafletMap) leafletMap.invalidateSize();
+        }, 80);
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      const colors = {
+        success: 'bg-sage-700 text-white',
+        warning: 'bg-terracotta-600 text-white',
+        info: 'bg-slate-800 text-white'
+      };
+      const icons = {
+        success: 'fa-circle-check',
+        warning: 'fa-triangle-exclamation',
+        info: 'fa-circle-info'
+      };
+      el.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-lg text-xs sm:text-sm font-semibold transition-all ${colors[type] || colors.info}`;
+      el.innerHTML = `<i class="fa-solid ${icons[type] || icons.info}"></i><span>${message}</span>`;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 300);
+      }, 3200);
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function downloadStandaloneHtml() {
+      try {
+        const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'index.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('ดาวน์โหลดไฟล์ index.html เรียบร้อยแล้ว', 'success');
+      } catch (err) {
+        showToast('ไม่สามารถดาวน์โหลดไฟล์ได้ในโหมดพรีวิว กรุณาคัดลอกโค้ดบันทึกเป็น index.html', 'warning');
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // 7. DASHBOARD & PDF 8-DEPARTMENT STRUCTURE RENDERING
+    // -----------------------------------------------------------------------
+    function renderDashboard() {
+      const studyVenues = venues.filter(v => v.category === 'study');
+      const confirmedCount = studyVenues.filter(v => v.contactStatus === 'confirmed').length;
+      const pendingCount = studyVenues.length - confirmedCount;
+
+      document.getElementById('kpi-venue-summary').textContent = `${studyVenues.length} แห่ง + จุดภาพ`;
+      document.getElementById('kpi-venue-confirmed').textContent = `ยืนยันคิวแล้ว ${confirmedCount} แห่ง • กำลังประสาน ${pendingCount} แห่ง`;
+
+      // 8 Departments Progress
+      const progContainer = document.getElementById('dashboard-8dept-progress');
+      progContainer.innerHTML = DEPARTMENTS.map(dept => {
+        const deptTasks = tasks.filter(t => t.deptId === dept.id);
+        const doneCount = deptTasks.filter(t => t.status === 'done').length;
+        const inProgCount = deptTasks.filter(t => t.status === 'in_progress').length;
+        const pct = deptTasks.length ? Math.round(((doneCount + inProgCount * 0.5) / deptTasks.length) * 100) : 0;
+
+        return `
+          <div class="p-3 rounded-xl bg-sand/60 border border-warmborder/80">
+            <div class="flex items-center justify-between text-xs mb-1.5">
+              <span class="font-bold text-slate-800 truncate">
+                <i class="fa-solid ${dept.icon} text-sage-600 mr-1"></i> ${dept.num}. ${dept.name}
+              </span>
+              <span class="font-bold text-sage-700 shrink-0 ml-1">${pct}%</span>
+            </div>
+            <div class="w-full h-2 bg-white rounded-full overflow-hidden border border-warmborder/50">
+              <div class="h-full bg-sage-600 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+              <span>โควตา ${dept.quota}</span>
+              <span>เสร็จ ${doneCount}/${deptTasks.length} งาน</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Contact Status Summary
+      const contactContainer = document.getElementById('dashboard-contact-summary');
+      contactContainer.innerHTML = studyVenues.map(v => {
+        const badge = getContactStatusBadge(v.contactStatus);
+        return `
+          <div class="p-3 rounded-xl bg-sand/60 border border-warmborder/80 flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <div class="text-xs font-bold text-slate-800 truncate">${v.name}</div>
+              <div class="text-[11px] text-slate-500 truncate">${v.field}</div>
+            </div>
+            <span class="shrink-0 text-[11px] font-bold px-2.5 py-0.5 rounded-full ${badge.cls}">
+              ${badge.label}
+            </span>
+          </div>
+        `;
+      }).join('');
+
+      // PDF 8-Department Responsibilities Matrix
+      const matrixBody = document.getElementById('pdf-dept-matrix-body');
+      matrixBody.innerHTML = DEPARTMENTS.map(d => `
+        <tr class="hover:bg-sage-50/40">
+          <td class="py-3 px-3 align-top font-bold text-slate-800 whitespace-nowrap">
+            ${d.num}. ${d.name}
+            <span class="block text-[11px] font-semibold text-sage-700">โควตา ${d.quota} (${d.supervisor})</span>
+          </td>
+          <td class="py-3 px-3 align-top text-xs text-slate-600">${d.duties}</td>
+          <td class="py-3 px-3 align-top text-xs text-slate-600">${d.beforeTrip}</td>
+          <td class="py-3 px-3 align-top text-xs text-slate-600">${d.duringTrip}</td>
+          <td class="py-3 px-3 align-top text-xs text-slate-600">${d.afterTrip}</td>
+        </tr>
+      `).join('');
+    }
+
+    // -----------------------------------------------------------------------
+    // 8. INTERACTIVE MAP WITH CLICK-TO-SCROLL TO VENUE DETAIL CARD
+    // -----------------------------------------------------------------------
+    function getCategoryMeta(cat) {
+      switch (cat) {
+        case 'study': return { label: 'สถานที่ศึกษาดูงาน', color: '#2F5D50' };
+        case 'hotel': return { label: 'ที่พักหลัก', color: '#C87D55' };
+        case 'photo': return { label: 'จุดถ่ายภาพ Photo 2', color: '#D97706' };
+        default: return { label: 'จุดแวะพัก & ฮาลาล', color: '#0284C7' };
+      }
+    }
+
+    function initMap() {
+      if (leafletMap) {
+        updateMapMarkers();
+        return;
+      }
+      leafletMap = L.map('map').setView([13.765, 100.565], 11);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(leafletMap);
+
+      updateMapMarkers();
+    }
+
+    function updateMapMarkers() {
+      if (!leafletMap) return;
+      Object.values(mapMarkers).forEach(m => leafletMap.removeLayer(m));
+      mapMarkers = {};
+
+      const filtered = currentVenueFilter === 'all'
+        ? venues
+        : venues.filter(v => v.category === currentVenueFilter);
+
+      filtered.forEach(v => {
+        const meta = getCategoryMeta(v.category);
+        const iconHtml = `
+          <div style="background:${meta.color};width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,0.28);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;">
+            <i class="fa-solid ${v.bannerIcon || 'fa-location-dot'}"></i>
+          </div>
+        `;
+        const customIcon = L.divIcon({
+          html: iconHtml,
+          className: '',
+          iconSize: [30, 30],
+          iconAnchor: [15, 15],
+          popupAnchor: [0, -15]
+        });
+
+        const marker = L.marker([v.lat, v.lng], { icon: customIcon }).addTo(leafletMap);
+
+        // Popup with prominent clickable text/button that scrolls smoothly to the exact detail card below
+        const popupHtml = `
+          <div style="min-width:235px;font-family:'Sarabun',sans-serif;padding:2px;">
+            <div style="font-size:11px;font-weight:700;color:${meta.color};">${meta.label} • ${v.field}</div>
+            <div style="font-family:'Prompt',sans-serif;font-size:14px;font-weight:700;color:#1E293B;margin:3px 0;">${v.name}</div>
+            <div style="font-size:12px;color:#475569;line-height:1.4;">${v.location}</div>
+            <div style="font-size:11px;color:#64748B;margin-top:4px;">${v.scheduleFit}</div>
+            <div style="margin-top:10px;padding-top:8px;border-top:1px solid #E2DFD7;">
+              <button onclick="scrollToVenueCard('${v.id}')" style="width:100%;background:#2F5D50;color:#FFFFFF;border:none;border-radius:8px;padding:7px 10px;font-family:'Prompt',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+                <span>คลิกดูการ์ดรายละเอียดสถานที่ด้านล่าง</span>
+                <span>↓</span>
+              </button>
+            </div>
+          </div>
+        `;
+
+        marker.bindPopup(popupHtml, { maxWidth: 290 });
+        mapMarkers[v.id] = marker;
+      });
+    }
+
+    // Smoothly scroll from Leaflet Map Popup to the exact Venue Detail Card below and highlight it
+    function scrollToVenueCard(venueId) {
+      let cardEl = document.getElementById(`venue-card-${venueId}`);
+      if (!cardEl) {
+        // Reset filter to 'all' if card was hidden by category filter
+        filterVenues('all');
+        cardEl = document.getElementById(`venue-card-${venueId}`);
+      }
+      if (!cardEl) return;
+
+      if (leafletMap) leafletMap.closePopup();
+
+      cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      cardEl.classList.remove('venue-highlight');
+      void cardEl.offsetWidth; // trigger reflow to restart CSS animation
+      cardEl.classList.add('venue-highlight');
+    }
+
+    function focusVenueOnMap(venueId) {
+      const v = venues.find(item => item.id === venueId);
+      if (!v) return;
+      document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (leafletMap) {
+        leafletMap.setView([v.lat, v.lng], 15, { animate: true });
+        if (mapMarkers[v.id]) {
+          setTimeout(() => mapMarkers[v.id].openPopup(), 380);
+        }
+      }
+    }
+
+    function focusMapBangkok() {
+      if (leafletMap) leafletMap.setView([13.765, 100.565], 11, { animate: true });
+    }
+
+    function focusMapAll() {
+      if (leafletMap) leafletMap.setView([10.8, 100.2], 6, { animate: true });
+    }
+
+    function filterVenues(cat) {
+      currentVenueFilter = cat;
+      document.querySelectorAll('.venue-filter-btn').forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.classList.add('bg-slate-800', 'text-white');
+          btn.classList.remove('bg-white', 'text-slate-700');
+        } else {
+          btn.classList.remove('bg-slate-800', 'text-white');
+          btn.classList.add('bg-white', 'text-slate-700');
+        }
+      });
+      renderVenues();
+      updateMapMarkers();
+    }
+
+    function renderVenues() {
+      const grid = document.getElementById('venues-grid');
+      const canEditLogistics = canEditDept('logistics');
+      const canDeleteLogistics = canDeleteDept('logistics');
+
+      const filtered = currentVenueFilter === 'all'
+        ? venues
+        : venues.filter(v => v.category === currentVenueFilter);
+
+      grid.innerHTML = filtered.map(v => {
+        const meta = getCategoryMeta(v.category);
+        const contactBadge = getContactStatusBadge(v.contactStatus);
+
+        return `
+          <article id="venue-card-${v.id}" class="card-soft rounded-2xl overflow-hidden flex flex-col justify-between transition duration-300">
+            <div>
+              <!-- Photo Header with Fallback SVG Gradient -->
+              <div class="relative h-40 overflow-hidden bg-slate-800">
+                <img
+                  src="${v.photoUrl || ''}"
+                  alt="${v.name}"
+                  onerror="this.style.display='none'"
+                  class="w-full h-full object-cover opacity-80"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent"></div>
+
+                <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-bold px-2.5 py-1 rounded-full text-white shadow-xs" style="background:${meta.color};">
+                    ${meta.label}
+                  </span>
+                  <span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-white/95 text-slate-800">
+                    ${v.field}
+                  </span>
+                </div>
+
+                <div class="absolute bottom-3 left-4 right-4 text-white">
+                  <h3 class="font-heading text-base sm:text-lg font-bold leading-snug drop-shadow-xs">${v.name}</h3>
+                </div>
+              </div>
+
+              <!-- Detailed Venue Information -->
+              <div class="p-5 space-y-3 text-xs sm:text-sm">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-warmborder/80">
+                  <span class="text-slate-600 font-medium">
+                    <i class="fa-solid fa-location-dot text-terracotta-500 mr-1"></i> ${v.location}
+                  </span>
+                  <button onclick="focusVenueOnMap('${v.id}')" class="px-2.5 py-1 rounded-lg bg-sage-50 hover:bg-sage-100 text-sage-700 font-bold text-xs transition shrink-0">
+                    <i class="fa-solid fa-map-pin mr-1"></i> ดูบนแผนที่ (${v.lat.toFixed(3)}, ${v.lng.toFixed(3)})
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div class="p-2.5 rounded-xl bg-sand/70">
+                    <span class="text-slate-500 block">โอกาสอนุมัติ &amp; เวลาสะดวก:</span>
+                    <strong class="text-slate-800">${v.scheduleFit}</strong>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-sand/70">
+                    <span class="text-slate-500 block">สถานะการติดต่อประสานงาน:</span>
+                    <span class="inline-block mt-0.5 font-bold px-2 py-0.5 rounded-full ${contactBadge.cls}">${contactBadge.label}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <span class="font-bold text-slate-800">สิ่งที่ได้เรียนรู้จริง:</span>
+                  <p class="text-slate-600 text-xs leading-relaxed mt-0.5">${v.learning}</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                  <div class="p-2.5 rounded-xl bg-sage-50/90 border border-sage-100">
+                    <div class="text-xs font-bold text-sage-700 mb-0.5"><i class="fa-solid fa-circle-plus mr-1"></i>ข้อดี</div>
+                    <p class="text-xs text-slate-600 leading-relaxed">${v.pros}</p>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-terracotta-50/90 border border-terracotta-100">
+                    <div class="text-xs font-bold text-terracotta-600 mb-0.5"><i class="fa-solid fa-circle-exclamation mr-1"></i>ข้อเสีย / จุดจอดรถบัส</div>
+                    <p class="text-xs text-slate-600 leading-relaxed">${v.cons}</p>
+                  </div>
+                </div>
+
+                <div class="text-xs text-slate-500 pt-1">
+                  <strong>ประวัตินักศึกษาดูงานจริง:</strong> ${v.pastVisit}
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="px-5 py-3 bg-sand/60 border-t border-warmborder flex items-center justify-between gap-2 text-xs">
+              <a href="${v.source}" target="_blank" rel="noopener noreferrer" class="text-sage-700 hover:underline font-bold flex items-center gap-1">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> แหล่งอ้างอิงข้อมูล
+              </a>
+
+              <div class="flex items-center gap-1.5">
+                ${canEditLogistics ? `
+                  <button onclick="openVenueModal('${v.id}')" class="px-2.5 py-1.5 rounded-lg bg-white border border-warmborder hover:bg-sage-50 text-slate-700 font-bold transition">
+                    <i class="fa-solid fa-pen"></i> แก้ไข
+                  </button>
+                ` : ''}
+
+                ${canDeleteLogistics ? `
+                  <button onclick="deleteVenue('${v.id}')" class="px-2.5 py-1.5 rounded-lg bg-terracotta-100 hover:bg-terracotta-600 hover:text-white text-terracotta-600 font-bold transition">
+                    <i class="fa-solid fa-trash"></i> ลบ
+                  </button>
+                ` : `
+                  <span title="เฉพาะหัวหน้าฝ่ายสถานที่ฯ หรือทีมบริหารเท่านั้นที่ลบได้" class="px-2 py-1.5 rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed">
+                    <i class="fa-solid fa-lock"></i>
+                  </span>
+                `}
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function openVenueModal(venueId = null) {
+      if (!canEditDept('logistics')) {
+        showToast('สิทธิ์ไม่เพียงพอ: เฉพาะสมาชิกหรือหัวหน้า "ฝ่ายสถานที่ พัสดุ และยานยนต์" เท่านั้นที่เพิ่ม/แก้ไขสถานที่ได้', 'warning');
+        return;
+      }
+
+      const form = document.getElementById('form-venue');
+      form.reset();
+      document.getElementById('venue-id').value = '';
+
+      if (venueId) {
+        const v = venues.find(item => item.id === venueId);
+        if (!v) return;
+        document.getElementById('modal-venue-title').textContent = `แก้ไขข้อมูลสถานที่: ${v.name}`;
+        document.getElementById('venue-id').value = v.id;
+        document.getElementById('venue-name').value = v.name;
+        document.getElementById('venue-category').value = v.category;
+        document.getElementById('venue-field').value = v.field;
+        document.getElementById('venue-lat').value = v.lat;
+        document.getElementById('venue-lng').value = v.lng;
+        document.getElementById('venue-location').value = v.location;
+        document.getElementById('venue-contact-info').value = v.contactInfo || '';
+        document.getElementById('venue-schedule-fit').value = v.scheduleFit;
+        document.getElementById('venue-source').value = v.source;
+        document.getElementById('venue-learning').value = v.learning;
+        document.getElementById('venue-pros').value = v.pros;
+        document.getElementById('venue-cons').value = v.cons;
+      } else {
+        document.getElementById('modal-venue-title').textContent = 'เพิ่มข้อมูลสถานที่ใหม่ (ซิงก์ไปฝ่ายประสานงาน)';
+        document.getElementById('venue-lat').value = '13.7563';
+        document.getElementById('venue-lng').value = '100.5680';
+        document.getElementById('venue-source').value = 'https://www.google.com/maps';
+      }
+
+      document.getElementById('modal-venue').classList.remove('hidden');
+    }
+
+    function saveVenueForm(e) {
+      e.preventDefault();
+      if (!canEditDept('logistics')) return;
+
+      const id = document.getElementById('venue-id').value;
+      const cat = document.getElementById('venue-category').value;
+      const meta = getCategoryMeta(cat);
+
+      const payload = {
+        name: document.getElementById('venue-name').value.trim(),
+        category: cat,
+        field: document.getElementById('venue-field').value.trim() || meta.label,
+        lat: parseFloat(document.getElementById('venue-lat').value),
+        lng: parseFloat(document.getElementById('venue-lng').value),
+        location: document.getElementById('venue-location').value.trim() || 'กรุงเทพมหานคร',
+        contactInfo: document.getElementById('venue-contact-info').value.trim() || 'รอระบุข้อมูลติดต่อ',
+        scheduleFit: document.getElementById('venue-schedule-fit').value.trim() || 'จ.–ศ. เวลาทำการ',
+        source: document.getElementById('venue-source').value.trim() || 'https://www.google.com/maps',
+        learning: document.getElementById('venue-learning').value.trim() || 'ศึกษาดูงานกระบวนการทำงานด้านเทคโนโลยีดิจิทัลและสื่อ',
+        pros: document.getElementById('venue-pros').value.trim() || 'เนื้อหาตรงสายวิชาชีพ',
+        cons: document.getElementById('venue-cons').value.trim() || 'ประสานจุดจอดรถบัสล่วงหน้า',
+        pastVisit: 'บันทึกข้อมูลโดยฝ่ายสถานที่ พัสดุ และยานยนต์',
+        bannerColor: meta.color,
+        bannerIcon: cat === 'study' ? 'fa-building' : 'fa-location-dot'
+      };
+
+      if (id) {
+        const idx = venues.findIndex(v => v.id === id);
+        if (idx !== -1) venues[idx] = { ...venues[idx], ...payload, updatedAt: 'อัปเดตล่าสุด' };
+        showToast('อัปเดตข้อมูลสถานที่และซิงก์ไปยังฝ่ายประสานงานเรียบร้อย', 'success');
+      } else {
+        venues.unshift({
+          id: 'v_' + Date.now(),
+          ...payload,
+          photoUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=75',
+          contactStatus: 'not_contacted',
+          contactReason: 'เพิ่มใหม่โดยฝ่ายสถานที่ฯ — รอฝ่ายประสานงานติดต่อเช็กคิว',
+          updatedAt: 'เพิ่มใหม่วันนี้'
+        });
+        showToast('เพิ่มสถานที่ใหม่สำเร็จ และส่งเข้าเช็คลิสต์ฝ่ายประสานงานแล้ว!', 'success');
+      }
+
+      saveState();
+      closeModal('modal-venue');
+      renderAll();
+    }
+
+    function deleteVenue(venueId) {
+      if (!canDeleteDept('logistics')) {
+        showToast('ปฏิเสธการลบ: เฉพาะหัวหน้าฝ่ายสถานที่ฯ หรือทีมบริหารเท่านั้นที่ลบสถานที่ได้', 'warning');
+        return;
+      }
+      venues = venues.filter(v => v.id !== venueId);
+      saveState();
+      renderAll();
+      showToast('ลบข้อมูลสถานที่เรียบร้อยแล้ว', 'info');
+    }
+
+    // -----------------------------------------------------------------------
+    // 9. COORDINATION CHECKLIST & 8 DEPARTMENTS TASK BOARD
+    // -----------------------------------------------------------------------
+    function getContactStatusBadge(status) {
+      switch (status) {
+        case 'confirmed':
+          return { label: 'ยืนยันอนุมัติแล้ว', cls: 'bg-sage-100 text-sage-700' };
+        case 'letter_sent':
+          return { label: 'ส่งหนังสือราชการแล้ว', cls: 'bg-sky-100 text-sky-700' };
+        case 'called':
+          return { label: 'โทรเช็กคิวเบื้องต้นแล้ว', cls: 'bg-ambersoft-100 text-ambersoft-600' };
+        case 'rejected':
+          return { label: 'ไม่สะดวก / ใช้ตัวเลือกสำรอง', cls: 'bg-terracotta-100 text-terracotta-600' };
+        default:
+          return { label: 'ยังไม่ติดต่อ', cls: 'bg-slate-100 text-slate-600' };
+      }
+    }
+
+    function renderCoordination() {
+      const studyVenues = venues.filter(v => v.category === 'study');
+      const canCoord = canEditDept('coord');
+
+      const confirmed = studyVenues.filter(v => v.contactStatus === 'confirmed').length;
+      const inProg = studyVenues.filter(v => ['called', 'letter_sent'].includes(v.contactStatus)).length;
+      const uncontacted = studyVenues.filter(v => v.contactStatus === 'not_contacted').length;
+
+      document.getElementById('coord-stats-badges').innerHTML = `
+        <span class="px-2.5 py-1 rounded-full bg-sage-100 text-sage-700">ยืนยันแล้ว: ${confirmed}</span>
+        <span class="px-2.5 py-1 rounded-full bg-ambersoft-100 text-ambersoft-600">กำลังประสาน: ${inProg}</span>
+        <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">ยังไม่ติดต่อ: ${uncontacted}</span>
+      `;
+
+      const tbody = document.getElementById('coordination-table-body');
+      tbody.innerHTML = studyVenues.map(v => {
+        const badge = getContactStatusBadge(v.contactStatus);
+        return `
+          <tr class="hover:bg-sage-50/40 transition">
+            <td class="py-3.5 px-4 align-top">
+              <div class="font-bold text-slate-800">${v.name}</div>
+              <div class="text-xs text-sage-700 font-semibold mt-0.5">${v.field}</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">${v.scheduleFit}</div>
+            </td>
+            <td class="py-3.5 px-4 align-top text-xs">
+              <div class="font-bold text-slate-700"><i class="fa-solid fa-phone text-sage-600 mr-1"></i> ${v.contactInfo || '-'}</div>
+              <div class="text-slate-500 mt-1"><i class="fa-solid fa-bus text-terracotta-500 mr-1"></i> ${v.cons}</div>
+            </td>
+            <td class="py-3.5 px-4 align-top">
+              <span class="inline-block text-xs font-bold px-3 py-1 rounded-full ${badge.cls}">
+                ${badge.label}
+              </span>
+              <div class="text-[11px] text-slate-400 mt-1">อัปเดต: ${v.updatedAt || '-'}</div>
+            </td>
+            <td class="py-3.5 px-4 align-top text-xs text-slate-600 max-w-xs leading-relaxed">
+              ${v.contactReason || '-'}
+            </td>
+            <td class="py-3.5 px-4 align-top text-right">
+              ${canCoord ? `
+                <button onclick="openCoordModal('${v.id}')" class="px-3 py-1.5 rounded-xl bg-sage-600 hover:bg-sage-700 text-white text-xs font-semibold transition whitespace-nowrap">
+                  <i class="fa-solid fa-pen-to-square mr-1"></i> อัปเดตสถานะ
+                </button>
+              ` : `
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-400 bg-slate-100 px-2.5 py-1 rounded-lg">
+                  <i class="fa-solid fa-lock"></i> เฉพาะฝ่ายประสานงาน
+                </span>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // 8 Departments Task Cards
+      const deptGrid = document.getElementById('departments-8-grid');
+      deptGrid.innerHTML = DEPARTMENTS.map(dept => {
+        const deptTasks = tasks.filter(t => t.deptId === dept.id);
+        const canEdit = canEditDept(dept.id);
+        const canDelete = canDeleteDept(dept.id);
+
+        return `
+          <div class="card-soft rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-2 pb-2.5 mb-3 border-b border-warmborder">
+                <div class="flex items-center gap-2 min-w-0">
+                  <div class="w-8 h-8 rounded-xl bg-sage-100 text-sage-700 flex items-center justify-center shrink-0">
+                    <i class="fa-solid ${dept.icon} text-xs"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <h4 class="font-heading text-xs sm:text-sm font-bold text-slate-800 truncate">${dept.num}. ${dept.name}</h4>
+                    <span class="text-[10px] text-slate-500">โควตา ${dept.quota} • ${deptTasks.length} งาน</span>
+                  </div>
+                </div>
+                ${canDelete
+                  ? '<span class="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-terracotta-100 text-terracotta-600">ลบได้</span>'
+                  : canEdit
+                    ? '<span class="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-sage-100 text-sage-700">แก้ไขได้</span>'
+                    : '<span class="shrink-0 text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-400">อ่าน</span>'
+                }
+              </div>
+
+              <div class="space-y-2">
+                ${deptTasks.map(task => {
+                  const statusBadge = task.status === 'done'
+                    ? { text: 'เสร็จแล้ว', cls: 'bg-sage-100 text-sage-700' }
+                    : task.status === 'in_progress'
+                      ? { text: 'กำลังทำ', cls: 'bg-ambersoft-100 text-ambersoft-600' }
+                      : { text: 'รอดำเนินการ', cls: 'bg-slate-100 text-slate-600' };
+
+                  return `
+                    <div class="p-2.5 rounded-xl bg-sand/70 border border-warmborder/80 flex items-start justify-between gap-2">
+                      <div class="min-w-0">
+                        <div class="text-xs font-semibold text-slate-800 leading-snug ${task.status === 'done' ? 'line-through text-slate-400' : ''}">
+                          ${task.title}
+                        </div>
+                        <div class="flex items-center gap-1.5 mt-1.5">
+                          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${statusBadge.cls}">${statusBadge.text}</span>
+                          <span class="text-[10px] text-slate-400">${task.due}</span>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center gap-1 shrink-0">
+                        ${canEdit ? `
+                          <button onclick="openTaskModal('${task.id}')" title="แก้ไขงาน" class="p-1.5 rounded-lg bg-white hover:bg-sage-100 text-slate-600 text-[11px] border border-warmborder">
+                            <i class="fa-solid fa-pen"></i>
+                          </button>
+                        ` : ''}
+                        ${canDelete ? `
+                          <button onclick="deleteTask('${task.id}')" title="ลบงาน (สิทธิ์หัวหน้าฝ่าย)" class="p-1.5 rounded-lg bg-terracotta-100 hover:bg-terracotta-600 hover:text-white text-terracotta-600 text-[11px]">
+                            <i class="fa-solid fa-trash"></i>
+                          </button>
+                        ` : ''}
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openCoordModal(venueId) {
+      if (!canEditDept('coord')) {
+        showToast('สิทธิ์ไม่เพียงพอ: เฉพาะฝ่ายประสานงานเท่านั้นที่อัปเดตสถานะติดต่อได้', 'warning');
+        return;
+      }
+      const v = venues.find(item => item.id === venueId);
+      if (!v) return;
+      document.getElementById('coord-venue-id').value = v.id;
+      document.getElementById('coord-modal-venue-name').textContent = v.name;
+      document.getElementById('coord-status').value = v.contactStatus || 'not_contacted';
+      document.getElementById('coord-reason').value = v.contactReason || '';
+      document.getElementById('modal-coord').classList.remove('hidden');
+    }
+
+    function saveCoordStatus(e) {
+      e.preventDefault();
+      if (!canEditDept('coord')) return;
+      const venueId = document.getElementById('coord-venue-id').value;
+      const idx = venues.findIndex(v => v.id === venueId);
+      if (idx !== -1) {
+        venues[idx].contactStatus = document.getElementById('coord-status').value;
+        venues[idx].contactReason = document.getElementById('coord-reason').value.trim();
+        venues[idx].updatedAt = 'อัปเดตเมื่อสักครู่';
+        saveState();
+        closeModal('modal-coord');
+        renderAll();
+        showToast('บันทึกสถานะติดต่อและเหตุผลเรียบร้อยแล้ว', 'success');
+      }
+    }
+
+    function openTaskModal(taskId = null) {
+      const editableDepts = DEPARTMENTS.filter(d => canEditDept(d.id));
+      if (editableDepts.length === 0) {
+        showToast('สิทธิ์ของคุณไม่มีสิทธิ์เพิ่ม/แก้ไขงานในฝ่ายใด', 'warning');
+        return;
+      }
+
+      const select = document.getElementById('task-dept');
+      select.innerHTML = editableDepts.map(d => `<option value="${d.id}">${d.num}. ${d.name}</option>`).join('');
+
+      document.getElementById('form-task').reset();
+      document.getElementById('task-id').value = '';
+
+      if (taskId) {
+        const t = tasks.find(item => item.id === taskId);
+        if (!t || !canEditDept(t.deptId)) {
+          showToast('คุณไม่มีสิทธิ์แก้ไขงานของฝ่ายนี้', 'warning');
+          return;
+        }
+        document.getElementById('modal-task-title').textContent = 'แก้ไขรายการงานของฝ่าย';
+        document.getElementById('task-id').value = t.id;
+        document.getElementById('task-dept').value = t.deptId;
+        document.getElementById('task-title').value = t.title;
+        document.getElementById('task-status').value = t.status;
+        document.getElementById('task-due').value = t.due;
+      } else {
+        document.getElementById('modal-task-title').textContent = 'เพิ่มรายการงานใหม่ในฝ่าย';
+      }
+
+      document.getElementById('modal-task').classList.remove('hidden');
+    }
+
+    function saveTaskForm(e) {
+      e.preventDefault();
+      const id = document.getElementById('task-id').value;
+      const deptId = document.getElementById('task-dept').value;
+      if (!canEditDept(deptId)) return;
+
+      const payload = {
+        deptId,
+        title: document.getElementById('task-title').value.trim(),
+        status: document.getElementById('task-status').value,
+        due: document.getElementById('task-due').value.trim() || 'ธ.ค. 2569'
+      };
+
+      if (id) {
+        const idx = tasks.findIndex(t => t.id === id);
+        if (idx !== -1) tasks[idx] = { ...tasks[idx], ...payload };
+        showToast('อัปเดตรายการงานเรียบร้อย', 'success');
+      } else {
+        tasks.unshift({ id: 't_' + Date.now(), ...payload });
+        showToast('เพิ่มรายการงานใหม่สำเร็จ', 'success');
+      }
+
+      saveState();
+      closeModal('modal-task');
+      renderAll();
+    }
+
+    function deleteTask(taskId) {
+      const t = tasks.find(item => item.id === taskId);
+      if (!t) return;
+      if (!canDeleteDept(t.deptId)) {
+        showToast('ปฏิเสธการลบ: เฉพาะหัวหน้าฝ่าย (Head) หรือทีมบริหารเท่านั้นที่ลบรายการงานได้', 'warning');
+        return;
+      }
+      tasks = tasks.filter(item => item.id !== taskId);
+      saveState();
+      renderAll();
+      showToast('ลบรายการงานเรียบร้อยแล้ว', 'info');
+    }
+
+    // -----------------------------------------------------------------------
+    // 10. SCHEDULE RENDERING
+    // -----------------------------------------------------------------------
+    function selectScheduleDay(dayKey) {
+      currentScheduleDay = dayKey;
+      renderSchedule();
+    }
+
+    function renderSchedule() {
+      const tabsContainer = document.getElementById('schedule-day-tabs');
+      const allActive = currentScheduleDay === 'all';
+      tabsContainer.innerHTML = `
+        <button onclick="selectScheduleDay('all')" class="px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition ${
+          allActive ? 'bg-slate-800 text-white' : 'bg-white border border-warmborder text-slate-700 hover:bg-sage-50'
+        }">
+          แสดงครบทั้ง 8 วัน
+        </button>
+        ${SCHEDULE_DAYS.map(d => {
+          const isAct = currentScheduleDay === d.dayNum;
+          return `
+            <button onclick="selectScheduleDay(${d.dayNum})" class="px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition ${
+              isAct ? 'bg-sage-600 text-white' : 'bg-white border border-warmborder text-slate-700 hover:bg-sage-50'
+            }">
+              วันที่ ${d.dayNum} (${d.dateLabel.split(' ')[0]} ${d.dateLabel.split(' ')[1]})
+            </button>
+          `;
+        }).join('')}
+      `;
+
+      const daysToRender = currentScheduleDay === 'all'
+        ? SCHEDULE_DAYS
+        : SCHEDULE_DAYS.filter(d => d.dayNum === currentScheduleDay);
+
+      const content = document.getElementById('schedule-content');
+      content.innerHTML = daysToRender.map(day => `
+        <div class="card-soft rounded-2xl overflow-hidden">
+          <div class="px-5 py-4 bg-sage-50 border-b border-sage-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-bold text-sage-700">วันที่ ${day.dayNum} • ${day.dateLabel}</span>
+              <h3 class="font-heading text-base sm:text-lg font-bold text-slate-800">${day.theme}</h3>
+            </div>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-white border border-sage-200 text-sage-700 self-start sm:self-center">
+              <i class="fa-solid fa-bed mr-1"></i> ${day.stay}
+            </span>
+          </div>
+
+          <div class="divide-y divide-warmborder/70">
+            ${day.items.map(item => {
+              const isPrayer = item.tag.includes('ละหมาด');
+              const isStudy = item.tag.includes('ดูงาน');
+              const badgeCls = isPrayer
+                ? 'bg-sky-100 text-sky-700'
+                : isStudy
+                  ? 'bg-sage-100 text-sage-700'
+                  : 'bg-ambersoft-100 text-ambersoft-600';
+
+              return `
+                <div class="p-4 sm:px-5 flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-5 hover:bg-sand/40 transition">
+                  <div class="sm:w-40 shrink-0">
+                    <div class="text-xs sm:text-sm font-bold text-terracotta-600">${item.time}</div>
+                    <span class="inline-block mt-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full ${badgeCls}">
+                      ${item.tag}
+                    </span>
+                  </div>
+                  <div class="flex-grow">
+                    <div class="font-bold text-sm text-slate-800">${item.title}</div>
+                    <p class="text-xs text-slate-600 leading-relaxed mt-1">${item.desc}</p>
+                  </div>
+                  <div class="sm:w-44 shrink-0 sm:text-right">
+                    <span class="text-[11px] font-semibold text-slate-500 bg-sand px-2.5 py-1 rounded-lg inline-block">
+                      ${item.dept}
+                    </span>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // -----------------------------------------------------------------------
+    // 11. EXPANDABLE BUDGET CATEGORY CARDS (CLICK CARD -> SHOW ITEMIZED LIST)
+    // -----------------------------------------------------------------------
+    function toggleBudgetCategory(catId) {
+      if (openBudgetIds.includes(catId)) {
+        openBudgetIds = openBudgetIds.filter(id => id !== catId);
+      } else {
+        openBudgetIds.push(catId);
+      }
+      renderBudgetCards();
+    }
+
+    function toggleAllBudgetCategories() {
+      if (openBudgetIds.length === INITIAL_BUDGET_CATEGORIES.length) {
+        openBudgetIds = [];
+      } else {
+        openBudgetIds = INITIAL_BUDGET_CATEGORIES.map(c => c.id);
+      }
+      renderBudgetCards();
+    }
+
+    function renderBudgetCards() {
+      const grandTotal = INITIAL_BUDGET_CATEGORIES.reduce(
+        (sum, cat) => sum + cat.items.reduce((s, item) => s + item.amount, 0),
+        0
+      );
+
+      document.getElementById('budget-grand-total-display').textContent = `${grandTotal.toLocaleString()} บาท`;
+
+      const container = document.getElementById('budget-cards-container');
+      container.innerHTML = INITIAL_BUDGET_CATEGORIES.map(cat => {
+        const catTotal = cat.items.reduce((s, item) => s + item.amount, 0);
+        const pct = ((catTotal / grandTotal) * 100).toFixed(1);
+        const isOpen = openBudgetIds.includes(cat.id);
+
+        return `
+          <div class="card-soft rounded-2xl overflow-hidden transition ${isOpen ? 'ring-1 ring-sage-500/40' : ''}">
+            <!-- Clickable Summary Header Card -->
+            <div onclick="toggleBudgetCategory('${cat.id}')" class="cursor-pointer p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-sage-50/50 transition select-none">
+              <div class="flex items-start sm:items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-sage-100 text-sage-700 flex items-center justify-center shrink-0">
+                  <i class="fa-solid ${cat.icon}"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="font-heading text-sm sm:text-base font-bold text-slate-800">${cat.title}</h4>
+                    <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-sand text-slate-600">${pct}%</span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-0.5">${cat.summary}</p>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between sm:justify-end gap-4 pl-13 sm:pl-0">
+                <div class="text-left sm:text-right">
+                  <div class="font-heading text-base sm:text-lg font-bold text-sage-700">${catTotal.toLocaleString()} ฿</div>
+                  <div class="text-[11px] text-slate-400">${cat.items.length} รายการย่อย</div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-sand flex items-center justify-center text-slate-600 transition-transform duration-200 ${isOpen ? 'rotate-180 bg-sage-100 text-sage-700' : ''}">
+                  <i class="fa-solid fa-chevron-down text-xs"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Expandable Detailed Sub-Items Table -->
+            ${isOpen ? `
+              <div class="border-t border-warmborder bg-sand/35 px-4 sm:px-6 py-4">
+                <div class="text-xs font-bold text-sage-700 mb-2.5 flex items-center gap-1.5">
+                  <i class="fa-solid fa-list-ul"></i> รายละเอียดรายการย่อยภายในหมวดนี้:
+                </div>
+                <div class="overflow-x-auto bg-white rounded-xl border border-warmborder">
+                  <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                    <thead>
+                      <tr class="bg-sand text-slate-600 text-[11px] uppercase border-b border-warmborder">
+                        <th class="py-2.5 px-3 w-16">ลำดับ</th>
+                        <th class="py-2.5 px-3">รายการค่าใช้จ่าย</th>
+                        <th class="py-2.5 px-3">รายละเอียดการคำนวณ</th>
+                        <th class="py-2.5 px-3 text-right">จำนวนเงิน (บาท)</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-warmborder/70">
+                      ${cat.items.map(item => `
+                        <tr class="hover:bg-sage-50/40">
+                          <td class="py-2.5 px-3 font-bold text-slate-500">${item.code}</td>
+                          <td class="py-2.5 px-3 font-semibold text-slate-800">${item.name}</td>
+                          <td class="py-2.5 px-3 text-xs text-slate-500">${item.calc}</td>
+                          <td class="py-2.5 px-3 text-right font-bold text-slate-800">${item.amount.toLocaleString()}</td>
+                        </tr>
+                      `).join('')}
+                      <tr class="bg-sage-50/70 font-bold text-sage-700">
+                        <td class="py-2.5 px-3" colspan="3">รวมย่อย${cat.title.split('—')[0].trim()}</td>
+                        <td class="py-2.5 px-3 text-right">${catTotal.toLocaleString()} ฿</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function recalculateBudget() {
+      const total = parseFloat(document.getElementById('calc-total').value) || 0;
+      const reimburse = parseFloat(document.getElementById('calc-reimburse').value) || 0;
+      const support = parseFloat(document.getElementById('calc-support').value) || 0;
+
+      const netTotal = Math.max(0, total - reimburse - support);
+      const perStudent = Math.ceil(netTotal / 23);
+      const perInstallment = Math.ceil(perStudent / 3);
+
+      document.getElementById('res-net-total').textContent = `${netTotal.toLocaleString()} ฿`;
+      document.getElementById('res-per-student').textContent = `${perStudent.toLocaleString()} ฿`;
+      document.getElementById('res-per-installment').textContent = `${perInstallment.toLocaleString()} ฿`;
+    }
+
+    // -----------------------------------------------------------------------
+    // 12. RESET & INITIALIZATION
+    // -----------------------------------------------------------------------
+    function openResetModal() {
+      document.getElementById('modal-reset').classList.remove('hidden');
+    }
+
+    function executeResetData() {
+      localStorage.removeItem(STORAGE_KEYS.VENUES);
+      localStorage.removeItem(STORAGE_KEYS.TASKS);
+      localStorage.removeItem(STORAGE_KEYS.USER);
+      currentUser = PRESET_ACCOUNTS[0];
+      loadState();
+      renderAll();
+      closeModal('modal-reset');
+      showToast('รีเซ็ตข้อมูลทั้งหมดกลับเป็นค่าเริ่มต้นเรียบร้อยแล้ว', 'success');
+    }
+
+    function renderAll() {
+      renderUserHeader();
+      renderDashboard();
+      renderVenues();
+      if (leafletMap) updateMapMarkers();
+      renderCoordination();
+      renderSchedule();
+      renderBudgetCards();
+      recalculateBudget();
+    }
+
+    window.onload = function () {
+      loadState();
+      renderAll();
+    };
+  </script>
+</body>
+</html>
