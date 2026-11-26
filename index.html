@@ -144,7 +144,7 @@
               A
             </div>
             <div class="hidden md:block text-left">
-              <div id="user-name-display" class="text-xs font-bold text-slate-800 leading-tight">น.ส.ซอลีฮะห์</div>
+              <div id="user-name-display" class="text-xs font-bold text-slate-800 leading-tight">น.ส.A (บัญชี A)</div>
               <div id="user-roles-display" class="text-[11px] text-sage-700 font-semibold leading-tight">หัวหน้าฝ่ายประสานงาน • สมาชิกฝ่ายวิชาการ</div>
             </div>
           </div>
@@ -208,6 +208,24 @@
     <!-- TAB 1: DASHBOARD & ORGANIZATIONAL STRUCTURE (8 DEPTS + EXEC TEAM)     -->
     <!-- ===================================================================== -->
     <section id="view-dashboard" class="space-y-6">
+      <!-- Latest Coordination Alert Banner -->
+      <div class="card-soft rounded-2xl p-4 sm:p-5 border-l-4 border-l-terracotta-500 bg-terracotta-50/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl bg-terracotta-100 text-terracotta-600 flex items-center justify-center shrink-0 mt-0.5">
+            <i class="fa-solid fa-bullhorn"></i>
+          </div>
+          <div class="text-xs sm:text-sm">
+            <div class="font-heading font-bold text-slate-800">อัปเดตล่าสุดจากฝ่ายประสานงาน (ชุดสถานที่ดูงาน 8 แห่ง + ตัวเลือกสำรอง)</div>
+            <p class="text-slate-600 mt-0.5 leading-relaxed">
+              ปรับเปลี่ยนสถานที่ตามผลการโทรประสานจริง: <strong>The Monk Studios, GDH 559, ช่อง 3, Thai PBS, The Able by King Power, อมรินทร์พริ้นติ้ง, Ascend Group และ Arise by Infinitas</strong> (ส่วน Garena, Igloo, Kantana, Agoda ปิดรับช่วงเดือน ม.ค. 70 และ Workpoint รอเจ้าหน้าที่ติดต่อกลับ)
+            </p>
+          </div>
+        </div>
+        <button onclick="switchTab('coordination')" class="px-3.5 py-2 rounded-xl bg-terracotta-600 hover:bg-terracotta-500 text-white text-xs font-bold transition shrink-0 self-start sm:self-center">
+          ดูรายละเอียดเช็คลิสต์ <i class="fa-solid fa-arrow-right ml-1"></i>
+        </button>
+      </div>
+
       <!-- Top KPIs -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="card-soft rounded-2xl p-5">
@@ -250,8 +268,8 @@
               <i class="fa-solid fa-building-circle-check"></i>
             </div>
           </div>
-          <div id="kpi-venue-summary" class="font-heading text-2xl font-bold text-slate-800">9 แห่ง + 3 จุดภาพ</div>
-          <p id="kpi-venue-confirmed" class="text-xs text-sage-700 font-semibold mt-1">ยืนยันคิวแล้ว 2 แห่ง • กำลังประสานงาน 7 แห่ง</p>
+          <div id="kpi-venue-summary" class="font-heading text-2xl font-bold text-slate-800">8 แห่งหลัก + จุดภาพ</div>
+          <p id="kpi-venue-confirmed" class="text-xs text-sage-700 font-semibold mt-1">ติดต่อได้แล้ว 5 แห่ง • กำลังประสาน/สำรอง</p>
         </div>
       </div>
 
@@ -275,7 +293,7 @@
         <div class="lg:col-span-5 card-soft rounded-2xl p-5 sm:p-6 flex flex-col">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <h2 class="font-heading text-lg font-bold text-slate-800">สถานะติดต่อสถานที่ดูงาน</h2>
+              <h2 class="font-heading text-lg font-bold text-slate-800">สถานะติดต่อสถานที่ดูงานล่าสุด</h2>
               <p class="text-xs text-slate-500">เชื่อมโยงข้อมูลระหว่างฝ่ายสถานที่ฯ และฝ่ายประสานงาน</p>
             </div>
             <button onclick="switchTab('coordination')" class="text-xs font-bold text-terracotta-600 hover:underline">
@@ -390,10 +408,10 @@
       <!-- Filter Buttons -->
       <div class="flex flex-wrap items-center gap-2">
         <button onclick="filterVenues('all')" class="venue-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-white transition" data-cat="all">
-          ทั้งหมด (17 พิกัด)
+          ทั้งหมด (18 พิกัด)
         </button>
         <button onclick="filterVenues('study')" class="venue-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-warmborder text-slate-700 hover:bg-sage-50 transition" data-cat="study">
-          <span class="inline-block w-2.5 h-2.5 rounded-full bg-sage-600 mr-1.5"></span>สถานที่ดูงาน (8 แห่ง + ตัวเลือก)
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-sage-600 mr-1.5"></span>สถานที่ดูงาน (8 แห่งหลัก + รอ/ปิดรับ)
         </button>
         <button onclick="filterVenues('hotel')" class="venue-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-warmborder text-slate-700 hover:bg-sage-50 transition" data-cat="hotel">
           <span class="inline-block w-2.5 h-2.5 rounded-full bg-terracotta-500 mr-1.5"></span>ที่พักหลัก
@@ -459,7 +477,7 @@
         <div class="p-5 border-b border-warmborder flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-sand/60">
           <div>
             <h3 class="font-heading text-base font-bold text-slate-800">To-Do Checklist ติดต่อสถานที่ศึกษาดูงาน (ฝ่ายประสานงาน)</h3>
-            <p class="text-xs text-slate-500">ตรวจสอบสถานะการติดต่อ ช่องทางประสาน และเหตุผลยืนยัน/ไม่ยืนยันของแต่ละแห่ง</p>
+            <p class="text-xs text-slate-500">รวมรายการสถานที่เป้าหมายหลัก 8 แห่ง ตัวเลือกรอติดต่อกลับ และหน่วยงานที่ปิดรับช่วง ม.ค. 70</p>
           </div>
           <div id="coord-stats-badges" class="flex flex-wrap gap-2 text-xs font-bold">
             <!-- Rendered by JS -->
@@ -509,7 +527,7 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="font-heading text-xl font-bold text-slate-800">ตารางกำหนดการเดินทาง 8 วัน 7 คืน (16 – 23 มกราคม 2570)</h2>
-          <p class="text-sm text-slate-500">อ้างอิงระยะทางจริงจาก Google Maps + ตัวคูณความเร็วรถบัส (+15–20%) และจังหวะแวะละหมาดตามเวลาจริง</p>
+          <p class="text-sm text-slate-500">จัดเส้นทางตามวันเวลาทำการจริงของทั้ง 8 หน่วยงาน + ระยะทาง Google Maps + ตัวคูณรถบัสและจังหวะละหมาด</p>
         </div>
         <div class="flex items-center gap-2 text-xs bg-sage-100 text-sage-700 px-3.5 py-2 rounded-xl font-bold">
           <i class="fa-solid fa-mosque"></i> รองรับรุกเศาะฮ์: ละหมาดซุบฮิ &amp; ย่อ-รวม (กัศร์และญะมะอ์)
@@ -559,8 +577,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">2. ขอเบิกคืนงบคณะฯ (อาจารย์ + พขร.)</label>
-                <input type="number" id="calc-reimburse" value="16690" oninput="recalculateBudget()" class="w-full px-3.5 py-2 rounded-xl border border-warmborder bg-white font-bold text-sage-700 focus:outline-none focus:border-sage-600" />
-                <span class="text-[11px] text-slate-500">ที่พัก อ. 9,600 + อาหาร อ. 3,390 + ที่พัก พขร. 3,700</span>
+                <input type="number" id="calc-reimburse" value="17030" oninput="recalculateBudget()" class="w-full px-3.5 py-2 rounded-xl border border-warmborder bg-white font-bold text-sage-700 focus:outline-none focus:border-sage-600" />
+                <span class="text-[11px] text-slate-500">ที่พัก อ. 9,600 + อาหาร อ. 3,230 + ที่พัก พขร. 4,200</span>
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">3. งบสนับสนุนคณะฯ + เงินเอก</label>
@@ -573,17 +591,17 @@
           <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div class="p-4 rounded-2xl bg-white border border-warmborder text-center">
               <div class="text-xs text-slate-500 font-semibold">ยอดสุทธิส่วนนักศึกษา</div>
-              <div id="res-net-total" class="font-heading text-xl font-bold text-slate-800 mt-1">126,645 ฿</div>
+              <div id="res-net-total" class="font-heading text-xl font-bold text-slate-800 mt-1">126,305 ฿</div>
               <div class="text-[11px] text-slate-400 mt-1">หารนักศึกษา 23 คน</div>
             </div>
             <div class="p-4 rounded-2xl bg-sage-600 text-white text-center shadow-sm">
               <div class="text-xs text-sage-100 font-semibold">เฉลี่ยต่อนักศึกษา 1 คน</div>
-              <div id="res-per-student" class="font-heading text-2xl font-bold mt-1">5,507 ฿</div>
+              <div id="res-per-student" class="font-heading text-2xl font-bold mt-1">5,492 ฿</div>
               <div class="text-[11px] text-sage-100 mt-1">รวมที่พัก 6 คืน + อาหาร</div>
             </div>
             <div class="p-4 rounded-2xl bg-terracotta-50 border border-terracotta-100 text-center">
               <div class="text-xs text-terracotta-600 font-bold">แบ่งจ่าย 3 งวด / คน</div>
-              <div id="res-per-installment" class="font-heading text-xl font-bold text-terracotta-600 mt-1">1,836 ฿</div>
+              <div id="res-per-installment" class="font-heading text-xl font-bold text-terracotta-600 mt-1">1,831 ฿</div>
               <div class="text-[11px] text-slate-500 mt-1">งวดละเท่าๆ กัน</div>
             </div>
           </div>
@@ -613,7 +631,7 @@
   <footer class="bg-white border-t border-warmborder py-5 mt-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
       <div>สาขาวิชาเทคโนโลยีดิจิทัลและสื่อสารการศึกษา คณะศึกษาศาสตร์ มหาวิทยาลัยสงขลานครินทร์ วิทยาเขตปัตตานี</div>
-      <div>ไฟล์ระบบจัดการโครงการ (index.html) • อัปเดตข้อมูลพร้อมใช้งาน</div>
+      <div>ไฟล์ระบบจัดการโครงการ (index.html) • อัปเดตกำหนดการและผลการประสานงานล่าสุดแล้ว</div>
     </div>
   </footer>
 
@@ -790,11 +808,11 @@
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">สถานะการติดต่อ *</label>
           <select id="coord-status" class="w-full px-3.5 py-2.5 rounded-xl border border-warmborder bg-white font-semibold">
-            <option value="not_contacted">1. ยังไม่ติดต่อ</option>
-            <option value="called">2. โทรเช็กคิวเบื้องต้นแล้ว</option>
-            <option value="letter_sent">3. ส่งหนังสือราชการ (ตราครุฑ) แล้ว</option>
+            <option value="not_contacted">1. ยังไม่ติดต่อ / รอติดต่อ</option>
+            <option value="called">2. ติดต่อได้แล้ว / รอเจ้าหน้าที่เคาะวัน</option>
+            <option value="letter_sent">3. เตรียมส่ง / ส่งหนังสือทางอีเมลแล้ว</option>
             <option value="confirmed">4. ยืนยันอนุมัติเข้าดูงานแล้ว</option>
-            <option value="rejected">5. ไม่สะดวก / คิวเต็ม (ใช้สถานที่สำรอง)</option>
+            <option value="rejected">5. ไม่เปิดรับช่วงที่จะไป (ปิดรับ)</option>
           </select>
         </div>
         <div>
@@ -859,7 +877,7 @@
       </div>
       <h3 class="font-heading text-lg font-bold text-slate-800">รีเซ็ตข้อมูลกลับเป็นค่าเริ่มต้น?</h3>
       <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
-        ระบบจะกู้คืนข้อมูลสถานที่ทั้ง 17 พิกัด สถานะประสานงาน และงานของทั้ง 8 ฝ่ายกลับเป็นค่าตั้งต้นทั้งหมด
+        ระบบจะกู้คืนข้อมูลสถานที่ทั้ง 18 พิกัด สถานะประสานงานล่าสุด และงานของทั้ง 8 ฝ่ายกลับเป็นค่าตั้งต้นทั้งหมด
       </p>
       <div class="flex justify-center gap-3 mt-5">
         <button onclick="closeModal('modal-reset')" class="px-4 py-2 rounded-xl bg-sand text-slate-700 text-sm font-semibold">ยกเลิก</button>
@@ -974,7 +992,6 @@
       }
     ];
 
-    
     const PRESET_ACCOUNTS = [
       {
         id: 'acc_a',
@@ -1022,11 +1039,10 @@
     ];
 
     // -----------------------------------------------------------------------
-    // 2. VENUES DATA WITH REAL GPS COORDINATES & CURATED VISUALS
+    // 2. VENUES DATA WITH REAL GPS COORDINATES (UPDATED COORDINATION RESULTS)
     // -----------------------------------------------------------------------
     const INITIAL_VENUES = [
       {
-        
         id: 'v_hotel',
         name: 'โรงแรมรีเจนท์ รามคำแหง 22 (ฐานที่พักหลัก 6 คืน)',
         category: 'hotel',
@@ -1035,7 +1051,7 @@
         lng: 100.6186,
         location: 'เลขที่ 4 ซอยรามคำแหง 22 แขวงหัวหมาก เขตบางกะปิ กรุงเทพฯ',
         contactInfo: 'โทร. 02-318-4444 / 094-464-9383 (เรตสถาบัน 800 บ./คืน)',
-        scheduleFit: 'พัก 6 คืน (16–22 ม.ค. 2570) | รวม 75 ห้อง-คืน',
+        scheduleFit: 'พัก 6 คืน (16–22 ม.ค. 2570) | รวม 90 ห้อง-คืน',
         learning: 'ศูนย์กลางกระจายตัวดูงานทุกโซน เดินไป กกท. ได้ใน 5 นาที มีห้องอาหารฮาลาลในโรงแรมและใกล้แหล่งอาหารฮาลาลซอยรามคำแหง 24',
         pros: 'มีลานจอดรถบัสขนาดใหญ่รองรับได้จริง ใกล้มัสยิดและอาหารฮาลาลตลอดคืน ราคาประหยัด 800 บ./คืน',
         cons: 'เรตหมู่คณะสถาบันการศึกษาไม่รวมอาหารเช้า (จัดงบอาหารเช้าแยกไว้ในหมวดสวัสดิการแล้ว)',
@@ -1046,205 +1062,227 @@
         bannerIcon: 'fa-hotel',
         contactStatus: 'confirmed',
         contactReason: 'ล็อกโควตา 15 ห้อง × 6 คืน เรตหมู่คณะสถาบันการศึกษา 800 บ./ห้อง (พขร. 700 บ.)',
-        updatedAt: '24 พ.ย. 2569'
+        updatedAt: '26 พ.ย. 2569'
       },
       {
-        id: 'v_kantana',
-        name: 'Kantana Animation Studios (กันตนา สตูดิโอ)',
+        id: 'v_themonk',
+        name: 'The Monk Studios (เดอะ มังค์ สตูดิโอ)',
         category: 'study',
-        field: 'ด้านกราฟิกและสื่อสร้างสรรค์',
-        lat: 13.7745,
-        lng: 100.5835,
-        location: '333/3 ซ.รัชดานิเวศน์ 19 ถ.ประชาอุทิศ แขวงสามเสนนอก เขตห้วยขวาง กทม.',
-        contactInfo: 'ฝ่ายประชาสัมพันธ์ / Kantana Institute (โทร. 02-275-0046)',
-        scheduleFit: 'ผ่าน 65–75% | จันทร์ที่ 18 ม.ค. 2570 (09.00–12.00 น.)',
-        learning: 'การออกแบบงานกราฟิก คาแรคเตอร์ คอนเซปต์อาร์ต งาน CG/แอนิเมชัน และกระบวนการผลิตสื่อสร้างสรรค์ในอุตสาหกรรมบันเทิงและดิจิทัลไทย',
-        pros: 'อยู่ใกล้ฐานที่พักรามคำแหง 22 เพียง 15–25 นาที มีชื่อเสียงด้านงานกราฟิกและสื่อสร้างสรรค์มายาวนาน',
-        cons: 'ซอยรัชดานิเวศน์ 19 ค่อนข้างจำกัด รถบัสใหญ่ควรจอดจุดเหมาะสมและห้ามถ่ายภาพพื้นที่การผลิต',
-        pastVisit: 'มีจริง — ต้อนรับคณะนักศึกษาและผู้เยี่ยมชมด้านแอนิเมชันและสื่อสร้างสรรค์อย่างต่อเนื่อง',
-        source: 'https://www.kantanaanimation.com/Our_Und_Service/66a30b0ab855b3001350b6dd',
-        photoUrl: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=900&q=75',
-        bannerColor: '#2F5D50',
-        bannerIcon: 'fa-pen-nib',
-        contactStatus: 'letter_sent',
-        contactReason: 'โทรเช็กคิวเบื้องต้นแล้ว ส่งหนังสือราชการตราครุฑขอรอบเช้า 18 ม.ค. 2570 รอตอบกลับ',
-        updatedAt: '22 พ.ย. 2569'
-      },
-      {
-        id: 'v_igloo',
-        name: 'Igloo Studio (อิกลู สตูดิโอ)',
-        category: 'study',
-        field: 'ด้านแอนิเมชัน 2D/3D และ VFX',
-        lat: 13.8213,
-        lng: 100.5658,
-        location: '32 (2-1) ซ.พหลโยธิน 24 ถ.พหลโยธิน แขวงจอมพล เขตจตุจักร กทม.',
-        contactInfo: 'IGLOO STUDIO HQ (contact@igloostudio.com)',
-        scheduleFit: 'ผ่าน 55–70% | จันทร์ที่ 18 ม.ค. 2570 (14.00–16.30 น.)',
-        learning: 'กระบวนการผลิตแอนิเมชัน 2D/2.5D/3D งาน VFX และ Character Effects การพัฒนา Original IP และการทำงานร่วมกับพาร์ทเนอร์ระดับนานาชาติ',
-        pros: 'สตูดิโอแอนิเมชันไทยระดับสากล สร้างแรงบันดาลใจให้สายแอนิเมชันและ 3D ได้ดีมาก',
-        cons: 'อยู่ในซอยพหลโยธิน 24 รถบัสใหญ่จอดหน้าตึกไม่ได้ (ส่งปากซอยแล้วเดินเข้า) และมีข้อจำกัดความลับโปรเจกต์ (NDA)',
-        pastVisit: 'มีจริง — รับนักศึกษาฝึกงานและเปิดบ้านต้อนรับเครือข่ายสายแอนิเมชัน',
-        source: 'https://igloostudio.com/',
+        field: 'ด้านแอนิเมชัน 3D / VFX (1 ใน 8 แห่งหลัก)',
+        lat: 13.7393,
+        lng: 100.6122,
+        location: 'ซอยพัฒนาการ 17 ถ.พัฒนาการ แขวงสวนหลวง เขตสวนหลวง กรุงเทพฯ',
+        contactInfo: 'ฝ่าย HR / Studio Admin (ติดต่อแล้ว — ส่งจดหมายก่อน)',
+        scheduleFit: 'จ.–ศ. เวลาทำการ | กำหนดการ: จันทร์ที่ 18 ม.ค. 2570 (09.00–12.00 น.)',
+        learning: 'กระบวนการผลิตแอนิเมชัน 3 มิติ และงาน VFX ระดับสากล (3D Pipeline) ตั้งแต่ Storyboard, Modeling, Rigging, Lighting จนถึง VFX',
+        pros: 'ไม่มีค่าใช้จ่าย รับจำนวนไม่เกิน 30 คน (คณะเรา 25 ท่านผ่านเกณฑ์พอดี) และอยู่ใกล้ที่พักรามคำแหง 22 เพียง ~6.5 กม.',
+        cons: 'ซอยพัฒนาการ 17 เป็นซอยชุมชน รถบัสใหญ่ควรจอดส่งที่ปากซอยแล้วเดินเท้าเข้าประมาณ 250 เมตร',
+        pastVisit: 'มีจริง — ต้อนรับคณะนักศึกษาสายแอนิเมชันและสื่อดิจิทัลอย่างต่อเนื่อง',
+        source: 'https://www.themonkstudios.com/',
         photoUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=900&q=75',
-        bannerColor: '#24493E',
+        bannerColor: '#2F5D50',
         bannerIcon: 'fa-film',
-        contactStatus: 'called',
-        contactReason: 'โทรสอบถามแอดมินแล้ว แจ้งให้ส่งหนังสือราชการพร้อมหัวข้อที่สนใจเพื่อเช็กคิวทีมโปรดักชัน',
-        updatedAt: '21 พ.ย. 2569'
+        contactStatus: 'letter_sent',
+        contactReason: 'ติดต่อได้แล้ว: ไม่มีค่าใช้จ่าย รับไม่เกิน 30 คน (เรามี 25 ท่าน) ให้ส่งจดหมายราชการก่อน',
+        updatedAt: '26 พ.ย. 2569'
       },
       {
-        id: 'v_google',
-        name: 'Google Thailand (อาคารปาร์ค เวนเจอร์ส)',
+        id: 'v_gdh',
+        name: 'บริษัท จีดีเอช ห้าห้าเก้า จำกัด (GDH 559)',
         category: 'study',
-        field: 'ด้านโปรแกรมและเทคโนโลยีระดับโลก',
-        lat: 13.7433,
-        lng: 100.5484,
-        location: 'อาคารปาร์ค เวนเจอร์ส อีโคเพล็กซ์ ชั้น 14–16 ถ.วิทยุ เพลินจิต กทม.',
-        contactInfo: 'ประสานผ่านเครือข่ายมหาวิทยาลัย / Google Developer Student',
-        scheduleFit: 'ผ่าน 35–50% | อังคารที่ 19 ม.ค. 2570 (09.00–11.30 น.)',
-        learning: 'วัฒนธรรมการทำงานในองค์กรเทคโนโลยีระดับโลก การพัฒนาผลิตภัณฑ์ดิจิทัล เครื่องมือแพลตฟอร์ม Google และทักษะสายซอฟต์แวร์',
-        pros: 'องค์กรเทคโนโลยีในฝันของสายโปรแกรมเมอร์ เปิดโลกทัศน์มาตรฐานสากล',
-        cons: 'ไม่เปิดรับกรุ๊ปดูงานทั่วไปแบบ walk-in โอกาสอนุมัติจำกัด ต้องเตรียม Arise by Infinitas / Agoda เป็นแผนสำรอง',
-        pastVisit: 'มีจริงเฉพาะบางกลุ่มที่ผ่านโครงการความร่วมมือหรือกิจกรรมนักศึกษาที่ได้รับเชิญ',
-        source: 'https://www.ise.eng.chula.ac.th/news/ise-student-activities-google-thailand-visit',
+        field: 'ด้านกราฟิก / โปรดักชัน / กองถ่าย (1 ใน 8 แห่งหลัก)',
+        lat: 13.7385,
+        lng: 100.5681,
+        location: '92/11 ซอยสุขุมวิท 31 (สวัสดี) แขวงคลองตันเหนือ เขตวัฒนา กรุงเทพฯ',
+        contactInfo: 'ฝ่ายประชาสัมพันธ์ / โปรดักชัน GDH 559 (ส่งหนังสือทางอีเมล)',
+        scheduleFit: 'จ.–ศ. เวลาทำการ | กำหนดการ: จันทร์ที่ 18 ม.ค. 2570 (14.00–16.30 น.)',
+        learning: 'กระบวนการผลิตภาพยนตร์และซีรีส์ (Production Pipeline) การออกแบบงานกราฟิก/โปสเตอร์ภาพยนตร์ และเบื้องหลังการทำงานกองถ่ายโปรดักชันจริง',
+        pros: 'ติดต่อได้แล้ว เจ้าหน้าที่ให้ส่งหนังสือทางอีเมลเพื่อเข้าดูกองถ่าย/โปรดักชันจริง ได้เห็นการทำงานเบื้องหลังระดับประเทศ',
+        cons: 'ซอยสุขุมวิท 31 มีรถสัญจรหนาแน่น รถบัสใหญ่จอดส่งปากซอยแล้ววนจอดรอ และห้ามถ่ายภาพเบื้องหลังกองถ่ายที่ยังไม่เผยแพร่',
+        pastVisit: 'มีจริง — เปิดรับคณะนักศึกษาเข้าเรียนรู้กระบวนการผลิตสื่อและโปรดักชัน',
+        source: 'https://www.gdh559.com/',
+        photoUrl: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#24493E',
+        bannerIcon: 'fa-clapperboard',
+        contactStatus: 'letter_sent',
+        contactReason: 'ติดต่อได้แล้ว: เจ้าหน้าที่ให้ส่งหนังสือทางอีเมล (ขอเข้าดูกองถ่าย / โปรดักชัน)',
+        updatedAt: '26 พ.ย. 2569'
+      },
+      {
+        id: 'v_arise',
+        name: 'Arise by Infinitas (เครือธนาคารกรุงไทย)',
+        category: 'study',
+        field: 'ด้านโปรแกรม / Software Dev (1 ใน 8 แห่งหลัก)',
+        lat: 13.7228,
+        lng: 100.5594,
+        location: 'อาคารเดอะ ปาร์ค (The PARQ) ถ.รัชดาภิเษก แขวงคลองเตย เขตคลองเตย กทม.',
+        contactInfo: 'โทร. 091-757-3779 / เว็บไซต์ arise.tech (อยู่ระหว่างติดตาม)',
+        scheduleFit: 'จ.–ศ. เวลาทำการ | กำหนดการ: อังคารที่ 19 ม.ค. 2570 (09.00–11.30 น.)',
+        learning: 'กระบวนการพัฒนาซอฟต์แวร์ขนาดใหญ่ (Software Engineering) เบื้องหลังแอปฯ เป๋าตัง และ Krungthai NEXT การทำงานแบบ Agile/Scrum',
+        pros: 'เจาะลึกสายเขียนโปรแกรมและพัฒนาซอฟต์แวร์ระดับประเทศ อยู่ใกล้ช่อง 3 (อาคารมาลีนนท์) เพียง 2.4 กม.',
+        cons: 'ติดต่อทางโทรศัพท์เบื้องต้นยังไม่ได้รับสาย อยู่ระหว่างติดตามประสานงานต่อ (มี Workpoint เป็นตัวเลือกเสริม)',
+        pastVisit: 'มีจริง — มีคณะนักศึกษาสายไอทีและซอฟต์แวร์เข้าดูงานอย่างต่อเนื่อง',
+        source: 'https://www.arise.tech/',
         photoUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=75',
         bannerColor: '#3D7A68',
         bannerIcon: 'fa-code',
-        contactStatus: 'called',
-        contactReason: 'อยู่ระหว่างประสานผ่านเครือข่ายอาจารย์และยื่นเรื่องคู่ขนานกับ Arise by Infinitas เป็นแผนสำรอง',
-        updatedAt: '23 พ.ย. 2569'
+        contactStatus: 'not_contacted',
+        contactReason: 'ติดต่อเบื้องต้นยังไม่ได้ (สายไม่ว่าง/ไม่มีผู้รับ) — ฝ่ายประสานงานจะติดตามซ้ำในวันพรุ่งนี้',
+        updatedAt: '26 พ.ย. 2569'
       },
       {
         id: 'v_ch3',
         name: 'สถานีวิทยุโทรทัศน์ไทยทีวีสีช่อง 3 (อาคารมาลีนนท์)',
         category: 'study',
-        field: 'ด้านสื่อและกระจายเสียง (สื่อเชิงพาณิชย์)',
+        field: 'ด้านสื่อและกระจายเสียง (1 ใน 8 แห่งหลัก)',
         lat: 13.7191,
         lng: 100.5732,
         location: 'อาคารมาลีนนท์ ทาวเวอร์ 3199 ถ.พระราม 4 แขวงคลองตัน เขตคลองเตย กทม.',
-        contactInfo: 'แผนกองค์กรสัมพันธ์ BEC World (โทร. 02-262-3333)',
-        scheduleFit: 'ผ่าน 65–75% | อังคารที่ 19 ม.ค. 2570 (14.00–16.30 น.)',
+        contactInfo: 'แผนกองค์กรสัมพันธ์ BEC World (ติดต่อได้แล้ว — รอเจ้าหน้าที่เคาะวัน)',
+        scheduleFit: 'จ.–ศ. 09.00–17.30 น. | เสนอวัน: อังคารที่ 19 ม.ค. 2570 (14.00–16.30 น.)',
         learning: 'การบริหารสถานีโทรทัศน์เชิงพาณิชย์ การผลิตข่าว ละคร ระบบออกอากาศ โครงสร้างไอทีสื่อ และการปรับตัวสู่สื่อออนไลน์/OTT',
-        pros: 'เดินทางจากรามคำแหง–พระราม 4 สะดวก เห็นภาพรวมสถานีโทรทัศน์เอกชนขนาดใหญ่',
-        cons: 'พื้นที่บางส่วนห้ามบันทึกภาพ และรถบัสใหญ่จอดรอหน้าอาคารมาลีนนท์ได้ชั่วคราวเท่านั้น',
+        pros: 'ติดต่อได้แล้ว รอทางหน่วยงานเคาะวันให้ เดินทางจากโซนพระราม 4 / รามคำแหงสะดวก',
+        cons: 'พื้นที่บางส่วนห้ามบันทึกภาพ และรถบัสใหญ่จอดรอหน้าอาคารมาลีนนท์ได้เพียงจุดรับ-ส่งชั่วคราว',
         pastVisit: 'มีจริง — สถานีเปิดรับการเยี่ยมชมองค์กรจากสถาบันการศึกษาอย่างต่อเนื่อง',
         source: 'https://www.becworld.com/en/news-and-media/company-visited',
-        photoUrl: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?auto=format&fit=crop&w=900&q=75',
+        photoUrl: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=900&q=75',
         bannerColor: '#2F5D50',
         bannerIcon: 'fa-tv',
-        contactStatus: 'letter_sent',
-        contactReason: 'ส่งหนังสือราชการถึงแผนกองค์กรสัมพันธ์ BEC World เรียบร้อยแล้ว รอแจ้งผลยืนยันคิว',
-        updatedAt: '20 พ.ย. 2569'
+        contactStatus: 'called',
+        contactReason: 'ติดต่อได้แล้ว: เจ้าหน้าที่รับเรื่องไว้และรอทางหน่วยงานเคาะวันให้ (เสนอวันอังคารที่ 19 ม.ค. บ่าย)',
+        updatedAt: '26 พ.ย. 2569'
       },
       {
         id: 'v_thaipbs',
         name: 'ไทยพีบีเอส (Thai PBS)',
         category: 'study',
-        field: 'ด้านสื่อและกระจายเสียง (สื่อสาธารณะ)',
+        field: 'ด้านสื่อสาธารณะและกระจายเสียง (1 ใน 8 แห่งหลัก)',
         lat: 13.8788,
         lng: 100.5772,
         location: '145 ถ.วิภาวดีรังสิต แขวงตลาดบางเขน เขตหลักสี่ กทม.',
-        contactInfo: 'ระบบจองเยี่ยมชม visit.thaipbs.or.th (โทร. 02-790-2000)',
-        scheduleFit: 'ผ่าน 75–85% | เฉพาะวันพุธที่ 20 ม.ค. 2570 (09.30–12.00 น.)',
-        learning: 'ภารกิจสื่อสาธารณะ กระบวนการผลิตและออกอากาศรายการ ระบบเทคนิควิศวกรรม และสื่อดิจิทัล/ออนไลน์',
-        pros: 'ระบบจองรอบชัดเจน (รับ 20–50 คน/รอบ) ลานจอดรถบัสกว้างขวาง เห็นความต่างของสื่อสาธารณะชัดเจน',
-        cons: 'เปิดรับเฉพาะวันพุธ–พฤหัสบดีเท่านั้น และอยู่โซนวิภาวดี–หลักสี่',
+        contactInfo: 'ระบบจองออนไลน์ visit.thaipbs.or.th (ต้องจองในระบบ)',
+        scheduleFit: 'เฉพาะวันพุธ–พฤหัสบดี | กำหนดการ: พุธที่ 20 ม.ค. 2570 (09.30–12.00 น.)',
+        learning: 'ภารกิจสื่อสาธารณะ การทำงานข่าว กระบวนการผลิตและออกอากาศรายการ ระบบเทคนิควิศวกรรม และสื่อดิจิทัล/ออนไลน์',
+        pros: 'รับกลุ่ม 20–50 คน/รอบ (คณะเรามี 25 ท่าน) และมีลานจอดรถบัสขนาดใหญ่ภายในสถานีสะดวกมาก',
+        cons: 'เปิดให้เข้าดูงานเฉพาะวันพุธ–พฤหัสบดีเท่านั้น และต้องกดจองรอบผ่านระบบออนไลน์ล่วงหน้า',
         pastVisit: 'มีจริงอย่างเป็นระบบ — คณะสายสื่อสารมวลชนเข้าดูงานประจำทุกสัปดาห์',
         source: 'https://visit.thaipbs.or.th/',
-        photoUrl: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=900&q=75',
+        photoUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=900&q=75',
         bannerColor: '#24493E',
         bannerIcon: 'fa-tower-broadcast',
-        contactStatus: 'confirmed',
-        contactReason: 'ยืนยันคิวรอบเช้าวันพุธที่ 20 ม.ค. 2570 (25 ท่าน) ตามเกณฑ์ 20–50 คน/รอบเรียบร้อยแล้ว',
-        updatedAt: '24 พ.ย. 2569'
-      },
-      {
-        id: 'v_vmlab',
-        name: 'Virtual Media Lab @ TCDC กรุงเทพฯ (CEA)',
-        category: 'study',
-        field: 'ด้านนวัตกรรมและเทคโนโลยีเพื่อการศึกษา',
-        lat: 13.7277,
-        lng: 100.5159,
-        location: 'ชั้น 4 อาคารไปรษณีย์กลาง 1160 ถ.เจริญกรุง เขตบางรัก กทม.',
-        contactInfo: 'CEA / TCDC Virtual Media Lab (โทร. 02-105-7400)',
-        scheduleFit: 'ผ่าน 75–85% | พุธที่ 20 ม.ค. 2570 (14.30–16.30 น.)',
-        learning: 'เทคโนโลยี VR/AR/Metaverse และ Virtual Production จอ LED Full Screen 45 ตร.ม. Unreal Engine, Blender เพื่อนวัตกรรมการเรียนรู้',
-        pros: 'ตรงกับสายนวัตกรรมทางการศึกษาและสื่อดิจิทัลของคณะศึกษาศาสตร์อย่างยิ่ง ได้เห็น Virtual Production จริง',
-        cons: 'ย่านเจริญกรุง–บางรักรถติดช่วงเย็น รถบัสต้องจอดส่งหน้าไปรษณีย์กลางแล้ววนไปรอ',
-        pastVisit: 'มีจริง — คณะนักศึกษาสาขาเทคโนโลยีสื่อดิจิทัลเข้าศึกษาดูงานต่อเนื่อง',
-        source: 'https://www.cea.or.th/single-project/virtual-media-lab',
-        photoUrl: 'https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?auto=format&fit=crop&w=900&q=75',
-        bannerColor: '#3D7A68',
-        bannerIcon: 'fa-vr-cardboard',
         contactStatus: 'letter_sent',
-        contactReason: 'ประสานเจ้าหน้าที่ CEA แล้ว ส่งหนังสือขอเข้าชมและสาธิต Virtual Production บ่าย 20 ม.ค. 2570',
-        updatedAt: '22 พ.ย. 2569'
+        contactReason: 'ต้องจองในระบบออนไลน์ (visit.thaipbs.or.th) — ล็อกวันพุธที่ 20 ม.ค. 2570 รอบเช้า (09.30–12.00 น.)',
+        updatedAt: '26 พ.ย. 2569'
       },
       {
-        id: 'v_garena',
-        name: 'บริษัท การีนา ออนไลน์ (ประเทศไทย) จำกัด',
+        id: 'v_kingpower',
+        name: 'The Able by King Power (กลุ่มบริษัท คิง เพาเวอร์)',
         category: 'study',
-        field: 'ด้านคอมพิวเตอร์ เกม และอีสปอร์ต',
-        lat: 13.7663,
-        lng: 100.5686,
-        location: 'อาคาร AIA Capital Center ชั้น 24 ถ.รัชดาภิเษก ดินแดง กทม.',
-        contactInfo: 'Garena Academy / ฝ่าย People (www.garena.co.th)',
-        scheduleFit: 'ผ่าน 65–75% | พฤหัสบดีที่ 21 ม.ค. 2570 (09.00–11.30 น.)',
-        learning: 'ระบบนิเวศอุตสาหกรรมเกมและอีสปอร์ต การบริหารแพลตฟอร์มออนไลน์ โครงสร้างอาชีพสายเกมและ Garena Academy',
-        pros: 'ตรงความสนใจนักศึกษาสายเกมและสื่อดิจิทัล เปิดมุมมองอาชีพใหม่ในอุตสาหกรรมเกม',
-        cons: 'ตรวจแลกบัตรเข้มงวด (ต้องส่งรายชื่อ/เลขบัตรประชาชนล่วงหน้า) ห้ามถ่ายภาพในพื้นที่ปฏิบัติงาน',
-        pastVisit: 'มีจริง — มีโครงการด้านการศึกษาและกิจกรรมร่วมกับนักศึกษามหาวิทยาลัยต่อเนื่อง',
-        source: 'https://www.garena.co.th/',
-        photoUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=75',
+        field: 'ด้านนวัตกรรม / Software / UX-UI (1 ใน 8 แห่งหลัก)',
+        lat: 13.7598,
+        lng: 100.5385,
+        location: 'คิง เพาเวอร์ รางน้ำ ซอยรางน้ำ ถ.พญาไท เขตราชเทวี กรุงเทพฯ',
+        contactInfo: 'เจ้าหน้าที่รับเรื่องแล้ว (ให้ส่งหนังสือผ่านอีเมล)',
+        scheduleFit: 'จ.–ศ. เวลาทำการ | กำหนดการ: พุธที่ 20 ม.ค. 2570 (14.00–16.30 น.)',
+        learning: 'การพัฒนาระบบดิจิทัลและนวัตกรรมเทคโนโลยีของเครือคิง เพาเวอร์ (Software Dev, UX/UI, E-Commerce & Digital Experience)',
+        pros: 'ติดต่อได้แล้ว เจ้าหน้าที่ให้ส่งหนังสือผ่านอีเมล มีที่จอดรถบัสขนาดใหญ่ ห้องละหมาด และอาหารฮาลาลครบในจุดเดียว',
+        cons: 'ต้องระบุหัวข้อด้านเทคโนโลยี/นวัตกรรมของ The Able ในหนังสือราชการให้ชัดเจนเพื่อพบทีมสาย Tech โดยตรง',
+        pastVisit: 'มีจริง — ต้อนรับคณะศึกษาดูงานจากสถาบันการศึกษาอย่างต่อเนื่อง',
+        source: 'https://www.kingpower.com/',
+        photoUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#3D7A68',
+        bannerIcon: 'fa-microchip',
+        contactStatus: 'letter_sent',
+        contactReason: 'ติดต่อได้แล้ว: เจ้าหน้าที่ให้ส่งหนังสือผ่านอีเมล (กำหนดเข้าดูงานบ่ายวันพุธที่ 20 ม.ค. 2570)',
+        updatedAt: '26 พ.ย. 2569'
+      },
+      {
+        id: 'v_ascend',
+        name: 'Ascend Group (เครือ True / Ascend Money)',
+        category: 'study',
+        field: 'ด้านคอมพิวเตอร์และนวัตกรรม (1 ใน 8 แห่งหลัก)',
+        lat: 13.6865,
+        lng: 100.6105,
+        location: 'อาคาร True Digital Park ถ.สุขุมวิท 101 แขวงบางจาก เขตพระโขนง กทม.',
+        contactInfo: 'ฝ่าย People / Employer Branding Ascend Group (รอติดต่อพรุ่งนี้)',
+        scheduleFit: 'จ.–ศ. เวลาทำการ | กำหนดการ: พฤหัสบดีที่ 21 ม.ค. 2570 (09.00–11.30 น.)',
+        learning: 'ระบบนิเวศเทคโนโลยี FinTech และ E-Commerce ชั้นนำของอาเซียน การพัฒนาแพลตฟอร์มดิจิทัล AI และ UX/UI ในองค์กร Tech ขนาดใหญ่',
+        pros: 'ตั้งอยู่ในศูนย์กลางนวัตกรรม True Digital Park ที่ทันสมัย มีจุดจอดรับ-ส่งรถบัสเป็นสัดส่วนและเดินทางจากรามคำแหงได้สะดวก',
+        cons: 'อยู่ระหว่างรอติดต่อประสานงานในวันพรุ่งนี้ (หากคิวเต็มสามารถสลับใช้ Workpoint Entertainment ได้)',
+        pastVisit: 'มีจริง — เปิดรับนักศึกษาสายคอมพิวเตอร์และเทคโนโลยีเข้าร่วมกิจกรรม/ดูงานเป็นประจำ',
+        source: 'https://www.ascendcorp.com/',
+        photoUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=900&q=75',
         bannerColor: '#2F5D50',
-        bannerIcon: 'fa-gamepad',
-        contactStatus: 'called',
-        contactReason: 'ติดต่อทีม Garena Academy แล้ว เตรียมส่งหนังสือราชการพร้อมรายชื่อผู้เข้าชม 25 ท่าน',
-        updatedAt: '19 พ.ย. 2569'
+        bannerIcon: 'fa-laptop-code',
+        contactStatus: 'not_contacted',
+        contactReason: 'อัปเดตล่าสุด: วางเป็นเป้าหมายหลักด้านคอมพิวเตอร์และนวัตกรรม ฝ่ายประสานงานเตรียมโทรติดต่อวันพรุ่งนี้',
+        updatedAt: '26 พ.ย. 2569'
       },
       {
         id: 'v_amarin',
         name: 'บมจ. อมรินทร์ คอร์เปอเรชั่นส์ (อมรินทร์พริ้นติ้ง)',
         category: 'study',
-        field: 'ด้านสื่อสิ่งพิมพ์และกราฟิก (ตัวเลือกหลัก)',
+        field: 'ด้านสื่อสิ่งพิมพ์และกราฟิก (1 ใน 8 แห่งหลัก)',
         lat: 13.7885,
         lng: 100.4438,
-        location: 'ถ.ชัยพฤกษ์ / บรมราชชนนี เขตตลิ่งชัน กทม.',
-        contactInfo: 'ฝ่ายทรัพยากรบุคคล / สื่อสารองค์กร อมรินทร์ (โทร. 02-422-9999)',
-        scheduleFit: 'ผ่าน 55–65% | พฤหัสบดีที่ 21 ม.ค. 2570 (14.00–16.30 น.)',
+        location: 'ถ.ชัยพฤกษ์ / บรมราชชนนี เขตตลิ่งชัน กรุงเทพฯ',
+        contactInfo: 'เจ้าหน้าที่รับเรื่องแล้ว (ให้ส่งจดหมายทางอีเมล)',
+        scheduleFit: 'จ.–ศ. 08.00–17.00 น. | กำหนดการ: พฤหัสบดีที่ 21 ม.ค. 2570 (14.00–16.30 น.)',
         learning: 'กระบวนการผลิตสื่อสิ่งพิมพ์และบรรจุภัณฑ์ครบวงจร เทคโนโลยีการพิมพ์สมัยใหม่ การคุมคุณภาพสี และการเชื่อมโยงสื่อสิ่งพิมพ์สู่ดิจิทัล',
-        pros: 'อยู่ในเขตกรุงเทพฯ (ตลิ่งชัน) ใกล้กว่าโรงงานสิริวัฒนาที่อยู่บางปะกง เห็นการแปรรูปงานกราฟิกสู่สิ่งพิมพ์จริง',
-        cons: 'อยู่ฝั่งธนบุรี ต้องเผื่อเวลารถติดข้ามเมืองช่วงเย็น และโรงพิมพ์มีกฎความปลอดภัย/ห้ามถ่ายภาพบางจุด',
+        pros: 'ติดต่อได้แล้ว เจ้าหน้าที่ให้ส่งจดหมายทางอีเมล มีพื้นที่จอดรถรองรับ และอยู่ในเขตกรุงเทพฯ (ตลิ่งชัน)',
+        cons: 'อยู่ฝั่งธนบุรี ต้องเผื่อเวลาเดินทางข้ามเมืองช่วงเย็น และโรงพิมพ์มีกฎความปลอดภัย/ห้ามถ่ายภาพในสายการผลิต',
         pastVisit: 'มีจริง — รับคณะนักศึกษาเข้าศึกษาดูงานและสหกิจศึกษาเป็นประจำ',
         source: 'https://www.yellowpages.co.th/en/profile/Amarin-Printing-Publishing-Public-Co-Ltd-3bXV9FVto',
         photoUrl: 'https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?auto=format&fit=crop&w=900&q=75',
         bannerColor: '#24493E',
         bannerIcon: 'fa-print',
-        contactStatus: 'not_contacted',
-        contactReason: 'เลือกใช้เป็นสถานที่หลักด้านสื่อสิ่งพิมพ์แทนบางปะกง เตรียมโทรเช็กคิวฝ่ายสื่อสารองค์กรสัปดาห์นี้',
-        updatedAt: '24 พ.ย. 2569'
+        contactStatus: 'letter_sent',
+        contactReason: 'ติดต่อได้แล้ว: เจ้าหน้าที่ให้ส่งจดหมายทางอีเมล (กำหนดเข้าดูงานบ่ายวันพฤหัสบดีที่ 21 ม.ค. 2570)',
+        updatedAt: '26 พ.ย. 2569'
       },
       {
-        id: 'v_sirivatana',
-        name: 'บมจ. สิริวัฒนา อินเตอร์พริ้นท์ (ตัวเลือกเปรียบเทียบ)',
+        id: 'v_workpoint',
+        name: 'บมจ. เวิร์คพอยท์ เอ็นเทอร์เทนเมนท์ (ตัวเลือกเสริม)',
         category: 'study',
-        field: 'ด้านสื่อสิ่งพิมพ์อุตสาหกรรม (ตัวเลือกสำรอง)',
-        lat: 13.5688,
-        lng: 100.9654,
-        location: '14/8 หมู่ 12 ถ.บางนา–ตราด กม.46 อ.บางปะกง จ.ฉะเชิงเทรา',
-        contactInfo: 'สำนักงานโรงงานบางปะกง (สายบางนา–ตราด)',
-        scheduleFit: 'ผ่าน 50–65% | จันทร์–ศุกร์ เวลาทำการโรงงาน',
-        learning: 'กระบวนการผลิตสื่อสิ่งพิมพ์อุตสาหกรรมขนาดใหญ่ ระบบออฟเซต/เพลท และการควบคุมคุณภาพสีระดับโรงงาน',
-        pros: 'เห็นสเกลโรงพิมพ์อุตสาหกรรมขนาดใหญ่ชัดเจน',
-        cons: 'อยู่ไกลถึง อ.บางปะกง จ.ฉะเชิงเทรา ใช้เวลาเดินทางไป–กลับจาก กทม. มากกว่าอมรินทร์พริ้นติ้ง (ตลิ่งชัน)',
-        pastVisit: 'มีบางส่วนตามการประสานงานเฉพาะกิจ',
-        source: 'https://pmaward.ditp.go.th/winner-directory/sirivatana-interprint-public-co-ltd/',
-        photoUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=900&q=75',
-        bannerColor: '#475569',
-        bannerIcon: 'fa-industry',
+        field: 'ด้านสื่อสารมวลชน & สตูดิโอ (รอติดต่อกลับ)',
+        lat: 13.9968,
+        lng: 100.5960,
+        location: '99 หมู่ 2 ถ.บางพูน–รังสิต อ.เมือง จ.ปทุมธานี',
+        contactInfo: 'โทร. 02-833-2000 (เจ้าหน้าที่รับเรื่องแล้ว จะติดต่อกลับมาอีกรอบ)',
+        scheduleFit: 'จ.–ศ. เวลาทำการ (สามารถจับคู่บ่ายวันพุธที่ 20 ม.ค. ต่อจาก Thai PBS ได้)',
+        learning: 'กระบวนการผลิตรายการโทรทัศน์และสื่อออนไลน์ ชมสตูดิโอถ่ายทำจริง ระบบแสง สี เสียง และฉากรายการขนาดใหญ่',
+        pros: 'มีลานจอดรถบัสขนาดใหญ่ และอยู่โซนเหนือใกล้กับ Thai PBS สามารถนำมาเสริมหรือทดแทนหน่วยงานที่ติดขัดได้ทันที',
+        cons: 'อยู่ระหว่างรอเจ้าหน้าที่ติดต่อกลับมาอีกรอบเพื่อยืนยันคิวว่าง',
+        pastVisit: 'มีจริงอย่างต่อเนื่อง — สถาบันการศึกษาเข้าดูงานสตูดิโอประจำทุกปี',
+        source: 'https://www.workpointtv.com/',
+        photoUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#0284C7',
+        bannerIcon: 'fa-video',
+        contactStatus: 'called',
+        contactReason: 'โทรติดต่อแล้ว: เจ้าหน้าที่แจ้งว่าจะติดต่อกลับมาอีกรอบ เก็บเป็นตัวเลือกเสริม/ทดแทนหากบางแห่งไม่สะดวก',
+        updatedAt: '26 พ.ย. 2569'
+      },
+      {
+        id: 'v_closed_list',
+        name: 'กลุ่ม 4 บริษัทที่ปิดรับดูงานช่วง ม.ค. 2570 (บันทึกผลติดต่อ)',
+        category: 'study',
+        field: 'Garena / Igloo Studio / Kantana / Agoda',
+        lat: 13.7663,
+        lng: 100.5686,
+        location: 'กทม. (รัชดาฯ / จตุจักร / ห้วยขวาง / พระราม 4)',
+        contactInfo: 'ฝ่ายประสานงานโทรตรวจสอบครบทั้ง 4 แห่งแล้ว',
+        scheduleFit: 'ไม่เปิดรับการดูงานช่วงเดือนมกราคม 2570',
+        learning: 'บันทึกประวัติการประสานงานเพื่อใช้อ้างอิงในรายงานและปรับเปลี่ยนเป็นสถานที่ชุดใหม่ทั้ง 8 แห่งเรียบร้อยแล้ว',
+        pros: 'ทราบผลชัดเจนรวดเร็ว ทำให้เปลี่ยนไปประสาน The Monk, GDH, King Power และ Ascend Group ได้ทันเวลา',
+        cons: 'Garena, Igloo Studio, Kantana Studio และ Agoda แจ้งงดรับคณะดูงานในช่วงเดือนมกราคม 2570',
+        pastVisit: 'บันทึกผลการโทรประสานงานจริงของฝ่ายประสานงาน',
+        source: 'https://www.garena.co.th/',
+        photoUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=75',
+        bannerColor: '#64748B',
+        bannerIcon: 'fa-ban',
         contactStatus: 'rejected',
-        contactReason: 'เก็บเป็นตัวเลือกสำรอง เนื่องจากโรงงานอยู่บางปะกง จ.ฉะเชิงเทรา จึงเลือกอมรินทร์พริ้นติ้ง (ตลิ่งชัน) ใน กทม. แทน',
-        updatedAt: '24 พ.ย. 2569'
+        contactReason: 'ปิดรับ: Garena, Igloo Studio, Kantana Studio และ Agoda ไม่เปิดรับการดูงานช่วงที่จะไป (ม.ค. 2570) จึงปรับเปลี่ยนสถานที่ใหม่แทนแล้ว',
+        updatedAt: '26 พ.ย. 2569'
       },
       {
         id: 'v_wat_chai',
@@ -1256,7 +1294,7 @@
         location: 'ต.บ้านป้อม อ.พระนครศรีอยุธยา จ.พระนครศรีอยุธยา',
         contactInfo: 'อุทยานประวัติศาสตร์พระนครศรีอยุธยา (ค่าเข้าคนไทย 10 บ.)',
         scheduleFit: 'ผ่าน 100% | อาทิตย์ที่ 17 ม.ค. 2570 (09.45–11.00 น.)',
-        learning: 'โจทย์ถ่ายภาพสถาปัตยกรรม (Architecture) เส้นนำสายตา (Leading Lines) และการถ่ายภาพบุคคลร่วมกับชุดไทยย้อนยุค',
+        learning: 'โจทย์ถ่ายภาพสถาปัตยกรรม (Architecture) เส้นนำสายตา (Leading Lines) และการถ่ายภาพบุคคลร่วมกับบรรยากาศย้อนยุค',
         pros: 'ลานจอดรถบัสกว้างขวางมาก อากาศเดือน ม.ค. เย็นสบาย ค่าเข้าชมเพียง 10 บาท/คน',
         cons: 'พื้นที่กลางแจ้งแดดแรงหลัง 10.30 น. ควรเริ่มถ่ายช่วงเช้าและเตรียมร่ม/หมวก',
         pastVisit: 'มีจริงอย่างแพร่หลาย — จุดฝึกปฏิบัติภาคสนามยอดนิยมของรายวิชาการถ่ายภาพ',
@@ -1266,7 +1304,7 @@
         bannerIcon: 'fa-camera-retro',
         contactStatus: 'confirmed',
         contactReason: 'แหล่งท่องเที่ยวสาธารณะ เปิด 08.00–18.00 น. จัดสรรงบค่าเข้า 10 บ. ไว้แล้ว',
-        updatedAt: '24 พ.ย. 2569'
+        updatedAt: '26 พ.ย. 2569'
       },
       {
         id: 'v_wat_maha',
@@ -1288,7 +1326,7 @@
         bannerIcon: 'fa-sun',
         contactStatus: 'confirmed',
         contactReason: 'บรรจุในแผน One Day Trip วันอาทิตย์ที่ 17 ม.ค. 2570 เรียบร้อย',
-        updatedAt: '24 พ.ย. 2569'
+        updatedAt: '26 พ.ย. 2569'
       },
       {
         id: 'v_khao_luang',
@@ -1299,18 +1337,18 @@
         lng: 99.9342,
         location: 'ต.ธงชัย อ.เมืองเพชรบุรี จ.เพชรบุรี (ติดเส้นทางลงใต้)',
         contactInfo: 'จุดบริการนักท่องเที่ยวถ้ำเขาหลวง (ค่าเข้า 25 บ./คน)',
-        scheduleFit: 'ผ่าน 100% | ศุกร์ที่ 22 ม.ค. 2570 (09.45–11.15 น.)',
+        scheduleFit: 'ผ่าน 100% | ศุกร์ที่ 22 ม.ค. 2570 (10.00–11.15 น.)',
         learning: 'ฝึกถ่ายภาพลำแสงอาทิตย์ส่องผ่านปล่องเพดานถ้ำ (God Rays) และการวัดแสงในสภาพแสงคอนทราสต์สูง',
         pros: 'อยู่บนเส้นทางขากลับภาคใต้โดยไม่ต้องอ้อม ค่าเข้าถูกมาก (25 บาท/คน)',
-        cons: 'ต้องเดินขึ้น-ลงบันไดภายในถ้ำ ระวังลื่น และลำแสงสวยที่สุดช่วง 09.30–10.30 น. ควรเช็กเอาต์ กทม. 07.15–07.30 น.',
+        cons: 'ต้องเดินขึ้น-ลงบันไดภายในถ้ำ ระวังลื่น และลำแสงสวยที่สุดช่วง 09.30–10.30 น. ควรเช็กเอาต์ กทม. 07.30 น.',
         pastVisit: 'มีจริง — จุดแวะถ่ายภาพยอดนิยมของคณะเดินทางสายใต้',
         source: 'https://th.trip.com/moments/detail/phetchaburi-1447089-138026870/',
         photoUrl: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=900&q=75',
         bannerColor: '#D97706',
         bannerIcon: 'fa-mountain-sun',
         contactStatus: 'confirmed',
-        contactReason: 'เปิดทุกวัน 08.00–16.00 น. กำหนดออก กทม. เช้าวันศุกร์ที่ 22 ม.ค. เพื่อทันแสงลอดถ้ำ',
-        updatedAt: '24 พ.ย. 2569'
+        contactReason: 'เปิดทุกวัน 08.00–16.00 น. กำหนดออก กทม. 07.30 น. เช้าวันศุกร์ที่ 22 ม.ค. เพื่อทันแสงลอดถ้ำ',
+        updatedAt: '26 พ.ย. 2569'
       },
       {
         id: 'v_psu',
@@ -1332,7 +1370,7 @@
         bannerIcon: 'fa-graduation-cap',
         contactStatus: 'confirmed',
         contactReason: 'กำหนดจุดนัดพบอาคารเทคโนโลยีการศึกษา เวลา 00.15 น. วันที่ 16 ม.ค. 2570',
-        updatedAt: '24 พ.ย. 2569'
+        updatedAt: '26 พ.ย. 2569'
       },
       {
         id: 'v_punpin',
@@ -1354,7 +1392,7 @@
         bannerIcon: 'fa-road',
         contactStatus: 'confirmed',
         contactReason: 'อ้างอิงพิกัดเส้นทางสายหลัก AH2 เรียบร้อย',
-        updatedAt: '24 พ.ย. 2569'
+        updatedAt: '26 พ.ย. 2569'
       },
       {
         id: 'v_khunsarai',
@@ -1376,7 +1414,7 @@
         bannerIcon: 'fa-utensils',
         contactStatus: 'confirmed',
         contactReason: 'กำหนดเป็นจุดพักหลักทั้งขาไปและขากลับ',
-        updatedAt: '24 พ.ย. 2569'
+        updatedAt: '26 พ.ย. 2569'
       },
       {
         id: 'v_lungteng',
@@ -1398,19 +1436,19 @@
         bannerIcon: 'fa-mosque',
         contactStatus: 'confirmed',
         contactReason: 'กำหนดเป็นจุดแวะละหมาดซุฮฺริ+อัศริ ขาไป',
-        updatedAt: '24 พ.ย. 2569'
+        updatedAt: '26 พ.ย. 2569'
       }
     ];
 
     const INITIAL_TASKS = [
-      { id: 't1', deptId: 'coord', title: 'โทรเช็กคิวเบื้องต้นทั้ง 8 บริษัทและขอชื่อผู้รับหนังสือราชการ', status: 'done', due: '25 พ.ย. 2569' },
-      { id: 't2', deptId: 'coord', title: 'ติดตามผลอนุมัติหนังสือตราครุฑ (Kantana, ช่อง 3, VMLab, Garena)', status: 'in_progress', due: '10 ธ.ค. 2569' },
-      { id: 't3', deptId: 'coord', title: 'ส่งรายชื่อและเลขบัตรประชาชน 25 ท่านให้ Garena ล่วงหน้า', status: 'pending', due: '25 ธ.ค. 2569' },
+      { id: 't1', deptId: 'coord', title: 'จองคิวในระบบออนไลน์ของ Thai PBS (รอบเช้าวันพุธที่ 20 ม.ค. 2570)', status: 'in_progress', due: '27 พ.ย. 2569' },
+      { id: 't2', deptId: 'coord', title: 'ส่งหนังสือทางอีเมลให้ The Monk Studios, GDH 559, อมรินทร์พริ้นติ้ง และ The Able by King Power', status: 'in_progress', due: '30 พ.ย. 2569' },
+      { id: 't3', deptId: 'coord', title: 'โทรติดตาม Arise by Infinitas, Ascend Group และรอเจ้าหน้าที่ช่อง 3 / Workpoint เคาะวัน', status: 'pending', due: '28 พ.ย. 2569' },
 
       { id: 't4', deptId: 'av', title: 'ตรวจเช็กกล้อง DSLR/Mirrorless ขาตั้งกล้อง และไมโครโฟนส่วนกลาง', status: 'in_progress', due: '15 ธ.ค. 2569' },
       { id: 't5', deptId: 'av', title: 'จัดซื้อซองกันชื้น ผ้าเช็ดเลนส์ และเมมโมรีการ์ดสำรองสำหรับทริป 8 วัน', status: 'pending', due: '10 ม.ค. 2570' },
 
-      { id: 't6', deptId: 'academic', title: 'จัดทำเล่มโครงการและกำหนดการ 8 วัน 7 คืน เสนอคณบดีอนุมัติ', status: 'done', due: '28 พ.ย. 2569' },
+      { id: 't6', deptId: 'academic', title: 'อัปเดตเล่มโครงการตามรายชื่อ 8 หน่วยงานล่าสุดเสนอคณบดีอนุมัติ', status: 'in_progress', due: '2 ธ.ค. 2569' },
       { id: 't7', deptId: 'academic', title: 'ประสานอาจารย์วิชา Photo 2 กำหนดโจทย์ถ่ายภาพอยุธยา & ถ้ำเขาหลวง', status: 'in_progress', due: '12 ธ.ค. 2569' },
 
       { id: 't8', deptId: 'pr', title: 'ออกแบบโปสเตอร์ประชาสัมพันธ์โครงการ และป้ายไวนิลถ่ายภาพหมู่', status: 'in_progress', due: '18 ธ.ค. 2569' },
@@ -1427,7 +1465,7 @@
 
       { id: 't16', deptId: 'logistics', title: 'จองห้องพักหมู่คณะ รร.รีเจนท์ รามคำแหง 22 (15 ห้อง × 6 คืน)', status: 'done', due: '26 พ.ย. 2569' },
       { id: 't17', deptId: 'logistics', title: 'ยื่นบันทึกข้อความขอใช้รถบัสปรับอากาศ ม.อ.ปัตตานี (16–23 ม.ค. 70)', status: 'in_progress', due: '4 ธ.ค. 2569' },
-      { id: 't18', deptId: 'logistics', title: 'จัดเตรียมชุดของที่ระลึกอัตลักษณ์ปัตตานี 8 ชุด + ของฝาก พขร. 2 ท่าน', status: 'pending', due: '8 ม.ค. 2570' }
+      { id: 't18', deptId: 'logistics', title: 'สำรวจจุดจอดส่งรถบัสหน้าซอยพัฒนาการ 17 (The Monk) และสุขุมวิท 31 (GDH)', status: 'pending', due: '8 ม.ค. 2570' }
     ];
 
     // -----------------------------------------------------------------------
@@ -1490,7 +1528,7 @@
         summary: 'ค่าบัตรเข้าชมโบราณสถานอยุธยา ถ้ำเขาหลวง เพชรบุรี และรถไฟฟ้า BTS/MRT กรณีรถบัสเข้าซอยไม่ได้',
         icon: 'fa-ticket',
         items: [
-          { code: '5.1', name: 'ค่าเข้าศึกษาดูงานบริษัทเอกชนและหน่วยงานทั้ง 8 แห่ง', calc: 'ฟรี (ในนามสถาบันการศึกษา)', amount: 0 },
+          { code: '5.1', name: 'ค่าเข้าศึกษาดูงานบริษัทเอกชนและหน่วยงานทั้ง 8 แห่ง (รวม The Monk ฟรี)', calc: 'ฟรี (ในนามสถาบันการศึกษา)', amount: 0 },
           { code: '5.2', name: 'ค่าเข้าชมวัดไชยวัฒนาราม และวัดมหาธาตุ จ.อยุธยา (อัตราคนไทย)', calc: '(10 + 10 บาท) × 25 ท่าน', amount: 500 },
           { code: '5.3', name: 'ค่าเข้าชมถ้ำเขาหลวง จ.เพชรบุรี (แวะถ่ายภาพแสงลอดถ้ำขากลับ)', calc: '25 บาท × 25 ท่าน', amount: 625 },
           { code: '5.4', name: 'ค่าเข้าชมโบราณสถาน/สถานที่สำรองเพิ่มเติมใน จ.อยุธยา', calc: '20 บาท × 25 ท่าน', amount: 500 },
@@ -1530,6 +1568,9 @@
       }
     ];
 
+    // -----------------------------------------------------------------------
+    // 4. UPDATED 8-DAY 7-NIGHT SCHEDULE (MATCHING 8 NEW VENUES & REAL MAPS)
+    // -----------------------------------------------------------------------
     const SCHEDULE_DAYS = [
       {
         dayNum: 1,
@@ -1560,53 +1601,53 @@
       {
         dayNum: 3,
         dateLabel: 'จันทร์ที่ 18 ม.ค. 2570',
-        theme: 'โซนห้วยขวาง – รัชดาฯ – จตุจักร (ด้านกราฟิกและด้านแอนิเมชัน)',
+        theme: 'โซนพัฒนาการ – สุขุมวิท 31 (ด้านแอนิเมชัน 3D และด้านโปรดักชัน/กองถ่าย)',
         stay: 'พักโรงแรมรีเจนท์ รามคำแหง 22 (คืนที่ 3)',
         items: [
-          { time: '06.15 – 08.30 น.', title: 'อาหารเช้า และออกเดินทางสู่ ซ.รัชดานิเวศน์ 19 เขตห้วยขวาง', desc: 'Maps 8.5 กม. (เผื่อรถติดหนักเช้าวันจันทร์เส้นรามคำแหง–พระราม 9 รวม 1 ชม. 15 นาที)', dept: 'ฝ่ายสถานที่ฯ / เลขาฯ', tag: 'เดินทาง' },
-          { time: '09.00 – 12.00 น.', title: 'ศึกษาดูงานแห่งที่ 1: Kantana Animation Studios (ด้านกราฟิก)', desc: 'เรียนรู้การผลิตสื่อดิจิทัลและงานกราฟิก คาแรคเตอร์ และคอนเซปต์อาร์ต (3 ชม.)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #1' },
-          { time: '12.00 – 13.15 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันโซนห้วยขวาง/รัชดาฯ และละหมาดก่อนเดินทางต่อไปจตุจักร', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
-          { time: '14.00 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 2: Igloo Studio ซ.พหลโยธิน 24 (ด้านแอนิเมชัน)', desc: 'เจาะลึกกระบวนการผลิตแอนิเมชัน 2D/3D, VFX และ Original IP ระดับสากล (2 ชม. 30 นาที)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #2' },
-          { time: '16.30 – 20.45 น.', title: 'เดินทางกลับที่พัก ทานมื้อเย็น ละหมาด และกิจกรรม Reflection วันที่ 1', desc: 'เผื่อรถติดเย็นเส้นพหลโยธิน–ลาดพร้าว 1 ชม. 45 นาที ทานมื้อเย็น ละหมาด (มัฆริบ + อิชาอ์) และสรุปองค์ความรู้', dept: 'ฝ่ายวิชาการ / ประเมินผล', tag: 'พักโรงแรม คืนที่ 3' }
+          { time: '07.00 – 08.45 น.', title: 'อาหารเช้า และเดินทางสู่ ซอยพัฒนาการ 17 เขตสวนหลวง', desc: 'Maps 6.5 กม. (รถยนต์ 16 นาที + เผื่อรถติดเช้าวันจันทร์เส้นรามคำแหง–พัฒนาการ 29 นาที = 45 นาที)', dept: 'ฝ่ายสถานที่ฯ / เลขาฯ', tag: 'เดินทาง' },
+          { time: '09.00 – 12.00 น.', title: 'ศึกษาดูงานแห่งที่ 1: The Monk Studios (ด้านแอนิเมชัน 3D / VFX)', desc: 'เรียนรู้กระบวนการผลิตแอนิเมชัน 3D และ VFX ระดับสากล (จอดส่งปากซอยพัฒนาการ 17 แล้วเดินเข้า ~250 ม. | เข้าชมฟรี รับไม่เกิน 30 คน)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #1' },
+          { time: '12.00 – 13.15 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันโซนพัฒนาการ/สุขุมวิท และละหมาดก่อนเดินทางต่อไปสุขุมวิท 31', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '14.00 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 2: GDH 559 ซ.สุขุมวิท 31 (ด้านโปรดักชัน/กองถ่าย/กราฟิก)', desc: 'เรียนรู้กระบวนการผลิตภาพยนตร์ ซีรีส์ และเบื้องหลังการทำงานกองถ่ายโปรดักชัน (2 ชม. 30 นาที)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #2' },
+          { time: '16.30 – 20.45 น.', title: 'เดินทางกลับที่พัก ทานมื้อเย็น ละหมาด และกิจกรรม Reflection วันที่ 1', desc: 'Maps 11.2 กม. (เผื่อรถติดเย็นเส้นเพชรบุรี–รามคำแหง 1 ชม. 15 นาที) ทานมื้อเย็น ละหมาด (มัฆริบ + อิชาอ์) และสรุปองค์ความรู้', dept: 'ฝ่ายวิชาการ / ประเมินผล', tag: 'พักโรงแรม คืนที่ 3' }
         ]
       },
       {
         dayNum: 4,
         dateLabel: 'อังคารที่ 19 ม.ค. 2570',
-        theme: 'โซนเพลินจิต – พระราม 4 (ด้านโปรแกรมและด้านสื่อกระจายเสียง)',
+        theme: 'โซนพระราม 4 – คลองเตย (ด้านโปรแกรมและด้านสื่อกระจายเสียง)',
         stay: 'พักโรงแรมรีเจนท์ รามคำแหง 22 (คืนที่ 4)',
         items: [
-          { time: '06.15 – 08.30 น.', title: 'อาหารเช้า และเดินทางสู่อาคารปาร์ค เวนเจอร์ส อีโคเพล็กซ์ ถ.วิทยุ', desc: 'Maps 12.4 กม. (เผื่อรถติดเช้าทางด่วนศรีรัช–เพลินจิต รวม 1 ชม. 15 นาที)', dept: 'ฝ่ายสถานที่ฯ / ประสานงาน', tag: 'เดินทาง' },
-          { time: '09.00 – 11.30 น.', title: 'ศึกษาดูงานแห่งที่ 3: Google Thailand (ด้านการเขียนโปรแกรมและระบบดิจิทัล)', desc: 'เรียนรู้วัฒนธรรมองค์กรเทคโนโลยีระดับโลก (หรือหน่วยงานสำรองสายซอฟต์แวร์)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #3' },
-          { time: '11.30 – 13.00 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันโซนเพลินจิต/นานา และละหมาดก่อนเดินทางไป ถ.พระราม 4', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
-          { time: '14.00 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 4: สถานีวิทยุโทรทัศน์ไทยทีวีสีช่อง 3 (อาคารมาลีนนท์)', desc: 'เรียนรู้การผลิตสื่อเสียง วิดีโอ งานกระจายเสียง และแพลตฟอร์มออนไลน์/OTT', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #4' },
-          { time: '16.30 – 20.45 น.', title: 'เดินทางกลับที่พัก ทานมื้อเย็น ละหมาด และกิจกรรม Reflection วันที่ 2', desc: 'เผื่อรถติดเย็นพระราม 4–ทางด่วนฉลองรัช 1 ชม. 45 นาที ทานมื้อเย็น ละหมาด และสรุปองค์ความรู้', dept: 'ฝ่ายวิชาการ / ประเมินผล', tag: 'พักโรงแรม คืนที่ 4' }
+          { time: '06.30 – 08.45 น.', title: 'อาหารเช้า และเดินทางสู่อาคาร The PARQ ถ.พระราม 4', desc: 'Maps 13.5 กม. (รถยนต์ 30 นาที + เผื่อรถติดเช้าทางด่วนศรีรัช–คลองเตย 45 นาที = 1 ชม. 15 นาที)', dept: 'ฝ่ายสถานที่ฯ / ประสานงาน', tag: 'เดินทาง' },
+          { time: '09.00 – 11.30 น.', title: 'ศึกษาดูงานแห่งที่ 3: Arise by Infinitas (ด้านโปรแกรม / Software Dev)', desc: 'เรียนรู้กระบวนการพัฒนาซอฟต์แวร์เบื้องหลังแอปฯ เป๋าตัง/Krungthai NEXT (หากติดต่อไม่ได้ใช้หน่วยงานสำรองสายซอฟต์แวร์)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #3' },
+          { time: '11.30 – 13.00 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันโซนคลองเตย/พระราม 4 และละหมาดก่อนเดินทางไปอาคารมาลีนนท์ (ห่างกัน 2.4 กม.)', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '13.30 – 16.00 น.', title: 'ศึกษาดูงานแห่งที่ 4: สถานีวิทยุโทรทัศน์ไทยทีวีสีช่อง 3 (อาคารมาลีนนท์)', desc: 'เรียนรู้การผลิตสื่อเสียง วิดีโอ งานกระจายเสียง และแพลตฟอร์มออนไลน์/OTT (2 ชม. 30 นาที)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #4' },
+          { time: '16.00 – 20.45 น.', title: 'เดินทางกลับที่พัก ทานมื้อเย็น ละหมาด และกิจกรรม Reflection วันที่ 2', desc: 'Maps 11.9 กม. (เผื่อรถติดเย็นพระราม 4–ทางด่วนฉลองรัช 1 ชม. 45 นาที) ทานมื้อเย็น ละหมาด และสรุปองค์ความรู้', dept: 'ฝ่ายวิชาการ / ประเมินผล', tag: 'พักโรงแรม คืนที่ 4' }
         ]
       },
       {
         dayNum: 5,
         dateLabel: 'พุธที่ 20 ม.ค. 2570',
-        theme: 'โซนวิภาวดี – บางรัก (ด้านสื่อสาธารณะและด้านนวัตกรรมทางการศึกษา)',
+        theme: 'โซนวิภาวดี – พญาไท (ด้านสื่อสาธารณะและด้านนวัตกรรมดิจิทัล)',
         stay: 'พักโรงแรมรีเจนท์ รามคำแหง 22 (คืนที่ 5)',
         items: [
-          { time: '06.30 – 09.00 น.', title: 'อาหารเช้า และเดินทางสู่ ถ.วิภาวดีรังสิต เขตหลักสี่', desc: 'Maps 25.1 กม. (เผื่อรถติดเช้าทางด่วนฉลองรัช–รามอินทรา–วิภาวดีฯ รวม 1 ชม. 30 นาที)', dept: 'ฝ่ายสถานที่ฯ / ประสานงาน', tag: 'เดินทาง' },
-          { time: '09.30 – 12.00 น.', title: 'ศึกษาดูงานแห่งที่ 5: สถานีโทรทัศน์ Thai PBS (รอบวันพุธช่วงเช้า)', desc: 'เรียนรู้ภารกิจสื่อสาธารณะ การผลิตรายการ และระบบวิศวกรรมออกอากาศ (2 ชม. 30 นาที)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #5' },
-          { time: '12.00 – 13.15 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันและละหมาด ก่อนขึ้นทางด่วนศรีรัชไปยังอาคารไปรษณีย์กลาง บางรัก', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
-          { time: '14.30 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 6: Virtual Media Lab (CEA / TCDC กรุงเทพฯ)', desc: 'ศึกษานวัตกรรมและเทคโนโลยีเพื่อการศึกษา จอ LED Virtual Production และ VR/AR', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #6' },
-          { time: '16.30 – 21.00 น.', title: 'เดินทางกลับที่พัก ทานมื้อเย็น ละหมาด และกิจกรรม Reflection วันที่ 3', desc: 'เผื่อรถติดเย็นย่านเจริญกรุง–สีลม–ทางด่วนศรีรัช 2 ชม. ทานมื้อเย็น ละหมาด และสรุปองค์ความรู้', dept: 'ฝ่ายวิชาการ / ประเมินผล', tag: 'พักโรงแรม คืนที่ 5' }
+          { time: '06.30 – 09.00 น.', title: 'อาหารเช้า และเดินทางสู่ ถ.วิภาวดีรังสิต เขตหลักสี่', desc: 'Maps 25.1 กม. (รถยนต์ 40 นาที + เผื่อรถติดเช้าด่วนฉลองรัช–วิภาวดีฯ 50 นาที = 1 ชม. 30 นาที)', dept: 'ฝ่ายสถานที่ฯ / ประสานงาน', tag: 'เดินทาง' },
+          { time: '09.30 – 12.00 น.', title: 'ศึกษาดูงานแห่งที่ 5: สถานีโทรทัศน์ Thai PBS (ล็อกรอบวันพุธช่วงเช้า)', desc: 'เรียนรู้ภารกิจสื่อสาธารณะ การผลิตรายการ และระบบวิศวกรรมออกอากาศ (ตรงตามรอบวันพุธในระบบจอง)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #5' },
+          { time: '12.00 – 13.15 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันและละหมาด ก่อนขึ้นโทลล์เวย์–ทางด่วนไปยังซอยรางน้ำ (Maps 18.2 กม. / 45 นาที)', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '14.00 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 6: The Able by King Power (ซอยรางน้ำ ถ.พญาไท)', desc: 'ศึกษานวัตกรรมเทคโนโลยีและแพลตฟอร์มดิจิทัลของเครือคิง เพาเวอร์ (มีที่จอดรถบัสใหญ่และห้องละหมาด)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #6' },
+          { time: '16.30 – 21.00 น.', title: 'เดินทางกลับที่พัก ทานมื้อเย็น ละหมาด และกิจกรรม Reflection วันที่ 3', desc: 'Maps 12.5 กม. (เผื่อรถติดเย็นด่วนศรีรัช–พระราม 9 1 ชม. 45 นาที) ทานมื้อเย็น ละหมาด และสรุปองค์ความรู้', dept: 'ฝ่ายวิชาการ / ประเมินผล', tag: 'พักโรงแรม คืนที่ 5' }
         ]
       },
       {
         dayNum: 6,
         dateLabel: 'พฤหัสบดีที่ 21 ม.ค. 2570',
-        theme: 'โซนรัชดาฯ – ตลิ่งชัน (ด้านคอมพิวเตอร์/เทคโนโลยี และด้านสื่อสิ่งพิมพ์)',
+        theme: 'โซนสุขุมวิท 101 – ตลิ่งชัน (ด้านคอมพิวเตอร์/นวัตกรรม และด้านสื่อสิ่งพิมพ์)',
         stay: 'พักโรงแรมรีเจนท์ รามคำแหง 22 (คืนที่ 6)',
         items: [
-          { time: '06.15 – 08.30 น.', title: 'อาหารเช้า และเดินทางสู่อาคาร AIA Capital Center ถ.รัชดาภิเษก', desc: 'Maps 8.1 กม. (เผื่อรถติดเช้าเส้นพระราม 9–รัชดาภิเษก รวม 1 ชม. 15 นาที)', dept: 'ฝ่ายสถานที่ฯ / ประสานงาน', tag: 'เดินทาง' },
-          { time: '09.00 – 11.30 น.', title: 'ศึกษาดูงานแห่งที่ 7: บริษัท การีนา ออนไลน์ (ประเทศไทย) จำกัด', desc: 'เรียนรู้ด้านเทคโนโลยีดิจิทัล คอมพิวเตอร์ อุตสาหกรรมเกม และ Garena Academy', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #7' },
-          { time: '11.30 – 12.45 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันและละหมาด ก่อนขึ้นทางด่วนประจิมรัถยาข้ามไปเขตตลิ่งชัน', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
-          { time: '14.00 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 8: บมจ. อมรินทร์ คอร์เปอเรชั่นส์ (อมรินทร์พริ้นติ้ง)', desc: 'เรียนรู้การผลิตสื่อดิจิทัลและงานกราฟิก (สื่อสิ่งพิมพ์ครบวงจร)', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #8' },
-          { time: '18.45 – 20.45 น.', title: 'เลี้ยงมื้อพิเศษปิดท้ายดูงาน (ปิ้งย่าง/ชาบูฮาลาล) & ละหมาด', desc: 'เดินทางกลับจากตลิ่งชัน ทานมื้อพิเศษปิดทริป ละหมาด (มัฆริบ + อิชาอ์) และเก็บสัมภาระ', dept: 'ฝ่ายสวัสดิการ / ทุกฝ่าย', tag: 'พักโรงแรม คืนที่ 6' }
+          { time: '06.30 – 08.45 น.', title: 'อาหารเช้า และเดินทางสู่อาคาร True Digital Park สุขุมวิท 101', desc: 'Maps 14.8 กม. (รถยนต์ 32 นาที + เผื่อรถติดเช้าศรีนครินทร์–สุขุมวิท 43 นาที = 1 ชม. 15 นาที)', dept: 'ฝ่ายสถานที่ฯ / ประสานงาน', tag: 'เดินทาง' },
+          { time: '09.00 – 11.30 น.', title: 'ศึกษาดูงานแห่งที่ 7: Ascend Group (ด้านคอมพิวเตอร์และนวัตกรรม)', desc: 'เรียนรู้ระบบนิเวศเทคโนโลยี FinTech, E-Commerce, AI และ UX/UI ในองค์กร Tech ขนาดใหญ่', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #7' },
+          { time: '11.30 – 12.45 น.', title: 'พักทานอาหารกลางวันฮาลาล และละหมาดย่อ-รวม (ซุฮฺริ + อัศริ)', desc: 'ทานอาหารกลางวันและละหมาด ก่อนขึ้นทางด่วนเฉลิมมหานคร–ประจิมรัถยาข้ามไปเขตตลิ่งชัน (Maps 28.5 กม.)', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '14.00 – 16.30 น.', title: 'ศึกษาดูงานแห่งที่ 8: บมจ. อมรินทร์ คอร์เปอเรชั่นส์ (อมรินทร์พริ้นติ้ง)', desc: 'เรียนรู้การผลิตสื่อดิจิทัลและงานกราฟิก (สื่อสิ่งพิมพ์ครบวงจร) ณ ถ.ชัยพฤกษ์ เขตตลิ่งชัน', dept: 'ฝ่ายวิชาการ / ประสานงาน', tag: 'ดูงาน #8' },
+          { time: '18.45 – 21.00 น.', title: 'เลี้ยงมื้อพิเศษปิดท้ายดูงาน (ปิ้งย่าง/ชาบูฮาลาล) & ละหมาด', desc: 'เดินทางกลับจากตลิ่งชัน (Maps 27.7 กม. / 2 ชม. 15 นาที) ทานมื้อพิเศษปิดทริป ละหมาด (มัฆริบ + อิชาอ์) และเก็บสัมภาระ', dept: 'ฝ่ายสวัสดิการ / ทุกฝ่าย', tag: 'พักโรงแรม คืนที่ 6' }
         ]
       },
       {
@@ -1615,10 +1656,10 @@
         theme: 'ฝึกปฏิบัติภาคสนามขากลับ ณ ถ้ำเขาหลวง จ.เพชรบุรี & เดินทางลงสู่ภาคใต้',
         stay: 'พักผ่อนบนรถบัสปรับอากาศ (คืนที่ 1)',
         items: [
-          { time: '06.30 – 07.30 น.', title: 'อาหารเช้า ขนสัมภาระขึ้นรถ และเช็กเอาต์ออกจากโรงแรม', desc: 'แนะนำออกเดินทางเวลา 07.30 น. เพื่อเลี่ยงรถติดขาออก ถ.พระราม 2 และทันแสงลอดถ้ำสวยที่สุด', dept: 'ฝ่ายสถานที่ฯ / เลขาฯ', tag: 'เช็กเอาต์' },
-          { time: '10.00 – 11.15 น.', title: 'ฝึกทักษะการถ่ายภาพแสงลอดปล่องถ้ำรายวิชา Photo 2 ณ ถ้ำเขาหลวง จ.เพชรบุรี', desc: 'ถ่ายภาพลำแสงอาทิตย์ส่องทะลุปล่องเพดานถ้ำ (God Rays) ที่สวยงามเป็นเอกลักษณ์', dept: 'ฝ่ายวิชาการ / ฝ่ายโสตฯ', tag: 'Photo 2' },
+          { time: '06.15 – 07.30 น.', title: 'อาหารเช้า ขนสัมภาระขึ้นรถ และเช็กเอาต์ออกจากโรงแรม', desc: 'ออกเดินทางเวลา 07.30 น. เพื่อเลี่ยงรถติดขาออก ถ.พระราม 2 และทันแสงลอดถ้ำสวยที่สุด', dept: 'ฝ่ายสถานที่ฯ / เลขาฯ', tag: 'เช็กเอาต์' },
+          { time: '10.00 – 11.15 น.', title: 'ฝึกทักษะการถ่ายภาพแสงลอดปล่องถ้ำรายวิชา Photo 2 ณ ถ้ำเขาหลวง จ.เพชรบุรี', desc: 'Maps 142 กม. (2 ชม. 30 นาที) ถ่ายภาพลำแสงอาทิตย์ส่องทะลุปล่องเพดานถ้ำ (God Rays) ช่วง 09.30–10.30 น.', dept: 'ฝ่ายวิชาการ / ฝ่ายโสตฯ', tag: 'Photo 2' },
           { time: '11.45 – 13.30 น.', title: 'จุดพักรถโซนชะอำ/หัวหิน ทานอาหารกลางวันฮาลาล ซื้อของฝาก และละหมาด', desc: 'ทานมื้อเที่ยง ซื้อของฝาก และละหมาดย่อและรวม (กัศร์และญะมะอ์ ตักดีม: ซุฮฺริ + อัศริ)', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
-          { time: '18.45 – 20.00 น.', title: 'แวะร้านอาหารคุณสาหร่าย จ.ชุมพร ทานอาหารเย็นฮาลาล และละหมาด', desc: 'รับประทานอาหารเย็น สลับพนักงานขับรถ และละหมาดย่อ-รวม (มัฆริบ + อิชาอ์)', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
+          { time: '18.45 – 20.00 น.', title: 'แวะร้านอาหารคุณสาหร่าย จ.ชุมพร ทานอาหารเย็นฮาลาล และละหมาด', desc: 'Maps 292 กม. (เวลารถบัสจริง + พักเข้าห้องน้ำ 5 ชม.) รับประทานอาหารเย็น สลับพนักงานขับรถ และละหมาดย่อ-รวม (มัฆริบ + อิชาอ์)', dept: 'ฝ่ายสวัสดิการ', tag: 'ละหมาดย่อ-รวม' },
           { time: '20.00 – 05.15 น.', title: 'เดินทางต่อเนื่องจาก จ.ชุมพร มุ่งหน้าสู่โซน อ.หาดใหญ่ / อ.จะนะ จ.สงขลา', desc: 'ช่วงชุมพร–พัทลุง–สงขลา ~510 กม. เวลารถบัสจริงพร้อมแวะพักสลับคนขับรวม 9 ชม. 15 นาที (นอนบนรถบัส)', dept: 'ฝ่ายสถานที่ฯ และยานยนต์', tag: 'นอนบนรถบัส' }
         ]
       },
@@ -1636,13 +1677,12 @@
     ];
 
     // -----------------------------------------------------------------------
-    // 4. STATE MANAGEMENT & LOCALSTORAGE
+    // 5. STATE MANAGEMENT & LOCALSTORAGE
     // -----------------------------------------------------------------------
     const STORAGE_KEYS = {
-      VENUES: 'psu_ft_index_venues_v2',
-      TASKS: 'psu_ft_index_tasks_v2',
-      USER: 'psu_ft_index_user_v2',
-      BUDGET_OPEN: 'psu_ft_index_budget_open_v2'
+      VENUES: 'psu_ft_index_venues_v3',
+      TASKS: 'psu_ft_index_tasks_v3',
+      USER: 'psu_ft_index_user_v3'
     };
 
     let venues = [];
@@ -1650,7 +1690,7 @@
     let currentUser = PRESET_ACCOUNTS[0];
     let currentVenueFilter = 'all';
     let currentScheduleDay = 'all';
-    let openBudgetIds = ['b_cat1']; // First category expanded by default to demonstrate detail view
+    let openBudgetIds = ['b_cat1'];
     let leafletMap = null;
     let mapMarkers = {};
 
@@ -1682,7 +1722,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 5. RBAC PERMISSION HELPERS (2 Roles per User, Head-only Delete)
+    // 6. RBAC PERMISSION HELPERS (2 Roles per User, Head-only Delete)
     // -----------------------------------------------------------------------
     function isAdmin() {
       return currentUser.roles.some(r => r.level === 'admin');
@@ -1762,7 +1802,6 @@
         `;
       }).join('');
 
-      // Populate custom role selects
       const deptOptions = DEPARTMENTS.map(d => `<option value="${d.id}">${d.num}. ${d.name}</option>`).join('');
       document.getElementById('custom-role1-dept').innerHTML = deptOptions;
       document.getElementById('custom-role2-dept').innerHTML = `<option value="none">-- ไม่มีฝ่ายที่ 2 --</option>` + deptOptions;
@@ -1809,7 +1848,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 6. TAB SWITCHING, TOASTS & DOWNLOAD STANDALONE index.html
+    // 7. TAB SWITCHING, TOASTS & DOWNLOAD STANDALONE index.html
     // -----------------------------------------------------------------------
     function switchTab(tabName) {
       ['dashboard', 'venues', 'coordination', 'schedule', 'budget'].forEach(v => {
@@ -1877,15 +1916,15 @@
     }
 
     // -----------------------------------------------------------------------
-    // 7. DASHBOARD & PDF 8-DEPARTMENT STRUCTURE RENDERING
+    // 8. DASHBOARD & PDF 8-DEPARTMENT STRUCTURE RENDERING
     // -----------------------------------------------------------------------
     function renderDashboard() {
       const studyVenues = venues.filter(v => v.category === 'study');
-      const confirmedCount = studyVenues.filter(v => v.contactStatus === 'confirmed').length;
-      const pendingCount = studyVenues.length - confirmedCount;
+      const contactedCount = studyVenues.filter(v => ['confirmed', 'letter_sent', 'called'].includes(v.contactStatus)).length;
+      const pendingCount = studyVenues.filter(v => v.contactStatus === 'not_contacted').length;
 
-      document.getElementById('kpi-venue-summary').textContent = `${studyVenues.length} แห่ง + จุดภาพ`;
-      document.getElementById('kpi-venue-confirmed').textContent = `ยืนยันคิวแล้ว ${confirmedCount} แห่ง • กำลังประสาน ${pendingCount} แห่ง`;
+      document.getElementById('kpi-venue-summary').textContent = `8 แห่งหลัก + จุดภาพ`;
+      document.getElementById('kpi-venue-confirmed').textContent = `ติดต่อได้แล้ว ${contactedCount} รายการ • รอติดต่อเพิ่ม ${pendingCount} แห่ง`;
 
       // 8 Departments Progress
       const progContainer = document.getElementById('dashboard-8dept-progress');
@@ -1948,7 +1987,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 8. INTERACTIVE MAP WITH CLICK-TO-SCROLL TO VENUE DETAIL CARD
+    // 9. INTERACTIVE MAP WITH CLICK-TO-SCROLL TO VENUE DETAIL CARD
     // -----------------------------------------------------------------------
     function getCategoryMeta(cat) {
       switch (cat) {
@@ -1964,7 +2003,7 @@
         updateMapMarkers();
         return;
       }
-      leafletMap = L.map('map').setView([13.765, 100.565], 11);
+      leafletMap = L.map('map').setView([13.755, 100.565], 11);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(leafletMap);
@@ -1998,7 +2037,6 @@
 
         const marker = L.marker([v.lat, v.lng], { icon: customIcon }).addTo(leafletMap);
 
-        // Popup with prominent clickable text/button that scrolls smoothly to the exact detail card below
         const popupHtml = `
           <div style="min-width:235px;font-family:'Sarabun',sans-serif;padding:2px;">
             <div style="font-size:11px;font-weight:700;color:${meta.color};">${meta.label} • ${v.field}</div>
@@ -2019,11 +2057,9 @@
       });
     }
 
-    // Smoothly scroll from Leaflet Map Popup to the exact Venue Detail Card below and highlight it
     function scrollToVenueCard(venueId) {
       let cardEl = document.getElementById(`venue-card-${venueId}`);
       if (!cardEl) {
-        // Reset filter to 'all' if card was hidden by category filter
         filterVenues('all');
         cardEl = document.getElementById(`venue-card-${venueId}`);
       }
@@ -2033,7 +2069,7 @@
 
       cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
       cardEl.classList.remove('venue-highlight');
-      void cardEl.offsetWidth; // trigger reflow to restart CSS animation
+      void cardEl.offsetWidth;
       cardEl.classList.add('venue-highlight');
     }
 
@@ -2050,7 +2086,7 @@
     }
 
     function focusMapBangkok() {
-      if (leafletMap) leafletMap.setView([13.765, 100.565], 11, { animate: true });
+      if (leafletMap) leafletMap.setView([13.755, 100.565], 11, { animate: true });
     }
 
     function focusMapAll() {
@@ -2088,7 +2124,6 @@
         return `
           <article id="venue-card-${v.id}" class="card-soft rounded-2xl overflow-hidden flex flex-col justify-between transition duration-300">
             <div>
-              <!-- Photo Header with Fallback SVG Gradient -->
               <div class="relative h-40 overflow-hidden bg-slate-800">
                 <img
                   src="${v.photoUrl || ''}"
@@ -2112,7 +2147,6 @@
                 </div>
               </div>
 
-              <!-- Detailed Venue Information -->
               <div class="p-5 space-y-3 text-xs sm:text-sm">
                 <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-warmborder/80">
                   <span class="text-slate-600 font-medium">
@@ -2125,7 +2159,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                   <div class="p-2.5 rounded-xl bg-sand/70">
-                    <span class="text-slate-500 block">โอกาสอนุมัติ &amp; เวลาสะดวก:</span>
+                    <span class="text-slate-500 block">วันเวลาสะดวก &amp; กำหนดการ:</span>
                     <strong class="text-slate-800">${v.scheduleFit}</strong>
                   </div>
                   <div class="p-2.5 rounded-xl bg-sand/70">
@@ -2151,12 +2185,11 @@
                 </div>
 
                 <div class="text-xs text-slate-500 pt-1">
-                  <strong>ประวัตินักศึกษาดูงานจริง:</strong> ${v.pastVisit}
+                  <strong>หมายเหตุประสานงาน:</strong> ${v.contactReason}
                 </div>
               </div>
             </div>
 
-            <!-- Footer Actions -->
             <div class="px-5 py-3 bg-sand/60 border-t border-warmborder flex items-center justify-between gap-2 text-xs">
               <a href="${v.source}" target="_blank" rel="noopener noreferrer" class="text-sage-700 hover:underline font-bold flex items-center gap-1">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> แหล่งอ้างอิงข้อมูล
@@ -2281,20 +2314,20 @@
     }
 
     // -----------------------------------------------------------------------
-    // 9. COORDINATION CHECKLIST & 8 DEPARTMENTS TASK BOARD
+    // 10. COORDINATION CHECKLIST & 8 DEPARTMENTS TASK BOARD
     // -----------------------------------------------------------------------
     function getContactStatusBadge(status) {
       switch (status) {
         case 'confirmed':
           return { label: 'ยืนยันอนุมัติแล้ว', cls: 'bg-sage-100 text-sage-700' };
         case 'letter_sent':
-          return { label: 'ส่งหนังสือราชการแล้ว', cls: 'bg-sky-100 text-sky-700' };
+          return { label: 'เตรียมส่ง / ส่งหนังสือแล้ว', cls: 'bg-sky-100 text-sky-700' };
         case 'called':
-          return { label: 'โทรเช็กคิวเบื้องต้นแล้ว', cls: 'bg-ambersoft-100 text-ambersoft-600' };
+          return { label: 'ติดต่อได้ / รอเคาะวัน', cls: 'bg-ambersoft-100 text-ambersoft-600' };
         case 'rejected':
-          return { label: 'ไม่สะดวก / ใช้ตัวเลือกสำรอง', cls: 'bg-terracotta-100 text-terracotta-600' };
+          return { label: 'ปิดรับช่วงที่จะไป', cls: 'bg-terracotta-100 text-terracotta-600' };
         default:
-          return { label: 'ยังไม่ติดต่อ', cls: 'bg-slate-100 text-slate-600' };
+          return { label: 'รอติดต่อเพิ่มเติม', cls: 'bg-slate-100 text-slate-600' };
       }
     }
 
@@ -2302,14 +2335,14 @@
       const studyVenues = venues.filter(v => v.category === 'study');
       const canCoord = canEditDept('coord');
 
-      const confirmed = studyVenues.filter(v => v.contactStatus === 'confirmed').length;
-      const inProg = studyVenues.filter(v => ['called', 'letter_sent'].includes(v.contactStatus)).length;
-      const uncontacted = studyVenues.filter(v => v.contactStatus === 'not_contacted').length;
+      const letterOrConf = studyVenues.filter(v => ['confirmed', 'letter_sent'].includes(v.contactStatus)).length;
+      const called = studyVenues.filter(v => v.contactStatus === 'called').length;
+      const pending = studyVenues.filter(v => v.contactStatus === 'not_contacted').length;
 
       document.getElementById('coord-stats-badges').innerHTML = `
-        <span class="px-2.5 py-1 rounded-full bg-sage-100 text-sage-700">ยืนยันแล้ว: ${confirmed}</span>
-        <span class="px-2.5 py-1 rounded-full bg-ambersoft-100 text-ambersoft-600">กำลังประสาน: ${inProg}</span>
-        <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">ยังไม่ติดต่อ: ${uncontacted}</span>
+        <span class="px-2.5 py-1 rounded-full bg-sky-100 text-sky-700">ส่งจดหมาย/จองระบบ: ${letterOrConf}</span>
+        <span class="px-2.5 py-1 rounded-full bg-ambersoft-100 text-ambersoft-600">รอเจ้าหน้าที่ตอบกลับ: ${called}</span>
+        <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">ติดต่อเพิ่มเติม: ${pending}</span>
       `;
 
       const tbody = document.getElementById('coordination-table-body');
@@ -2523,7 +2556,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 10. SCHEDULE RENDERING
+    // 11. SCHEDULE RENDERING
     // -----------------------------------------------------------------------
     function selectScheduleDay(dayKey) {
       currentScheduleDay = dayKey;
@@ -2604,7 +2637,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 11. EXPANDABLE BUDGET CATEGORY CARDS (CLICK CARD -> SHOW ITEMIZED LIST)
+    // 12. EXPANDABLE BUDGET CATEGORY CARDS (CLICK CARD -> SHOW ITEMIZED LIST)
     // -----------------------------------------------------------------------
     function toggleBudgetCategory(catId) {
       if (openBudgetIds.includes(catId)) {
@@ -2640,7 +2673,6 @@
 
         return `
           <div class="card-soft rounded-2xl overflow-hidden transition ${isOpen ? 'ring-1 ring-sage-500/40' : ''}">
-            <!-- Clickable Summary Header Card -->
             <div onclick="toggleBudgetCategory('${cat.id}')" class="cursor-pointer p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-sage-50/50 transition select-none">
               <div class="flex items-start sm:items-center gap-3.5">
                 <div class="w-10 h-10 rounded-xl bg-sage-100 text-sage-700 flex items-center justify-center shrink-0">
@@ -2666,7 +2698,6 @@
               </div>
             </div>
 
-            <!-- Expandable Detailed Sub-Items Table -->
             ${isOpen ? `
               <div class="border-t border-warmborder bg-sand/35 px-4 sm:px-6 py-4">
                 <div class="text-xs font-bold text-sage-700 mb-2.5 flex items-center gap-1.5">
@@ -2720,7 +2751,7 @@
     }
 
     // -----------------------------------------------------------------------
-    // 12. RESET & INITIALIZATION
+    // 13. RESET & INITIALIZATION
     // -----------------------------------------------------------------------
     function openResetModal() {
       document.getElementById('modal-reset').classList.remove('hidden');
